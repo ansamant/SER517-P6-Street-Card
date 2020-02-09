@@ -70,7 +70,10 @@ body {
 }
 
 .login-form {
-  max-width: 600px;
+  max-width: 500px;
+  padding: 50px;
+  border: 3px solid gray;
+  margin: 100px;
 }
 .login-form-forgot {
   float: right;
