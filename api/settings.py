@@ -12,15 +12,25 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+# For improperly configured os key 
+from django.core.exceptions import ImproperlyConfigured
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Get value from environment raise improperly configured exception
+def get_val_from_env(django_var):
+    try:
+        return os.environ[django_var]
+    except KeyError:
+        raise ImproperlyConfigured('The variable {} is not set correctly'.format(django_var))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '0zlbr3fwu(63)=^8(=0ty-e11x43o^vp+&%nt9*n5ftyzmy@$w'
+SECRET_KEY = get_val_from_env('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -74,11 +84,13 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djanggo.db.backends.postgresql',
+        'USER': get_val_from_env('DJANGO_USER'),
+        'PASSWORD': get_val_from_env('DJANGO_PASSWORD'),
+        'HOST': get_val_from_env('DJANGO_HOST'),
+        'PORT': int(get_val_from_env('DJANGO_PORT')),
     }
 }
 
