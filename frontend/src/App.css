@@ -1,5 +1,11 @@
+@import '~antd/dist/antd.css';
+
 .App {
-  text-align: center;
+  text-align: left;
+}
+
+body {
+  background-color: #FFC627;
 }
 
 .App-logo {
@@ -35,4 +41,46 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.demo-loadmore-list {
+  min-height: 350px;
+}
+
+.button-login {
+  margin-left: 1100px;
+  min-height: 50px;
+  min-width: 500px;
+}
+
+.button-register {
+  min-height: 50px;
+  min-width: 500px;
+}
+
+.ant-layout-content {
+  background: "#FFC627";
+}
+
+.location-map {
+  width: 320px;
+  padding: 10px;
+  border: 5px solid gray;
+  margin: 0;
+}
+
+.login-form {
+  max-width: 500px;
+  padding: 50px;
+  border: 3px solid gray;
+  margin: 100px;
+}
+.login-form-forgot {
+  float: right;
+}
+.login-form-button {
+  width: 100%;
+}
+.login-form {
+
 }
