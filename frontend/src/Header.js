@@ -2,6 +2,7 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
 import { PageHeader, Button} from "antd";
+import { Link } from 'react-router-dom'; 
 
 export default class Header extends React.Component {
 
@@ -17,10 +18,7 @@ export default class Header extends React.Component {
 			      ghost={false}
 			      title="StreetCard"
 			      extra={[
-			        <Button style={{ fontSize:22 }} key="2">Login</Button>,
-			        <Button style={{ fontSize:22 }} key="1" type="primary">
-			          Registration
-			        </Button>
+			        <Link to="/login"><Button style={{ fontSize:22 }} key="2">Login</Button></Link>
 			      ]}
 			    />
 			  </div>
