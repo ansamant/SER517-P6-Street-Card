@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 # Create your models here.
-class Client(models.Model):
+class Homeless(models.Model):
     class NameDataQuality(models.IntegerChoices):
         FULL_NAME_REPORTED = 1, _('Full Name Reported')
         PARTIAL_NAME_REPORTED = 2, _('Partial Name Reported')

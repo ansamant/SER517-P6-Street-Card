@@ -87,11 +87,12 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'USER': get_val_from_env('DJANGO_USER'),
-        'PASSWORD': get_val_from_env('DJANGO_PASSWORD'),
-        'HOST': get_val_from_env('DJANGO_HOST'),
-        'PORT': int(get_val_from_env('DJANGO_PORT')),
-    }
+        'USER': get_val_from_env('DB_USER'),
+        'PASSWORD': get_val_from_env('DB_PASSWORD'),
+        'HOST': get_val_from_env('DB_HOST'),
+        'PORT': int(get_val_from_env('DB_PORT')),
+        'NAME': get_val_from_env('DB_NAME'),
+        }
 }
 
 
