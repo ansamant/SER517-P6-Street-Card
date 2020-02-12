@@ -7,12 +7,58 @@ import Header from './HeaderCommon.js'
 import StreetCardFooter from './StreetCardFooter'
 
  class NormalLoginForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      logged_in: localStorage.getItem('token') ? true : false,
+      username: ''
+    };
+  }
+
+
+  handle_login = (e, data) => {
+    e.preventDefault();
+    fetch('http://localhost:8000/token-auth/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(json => {
+        localStorage.setItem('token', json.token);
+        this.setState({
+          logged_in: true,
+          displayed_form: '',
+          username: json.user.username
+        });
+      });
+  };
+
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-      }
+        fetch('http://localhost:8000/api/token/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(values)
+        })
+          .then(res => res.json())
+          .then(json => {
+            localStorage.setItem('token', json.token);
+            this.setState({
+              logged_in: true,
+              username: json.user.username
+            });
+          });
+        }
     });
   };
 
