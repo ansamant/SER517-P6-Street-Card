@@ -30,6 +30,12 @@ body {
   color: white;
 }
 
+.registration-form {
+  max-width: 1000px;
+  padding: 50px;
+  margin: 100px;
+}
+
 .App-link {
   color: #61dafb;
 }

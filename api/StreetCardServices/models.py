@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 
@@ -77,7 +76,7 @@ class Homeless(models.Model):
     Gender = models.IntegerField(choices=Gender.choices)
     VeteranStatus = models.IntegerField(choices=VeteranStatus.choices)
 
-    
+
 class SocialWorker(models.Model):
     class ClearanceLevel(models.IntegerChoices):
         LEVEL0 = 0, _("Level 0")
@@ -94,4 +93,3 @@ class SocialWorker(models.Model):
     clearanceLevel = models.IntegerField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
