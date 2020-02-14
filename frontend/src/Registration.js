@@ -15,22 +15,38 @@ import Header from "./HeaderRegistration";
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
 
-const roles = [
+const clearanceLevel = [
   {
-    value: "Greeter",
+    value: "greeter",
     label: "Greeter"
   },
   {
-    value: "Case Worker",
+    value: "caseworker",
     label: "Case Worker"
   },
   {
-    value: "Navigator",
-    label: "Navigator"
+    value: "service_provider_emp",
+    label: "Service Provider Employee"
+  }
+];
+
+
+const serviceProvider = [
+  {
+    value: "FP",
+    label: "Food Pantry"
   },
   {
-    value: "Service Provider Employee",
-    label: "Service Provider Employee"
+    value: "DIC",
+    label: "Drop in Centre"
+  },
+  {
+    value: "SH",
+    label: "Shelter Home"
+  },
+  {
+    value: "SK",
+    label: "Soup Kitchen"
   }
 ];
 
@@ -45,8 +61,35 @@ class RegistrationForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
+
       if (!err) {
-        console.log("Received values of form: ", values);
+
+        var registerRequestObject = {};
+        registerRequestObject.username = values.username;
+        registerRequestObject.email = values.email;
+        registerRequestObject.first_name = values.first_name;
+        registerRequestObject.last_name = values.last_name;
+        registerRequestObject.password = values.password;
+
+        var socialWorker = {};
+        socialWorker.clearanceLevel = values.clearanceLevel[0];
+        socialWorker.address = values.address;
+        socialWorker.serviceProvider = values.serviceProvider[0];
+
+        registerRequestObject.socialWorker = socialWorker;
+
+        fetch('http://localhost:8000/register/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          },
+          body: JSON.stringify(registerRequestObject)
+        })
+          .then(res => res.json())
+          .then(json => {
+            console.log("register response:", json);
+          });
       }
     });
   };
@@ -99,18 +142,6 @@ class RegistrationForm extends React.Component {
         }
       }
     };
-    const prefixSelector = getFieldDecorator("prefix", {
-      initialValue: "86"
-    })(
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
-      </Select>
-    );
-
-    const websiteOptions = autoCompleteResult.map(website => (
-      <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-    ));
 
     return (
       <div>
@@ -170,7 +201,7 @@ class RegistrationForm extends React.Component {
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Frist Name">
-          {getFieldDecorator("firstname", {
+          {getFieldDecorator("first_name", {
             rules: [
               {
                 required: true,
@@ -181,7 +212,7 @@ class RegistrationForm extends React.Component {
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Last Name">
-          {getFieldDecorator("lastname", {
+          {getFieldDecorator("last_name", {
             rules: [
               {
                 message: "Please input your last name!",
@@ -201,7 +232,7 @@ class RegistrationForm extends React.Component {
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Clearence Level">
-          {getFieldDecorator("roles", {
+          {getFieldDecorator("clearanceLevel", {
             rules: [
               {
                 type: "array",
@@ -209,7 +240,18 @@ class RegistrationForm extends React.Component {
                 message: "Please select your role!"
               }
             ]
-          })(<Cascader options={roles} />)}
+          })(<Cascader options={clearanceLevel} />)}
+        </Form.Item>
+        <Form.Item label="Service Provider">
+          {getFieldDecorator("serviceProvider", {
+            rules: [
+              {
+                type: "array",
+                required: true,
+                message: "Please select your role!"
+              }
+            ]
+          })(<Cascader options={serviceProvider} />)}
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
