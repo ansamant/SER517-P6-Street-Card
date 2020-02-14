@@ -92,6 +92,6 @@ class SocialWorker(models.Model):
         OTHERS = "OTH", _("Others")
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    clearanceLevel = models.IntegerField(choices=ClearanceLevel.choices)
+    clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
