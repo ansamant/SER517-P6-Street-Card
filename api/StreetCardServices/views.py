@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer
+from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer
+from .models import SocialWorker
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -17,3 +18,13 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+
+class SocialWorkerRegistration(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class SocialWorkerDetails(viewsets.ModelViewSet):
+    queryset = SocialWorker.objects.all()
+    serializer_class = SocialWorkerSerializer
