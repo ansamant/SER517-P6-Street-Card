@@ -95,3 +95,67 @@ class SocialWorker(models.Model):
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+# Work in Progress
+class Project(models.Model):
+    ProjectId = models.CharField(max_length=32, primary_key=True)
+
+
+# Work in Progress
+class Enrollment(models.Model):
+    EnrollmentID = models.CharField(max_length=32, primary_key=True)
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='Enrollment_PersonalId')
+    ProjectID = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='ProjectID')
+
+
+class ResponseCategory(models.IntegerChoices):
+    NO = 0, _('No')
+    YES = 1, _('Yes')
+    CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+    CLIENT_REFUSED = 9, _('Client Refused')
+    DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+
+class YesNoResponse(models.IntegerChoices):
+    NO = 0, _('No')
+    YES = 1, _('Yes')
+
+
+class IncomeAndSources(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='IncomeAndSources_EnrollmentID')
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='IncomeAndSources_PersonalId')
+    InformationDate = models.DateField()
+    IncomeFromAnySources = models.IntegerField(choices=ResponseCategory.choices)
+    Earned = models.IntegerField(choices=YesNoResponse.choices, default=0)
+    EarnedIncome = models.IntegerField(default=0)
+    Unemployment = models.IntegerField(choices=YesNoResponse.choices, default=0)
+    UnemploymentAmount = models.IntegerField(null=True)
+    SSI = models.IntegerField(choices=YesNoResponse.choices)
+    SSIAmount = models.IntegerField(null=True)
+    SSDI = models.IntegerField(choices=YesNoResponse.choices)
+    SSDIAmount = models.IntegerField(null=True)
+    VADisabilityService = models.IntegerField(choices=YesNoResponse.choices)
+    VADisabilityServiceAmount = models.IntegerField(null=True)
+    VADisabilityNonService = models.IntegerField(choices=YesNoResponse.choices)
+    VADisabilityNonServiceNonAmount = models.IntegerField(null=True)
+    PrivateDisability = models.IntegerField(choices=YesNoResponse.choices)
+    PrivateDisabilityAmount = models.IntegerField(null=True)
+    WorkersComp = models.IntegerField(choices=YesNoResponse.choices)
+    WorkersCompAmount = models.IntegerField(null=True)
+    TANF = models.IntegerField(choices=YesNoResponse.choices)
+    TANFAmount = models.IntegerField(null=True)
+    GA = models.IntegerField(choices=YesNoResponse.choices)
+    GAAmount = models.IntegerField(null=True)
+    SocSecRetirement = models.IntegerField(choices=YesNoResponse.choices)
+    SocSecRetirementAmount = models.IntegerField(null=True)
+    Pension = models.IntegerField(choices=YesNoResponse.choices)
+    PensionAmount = models.IntegerField(null=True)
+    ChildSupport = models.IntegerField(choices=YesNoResponse.choices)
+    ChildSupportAmount = models.IntegerField(null=True)
+    Alimony = models.IntegerField(choices=YesNoResponse.choices)
+    AlimonyAmount = models.IntegerField(null=True)
+    OtherIncomeSources = models.IntegerField(choices=YesNoResponse.choices)
+    OtherIncomeSourcesAmount = models.IntegerField(null=True)
+    OtherIncomeSourcesIdentify = models.TextField(max_length=50, blank=True, null=True)
+    TotalMonthlyIncome = models.IntegerField(default=0)
