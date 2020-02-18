@@ -102,14 +102,6 @@ class Project(models.Model):
     ProjectId = models.CharField(max_length=32, primary_key=True)
 
 
-# Work in Progress
-class Enrollment(models.Model):
-    EnrollmentID = models.CharField(max_length=32, primary_key=True)
-    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='Enrollment_PersonalId')
-    ProjectID = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='ProjectID')
-    EntryDate = models.DateField()
-
-
 class ResponseCategory(models.IntegerChoices):
     NO = 0, _('No')
     YES = 1, _('Yes')
@@ -121,6 +113,69 @@ class ResponseCategory(models.IntegerChoices):
 class YesNoResponse(models.IntegerChoices):
     NO = 0, _('No')
     YES = 1, _('Yes')
+
+
+class SubstanceAbuseCategory(models.IntegerChoices):
+    NO = 0, _('No')
+    ALCOHOL = 1, _('Alcohol')
+    DRUG = 2, _('Drug')
+    BOTH = 3, _('Both Drug and Alcohol')
+    CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+    CLIENT_REFUSED = 9, _('Client Refused')
+    DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+
+class DomesticViolenceOccurrence(models.IntegerChoices):
+    PAST_THREE_MONTHS = 1, _('Past 3 Months')
+    THREE_TO_SIX_MONTHS = 2, _('Three to six months ago')
+    SIX_MONTHS_TO_ONE_YEAR = 3, _('Six Months to One year')
+    ONE_YEAR_OR_MORE = 4, _('One year or more')
+    CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+    CLIENT_REFUSED = 9, _('Client Refused')
+    DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+
+class Enrollment(models.Model):
+    DisablingCondition = models.IntegerField(choices=YesNoResponse.choices, default=YesNoResponse.NO)
+    EnrollmentID = models.CharField(max_length=32, primary_key=True)
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='Enrollment_PersonalId')
+    ProjectID = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='ProjectID')
+    EntryDate = models.DateField()
+
+
+class DomesticViolence(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='DomesticViolence_EnrollmentID')
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='DomesticViolence_PersonalId')
+    InformationDate = models.DateField()
+    DomesticViolenceVictim = models.IntegerField(choices=YesNoResponse.choices)
+    WhenOccurred = models.IntegerField(choices=DomesticViolenceOccurrence.choices)
+    CurrentlyFleeing = models.IntegerField(choices=ResponseCategory.choices)
+
+
+class DisablingCondition(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='DisablingCondition_EnrollmentID')
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='DisablingCondition_PersonalId')
+    InformationDate = models.DateField()
+    PHYSICAL_DISABILITY = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    PHYSICAL_DISABILITY_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
+                                                        default=None)
+    DEVELOPMENTAL_DISABILITY = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    DEVELOPMENTAL_DISABILITY_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
+                                                             default=None)
+    CHRONIC_HEALTH = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    CHRONIC_HEALTH_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
+                                                   default=None)
+    HIV_AIDS = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    HIV_AIDS_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True, default=None)
+    MENTAL_HEALTH = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    MENTAL_HEALTH_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True, default=None)
+    SUBSTANCE_ABUSE = models.IntegerField(choices=SubstanceAbuseCategory.choices, null=True, default=None)
+    SUBSTANCE_ABUSE_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
+                                                    default=None)
+
+    # Work in Progress
 
 
 class IncomeAndSources(models.Model):
