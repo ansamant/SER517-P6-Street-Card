@@ -95,3 +95,80 @@ class SocialWorker(models.Model):
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+# WorkInProgress-NarenKonchada
+
+class NonCashBenefits(models.Model):
+    class ResponseCategory(models.IntegerChoices):
+        NO = 0, _('No')
+        YES = 1, _('Yes')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    class YesNoResponse(models.IntegerChoices):
+        NO = 0, _('No')
+        YES = 1, _('Yes')
+
+    InformationDate = models.DateField()
+    BenefitsFromAnySource = models.IntegerField(choices=ResponseCategory.choices)
+    SNAP = models.IntegerField(choices=YesNoResponse.choices)
+    WIC = models.IntegerField(choices=YesNoResponse.choices)
+    TANFChildCare = models.IntegerField(choices=YesNoResponse.choices)
+    TANFTransportation = models.IntegerField(choices=YesNoResponse.choices)
+    OtherTANF = models.IntegerField(choices=YesNoResponse.choices)
+    OtherSource = models.IntegerField(choices=YesNoResponse.choices)
+    SpecifySource = models.CharField(max_length=50)
+    RentalAssistanceOngoing = models.IntegerField(null=True)
+    RentalAssistanceTemp = models.IntegerField(null=True)
+    DataCollectionStage = models.IntegerField(null=True)
+
+
+class HealthInsurance(models.Model):
+    class InsuranceReasonCategory(models.IntegerChoices):
+        APPLIED_DECISION_PENDING = 1, _('Applied;decision pending')
+        APPLIED_CLIENT_NOT_ELIGIBLE = 2, _('Applied;client not eligible')
+        CLIENT_DIDNOT_APPLY = 3, _('Client did not apply')
+        INSURANCE_TYPE_NA_FOR_THIS_CLIENT = 4, _('Insurance type N/A for this client')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    class ResponseCategory(models.IntegerChoices):
+        NO = 0, _('No')
+        YES = 1, _('Yes')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    class YesNoResponse(models.IntegerChoices):
+        NO = 0, _('No')
+        YES = 1, _('Yes')
+
+    InformationDate = models.DateField()
+    CoveredByHealthInsurance = models.IntegerField(choices=ResponseCategory.choices)
+    Medicaid = models.IntegerField(choices=YesNoResponse.choices)
+    Medicare = models.IntegerField(choices=YesNoResponse.choices)
+    SCHIP = models.IntegerField(choices=YesNoResponse.choices)
+    VAMedicalServices = models.IntegerField(choices=YesNoResponse.choices)
+    EmployerProvided = models.IntegerField(choices=YesNoResponse.choices)
+    COBRA = models.IntegerField(choices=YesNoResponse.choices)
+    PrivatePay = models.IntegerField(choices=YesNoResponse.choices)
+    StateHealthInsuranceForAdults = models.IntegerField(choices=YesNoResponse.choices)
+    IndianHealthServices = models.IntegerField(choices=YesNoResponse.choices)
+    OtherInsurance = models.IntegerField(choices=YesNoResponse.choices)
+    SpecifySource = models.CharField(max_length=50)
+    Reason = models.TextField(choices=InsuranceReasonCategory.choices)
+
+# class PhysicalDisability(models.Model):
+#     class ResponseCategory(models.IntegerChoices):
+#         NO = 0, _('No')
+#         YES = 1, _('Yes')
+#         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+#         CLIENT_REFUSED = 9, _('Client Refused')
+#         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+#
+#     InformationDate = models.DateField()
+#     PhysicalDisability = models.IntegerField(choices=ResponseCategory.choices)
+#
