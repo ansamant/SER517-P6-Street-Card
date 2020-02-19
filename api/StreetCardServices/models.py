@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
-
+from django.utils import timezone
 
 # Create your models here.
 class Homeless(models.Model):
@@ -95,3 +95,17 @@ class SocialWorker(models.Model):
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+# Log table, used to display information on Case Worker page
+# Log should be recorded whenever greeter swipes card
+# Log should also be recorded whenever caseworker swipes card.
+# Greeter should retrieve model based on the worker's info.
+
+class Log(models.Model):
+    #datetime field can be retrieved relative to timezone and converted later.
+    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    serviceProvider = models.ForeignKey(SocialWorker, on_delete=models.CASCADE)
+
+
+    

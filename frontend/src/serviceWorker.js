@@ -132,6 +132,10 @@ export function unregister() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready.then(registration => {
       registration.unregister();
+    }).catch(() => {
+      console.log(
+        'Unable to unregister Service Worker, check if service worker is ready.'
+      )
     });
   }
 }
