@@ -161,14 +161,3 @@ class HealthInsurance(models.Model):
     SpecifySource = models.CharField(max_length=50)
     Reason = models.TextField(choices=InsuranceReasonCategory.choices)
 
-# class PhysicalDisability(models.Model):
-#     class ResponseCategory(models.IntegerChoices):
-#         NO = 0, _('No')
-#         YES = 1, _('Yes')
-#         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
-#         CLIENT_REFUSED = 9, _('Client Refused')
-#         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
-#
-#     InformationDate = models.DateField()
-#     PhysicalDisability = models.IntegerField(choices=ResponseCategory.choices)
-#
