@@ -61,7 +61,7 @@ class Homeless(models.Model):
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
-    PersonalId = models.CharField(max_length=32, blank=True, null=True)
+    PersonalId = models.CharField(max_length=32, primary_key=True, unique=True)
     FirstName = models.CharField(max_length=128, blank=True, null=True)
     MiddleName = models.CharField(max_length=128, blank=True, null=True)
     LastName = models.CharField(max_length=128, blank=True, null=True)
@@ -98,8 +98,8 @@ class SocialWorker(models.Model):
 
 
 # Work in Progress
-class Project(models.Model):
-    ProjectId = models.CharField(max_length=32, primary_key=True)
+class Project(models.IntegerChoices):
+    HUD_COC_HOMELESS_PREVENTION = 0, _('HUD:CoC-HomelessPrevention')
 
 
 class ResponseCategory(models.IntegerChoices):
@@ -138,9 +138,11 @@ class DomesticViolenceOccurrence(models.IntegerChoices):
 class Enrollment(models.Model):
     DisablingCondition = models.IntegerField(choices=YesNoResponse.choices, default=YesNoResponse.NO)
     EnrollmentID = models.CharField(max_length=32, primary_key=True)
-    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='Enrollment_PersonalId')
-    ProjectID = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='ProjectID')
-    EntryDate = models.DateField()
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None,
+                                   related_name='Enrollment_PersonalId')
+    Project = models.IntegerField(choices=Project.choices, null=True)
+    EntryDate = models.DateField(null=True)
+    ExitDate = models.DateField(null=True)
 
 
 class DomesticViolence(models.Model):

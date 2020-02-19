@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer
-from .models import SocialWorker
+from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer
+from .models import SocialWorker, Enrollment
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -28,3 +28,8 @@ class SocialWorkerRegistration(viewsets.ModelViewSet):
 class SocialWorkerDetails(viewsets.ModelViewSet):
     queryset = SocialWorker.objects.all()
     serializer_class = SocialWorkerSerializer
+
+
+class EnrollmentViewSet(viewsets.ModelViewSet):
+    queryset = Enrollment.objects.all()
+    serializer_class = EnrollmentSerializer
