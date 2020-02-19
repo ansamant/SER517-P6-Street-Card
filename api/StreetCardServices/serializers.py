@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .models import SocialWorker
+from .models import SocialWorker, Enrollment
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -42,3 +42,9 @@ class UserSerializer(ModelSerializer):
         user.save()
         SocialWorker.objects.create(user=user, **profile_data)
         return user
+
+
+class EnrollmentSerializer(ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = '__all__'
