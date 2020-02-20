@@ -10,7 +10,7 @@ import {
   Button,
   AutoComplete
 } from "antd";
-import Header from "./HeaderRegistration";
+import Header from "./Header";
 
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
@@ -53,12 +53,28 @@ const serviceProvider = [
 const TITLE = 'Register Social worker'
 
 class RegistrationForm extends React.Component {
+
+  constructor(props) {
+
+    super(props);
+
+    this.handleSocialWorkerRegistrationSubmit = this.handleSocialWorkerRegistrationSubmit.bind(this);
+    this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
+  }
+
   state = {
     confirmDirty: false,
     autoCompleteResult: []
   };
 
-  handleSubmit = e => {
+
+  handleSuccessfulLogoutAction() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    this.props.history.push('/login');
+  }
+
+  handleSocialWorkerRegistrationSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
 
@@ -89,6 +105,7 @@ class RegistrationForm extends React.Component {
           .then(res => res.json())
           .then(json => {
             console.log("register response:", json);
+            this.props.history.push('/login');
           });
       }
     });
@@ -145,9 +162,12 @@ class RegistrationForm extends React.Component {
 
     return (
       <div>
-      <Header/>
+      <Header 
+        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+        loggedInStatus={this.state.loggedInStatus}
+      />
 
-        <Form {...formItemLayout} onSubmit={this.handleSubmit} className="registration-form ">
+        <Form {...formItemLayout} onSubmit={this.handleSocialWorkerRegistrationSubmit} className="registration-form ">
           <h1>Fill the details of social worker for registration:</h1>
         <Form.Item label="User Name">
           {getFieldDecorator("username", {
