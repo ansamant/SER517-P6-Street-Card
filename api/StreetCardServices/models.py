@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 # Create your models here.
@@ -154,9 +155,17 @@ class HealthInsurance(models.Model):
     Reason = models.TextField(choices=InsuranceReasonCategory.choices)
 
 
-# Work in Progress
+# Project Names
 class Project(models.IntegerChoices):
-    HUD_COC_HOMELESS_PREVENTION = 0, _('HUD:CoC-HomelessPrevention')
+    HUD_COC_HOMELESS_PREVENTION = 0, _('HUD:CoC - HomelessPrevention')
+    HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 1, _('HUD:HOPWA – Hotel/Motel Vouchers')
+    HUD_HOPWA_HOUSING_INFORMATION = 2, _('HUD:HOPWA – Housing Information')
+    HUD_HOPWA_PERMANENT_HOUSING = 3, _('HUD:HOPWA – Permanent Housing (facility based or TBRA)')
+    HUD_HOPWA_PERMANENT_HOUSING_PLACEMENT = 4, _('HUD:HOPWA – Permanent Housing Placement')
+    HUD_HOPWA_SHORT_TERM_RENT_MORTGAGE_UTILITY_ASSISTANCE = 5, _(
+        'HUD:HOPWA – Short-Term Rent, Mortgage, Utility assistance')
+    HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 6, _('HUD:HOPWA – Short-Term Supportive Facility')
+    HUD_HOPWA_TransitionalHousing = 7, _('HUD:HOPWA – Transitional Housing')
 
 
 class SubstanceAbuseCategory(models.IntegerChoices):
@@ -261,3 +270,105 @@ class IncomeAndSources(models.Model):
     OtherIncomeSourcesAmount = models.IntegerField(null=True)
     OtherIncomeSourcesIdentify = models.TextField(max_length=50, blank=True, null=True)
     TotalMonthlyIncome = models.IntegerField(default=0)
+
+
+# HOPWA Specific Project Elements
+
+class W1ServicesProvidedHOPWA(models.Model):
+    class HOPWAServiceType(models.IntegerChoices):
+        ADULT_DAYCARE_AND_PERSONAL_ASSISTANCE = 1, _('Adult day care and personal assistance')
+        CASE_MANAGEMENT = 2, _('Case management')
+        CHILDCARE = 3, _('Child care')
+        CRIMINAL_JUSTICE_LEGAL_SERVICES = 4, _('Criminal justice/legal services')
+        EDUCATION = 5, _('Education')
+        EMPLOYMENT_AND_TRAINING_SERVICES = 6, _('Employment and training services')
+        FOOD_MEALS_NUTRITIONAL_SERVICES = 7, _('Food/meals/nutritional services')
+        HEALTH_MEDICAL_CARE = 8, _('Health/medical care')
+        LIFE_SKILLS_TRAINING = 9, _('Life skills training')
+        MENTAL_HEALTH_CARE_COUNSELING = 10, _('Mental health care/counseling')
+        OUTREACH_AND_OR_ENGAGEMENT = 11, _('Outreach and/or engagement')
+        SUBSTANCE_ABUSE_SERVICES_TREATMENT = 12, _('Substance abuse services/treatment')
+        TRANSPORTATION = 13, _('Transportation')
+        OTHER_HOPWA_FUNDED_SERVICE = 14, _('Other HOPWA funded service')
+
+    DateOfService = models.DateField()
+    TypeOfService = models.ImageField(choices=HOPWAServiceType.choices)
+
+
+class FinancialAssistanceHOPWA(models.Model):
+    class FinancialAssistanceTypeCategory(models.IntegerChoices):
+        RENTAL_ASSISTANCE = 1, _('Rental assistance')
+        SECURITY_DEPOSITS = 2, _('Security deposits')
+        UTILITY_DEPOSITS = 3, _('Utility deposits')
+        UTILITY_PAYMENTS = 4, _('Utility payments')
+        MORTGAGE_ASSISTANCE = 7, _('Mortgage assistance')
+
+    DateOfFinancialAssistance = models.DateField()
+    FinancialAssistanceType = models.IntegerChoices(choices=FinancialAssistanceTypeCategory.choices)
+    FinancialAssistanceAmount = models.ImageField(default=0)
+
+
+class MedicalAssistanceHOPWA(models.Model):
+    class IfNoReasonTypeCategory(models.IntegerChoices):
+        APPLIED_DECISION_PENDING = 1, _('Applied; decision pending')
+        APPLIED_CLIENT_NOT_ELIGIBLE = 2, _('Applied; client not eligible')
+        CLIENT_DIDNOT_APPLY = 3, _('Client did not apply ')
+        INSURANCE_TYPE_NA_FOR_THIS_CLIENT = 4, _('Insurance type N/A for this client')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    InformationDate = models.DateField()
+    ReceivingPublicHIVAIDSMedicalAssistance = models.IntegerChoices(choices=ResponseCategory.choices)
+    IfNoReason = models.IntegerChoices(choices=IfNoReasonTypeCategory.choices)
+    ReceivingAIDSDrugAssistanceProgram = models.IntegerChoices(choices=ResponseCategory.choices)
+    IfNoReason = models.IntegerChoices(choices=IfNoReasonTypeCategory.choices)
+
+
+class TCellCD4AndViralLoadHOPWA(models.Model):
+    class InformationObtainedResponseCategory(models.IntegerChoices):
+        MEDICAL_REPORT = 1, _('Medical Report')
+        CLIENT_REPORT = 2, _('Client Report')
+        OTHER = 3, _('Other')
+
+    InformationDate = models.DateField()
+    TCellCD4CountAvailable = models.IntegerChoices(choices=ResponseCategory.choices)
+    IfYesTCellCount = models.IntegerField(validators=[MaxValueValidator(0), MinValueValidator(1500)])
+    HowWasTheInformationObtained = models.IntegerChoices(choices=InformationObtainedResponseCategory.choices)
+    ViralLoadInformationAvailable = models.IntegerChoices(choices=ResponseCategory.choices)
+    ViralLoadCount = models.IntegerField(validators=[MaxValueValidator(0), MinValueValidator(999999)])
+    HowWasTheInformationObtained = models.IntegerChoices(choices=InformationObtainedResponseCategory.choices)
+
+
+class HousingAssessmentAtExitHOPWA(models.Model):
+    class HousingAssessmentAtExitResponseCategory(models.IntegerChoices):
+        ABLE_TO_MAINTAIN_THE_HOUSING_THEY_HAD_AT_PROJECT_ENTRY = 1, _(
+            "Able to maintain the housing they had at project entry")
+        MOVED_TO_NEW_HOUSING_UNIT = 2, _('Moved to new housing unit')
+        MOVED_IN_WITH_FAMILY_FRIENDS_ON_A_TEMPORARY_BASIS = 3, _('Moved in with family/friends on a temporary basis')
+        MOVED_IN_WITH_FAMILY_FRIENDS_ON_A_PERMANENT_BASIS = 4, _('Moved in with family/friends on a permanent basis')
+        MOVED_TO_A_TRANSITIONAL_OR_TEMPORARY_HOUSING_FACILITY_OR_PROGRAM = 5, _(
+            " Moved to a transitional or temporary housing facility or program")
+        CLIENT_BECAME_HOMELESS_MOVING_TO_A_SHELTER_OR_OTHER_PLACE_UNFIT_FOR_HUMAN_HABITATION = 6, _(
+            "Client became homeless - moving to a shelter or other place unfit for human habitation")
+        CLIENT_WENT_TO_JAIL_PRISON = 7, _('Client went to jail/prison')
+        CLIENT_DIED = 10, _('Client Died')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    class SubsidyInformationResponseCategory(models.IntegerChoices):
+        WITHOUT_A_SUBSIDY = 1, _('Without_a_subsidy')
+        WITH_THE_SUBSIDY_THEY_HAD_AT_PROJECT_ENTRY = 2, _('With the subsidy they had at project entry')
+        WITH_AN_ONGOING_SUBSIDY_ACQUIRED_SINCE_PROJECT_ENTRY = 3, _(
+            'With an ongoing subsidy acquired since project entry')
+        ONLY_WITH_FINANCIAL_ASSISTANCE_OTHER_THAN_A_SUBSIDY = 4, _(
+            'Only with financial assistance other than a subsidy')
+
+    class AnotherSubsidyInformationResponseCategory(models.IntegerChoices):
+        WITH_ONGOING_SUBSIDY = 1, _('With ongoing subsidy')
+        WITHOUT_AN_ONGOING_SUBSIDY = 2, _('Without an ongoing subsidy')
+
+    HousingAssessmentAtExit = models.IntegerChoices(choices=HousingAssessmentAtExitResponseCategory.choices)
+    SubsidyInformation = models.IntegerChoices(choices=SubsidyInformationResponseCategory.choices)
+    SubsidyInformation = models.IntegerChoices(choices=AnotherSubsidyInformationResponseCategory.choices)
