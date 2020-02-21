@@ -4,6 +4,19 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 
+class ResponseCategory(models.IntegerChoices):
+    NO = 0, _('No')
+    YES = 1, _('Yes')
+    CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+    CLIENT_REFUSED = 9, _('Client Refused')
+    DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+
+class YesNoResponse(models.IntegerChoices):
+    NO = 0, _('No')
+    YES = 1, _('Yes')
+
+
 # Create your models here.
 class Homeless(models.Model):
     class NameDataQuality(models.IntegerChoices):
@@ -98,21 +111,17 @@ class SocialWorker(models.Model):
 
 
 # Work in Progress
-class Project(models.IntegerChoices):
+class ProjectCategory(models.IntegerChoices):
     HUD_COC_HOMELESS_PREVENTION = 0, _('HUD:CoC-HomelessPrevention')
 
 
-class ResponseCategory(models.IntegerChoices):
-    NO = 0, _('No')
-    YES = 1, _('Yes')
-    CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
-    CLIENT_REFUSED = 9, _('Client Refused')
-    DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+class ProjectCategoryName(models.TextChoices):
+    HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
 
 
-class YesNoResponse(models.IntegerChoices):
-    NO = 0, _('No')
-    YES = 1, _('Yes')
+class Project(models.Model):
+    ProjectName = models.TextField(choices=ProjectCategoryName.choices)
+    ProjectType = models.IntegerField(choices=ProjectCategory.choices, null=True)
 
 
 class SubstanceAbuseCategory(models.IntegerChoices):
@@ -140,7 +149,7 @@ class Enrollment(models.Model):
     EnrollmentID = models.CharField(max_length=32, primary_key=True)
     PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None,
                                    related_name='Enrollment_PersonalId')
-    Project = models.IntegerField(choices=Project.choices, null=True)
+    Project = models.IntegerField(choices=ProjectCategory.choices, null=True)
     EntryDate = models.DateField(null=True)
     ExitDate = models.DateField(null=True)
 
@@ -181,8 +190,10 @@ class DisablingCondition(models.Model):
 
 
 class IncomeAndSources(models.Model):
-    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='IncomeAndSources_EnrollmentID')
-    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='IncomeAndSources_PersonalId')
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='IncomeAndSources_EnrollmentID',
+                                     default=None)
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='IncomeAndSources_PersonalId',
+                                   default=None)
     InformationDate = models.DateField()
     IncomeFromAnySources = models.IntegerField(choices=ResponseCategory.choices)
     Earned = models.IntegerField(choices=YesNoResponse.choices, default=0)
@@ -220,6 +231,10 @@ class IncomeAndSources(models.Model):
 
 
 class NonCashBenefits(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='NonCashBenefits_EnrollmentID',
+                                     default=None)
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='NonCashBenefits_PersonalId',
+                                   default=None)
     InformationDate = models.DateField()
     BenefitsFromAnySource = models.IntegerField(choices=ResponseCategory.choices)
     SNAP = models.IntegerField(choices=YesNoResponse.choices)

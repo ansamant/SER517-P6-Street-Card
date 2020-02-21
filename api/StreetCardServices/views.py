@@ -1,7 +1,15 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer
-from .models import SocialWorker, Enrollment
+from rest_framework.response import Response
+from rest_framework import status
+
+from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
+    IncomeSerializer, NonCashBenefitsSerializer
+from .models import SocialWorker, Enrollment, IncomeAndSources, NonCashBenefits, Homeless
+
+from collections import namedtuple
+
+Combined = namedtuple('Combined', ('income', 'noncash'))
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -30,6 +38,24 @@ class SocialWorkerDetails(viewsets.ModelViewSet):
     serializer_class = SocialWorkerSerializer
 
 
+class IncomeDetails(viewsets.ModelViewSet):
+    queryset = IncomeAndSources.objects.all()
+    serializer_class = IncomeSerializer
+
+
+class NonCashDetails(viewsets.ModelViewSet):
+    queryset = NonCashBenefits.objects.all()
+    serializer_class = NonCashBenefitsSerializer
+
+
 class EnrollmentViewSet(viewsets.ModelViewSet):
     queryset = Enrollment.objects.all()
     serializer_class = EnrollmentSerializer
+
+    def create(self, request):
+        serializer = EnrollmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
