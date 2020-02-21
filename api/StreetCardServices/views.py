@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer
-from .models import SocialWorker
+from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, HomelessSerializer, LogSerializer
+from .models import SocialWorker, Homeless, Log
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -28,3 +28,13 @@ class SocialWorkerRegistration(viewsets.ModelViewSet):
 class SocialWorkerDetails(viewsets.ModelViewSet):
     queryset = SocialWorker.objects.all()
     serializer_class = SocialWorkerSerializer
+
+class HomelessEntry(viewsets.ModelViewSet):
+    def create(self, request, pk=None):
+        queryset= Homeless.objects.all()
+        serializer_class = HomelessSerializer
+
+class LogEntry(viewsets.ModelViewSet):
+    def create(self, request, pk=None):
+        queryset= Log.objects.all()
+        serializer_class = LogSerializer

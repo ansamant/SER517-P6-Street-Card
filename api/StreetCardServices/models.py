@@ -61,7 +61,7 @@ class Homeless(models.Model):
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
-    PersonalId = models.CharField(max_length=32, blank=True, null=True)
+    PersonalId = models.CharField(max_length=32, blank=True, null=True, primary_key=True)
     FirstName = models.CharField(max_length=128, blank=True, null=True)
     MiddleName = models.CharField(max_length=128, blank=True, null=True)
     LastName = models.CharField(max_length=128, blank=True, null=True)
@@ -103,9 +103,9 @@ class SocialWorker(models.Model):
 
 class Log(models.Model):
     #datetime field can be retrieved relative to timezone and converted later.
-    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
-    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    serviceProvider = models.ForeignKey(SocialWorker, on_delete=models.CASCADE)
+    DateTime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
+    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    ServiceProvider = models.ForeignKey(SocialWorker, on_delete=models.CASCADE)
 
 
     
