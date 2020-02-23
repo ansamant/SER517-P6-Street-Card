@@ -15,7 +15,7 @@ class Homeless(models.Model):
 
     class SSNDataQuality(models.IntegerChoices):
         FULL_SSN_REPORTED = 1, _('Full SSN Reported')
-        PARTIAL_SSN_REPORTED = 2, _('Partial Name Reported')
+        PARTIAL_SSN_REPORTED = 2, _('Partial SSN Reported')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
@@ -30,7 +30,7 @@ class Homeless(models.Model):
     class Race(models.IntegerChoices):
         AMERICAN_INDIAN_OR_ALASKAN_NATIVE = 1, _('American India or Alaskan Native')
         ASIAN = 2, _('Asian')
-        BLACK_OR_AFRICAN_AMERICAN = 3, _('Balck or African American')
+        BLACK_OR_AFRICAN_AMERICAN = 3, _('Black or African American')
         NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER = 4, _('Native Hawaiian or Pacific Islander')
         WHITE = 5, _('White')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -61,7 +61,7 @@ class Homeless(models.Model):
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
-    PersonalId = models.CharField(max_length=32, blank=True, null=True)
+    PersonalId = models.CharField(max_length=32, primary_key=True, unique=True)
     FirstName = models.CharField(max_length=128, blank=True, null=True)
     MiddleName = models.CharField(max_length=128, blank=True, null=True)
     LastName = models.CharField(max_length=128, blank=True, null=True)
@@ -95,3 +95,12 @@ class SocialWorker(models.Model):
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+class UserNameAndIdMapping(models.Model):
+    
+   user_name = models.CharField(max_length=32, primary_key=True, unique=True)
+   user_id = models.IntegerField()
+
+
+

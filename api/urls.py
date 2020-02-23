@@ -16,15 +16,17 @@ Including another URLconf
 from django.urls import include, path
 from rest_framework import routers
 from api.StreetCardServices import views
-from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails
+from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails,HomelessView,UserViewSet,UserMapping
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib import admin
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
+router.register('mapping', UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register('register', SocialWorkerRegistration)
 router.register('socialinfo', SocialWorkerDetails)
+router.register('homeless', HomelessView)
+router.register('user', UserMapping)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

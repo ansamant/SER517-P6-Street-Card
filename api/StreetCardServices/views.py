@@ -1,14 +1,12 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer
-from .models import SocialWorker
-
+from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer,HomelessSerializer, UserNameAndIdMappingSerializer
+from .models import SocialWorker,Homeless,UserNameAndIdMapping
+from rest_framework.views import APIView
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
+    
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
@@ -28,3 +26,14 @@ class SocialWorkerRegistration(viewsets.ModelViewSet):
 class SocialWorkerDetails(viewsets.ModelViewSet):
     queryset = SocialWorker.objects.all()
     serializer_class = SocialWorkerSerializer
+
+
+
+class HomelessView(viewsets.ModelViewSet):
+    queryset = Homeless.objects.all()
+    serializer_class = HomelessSerializer
+
+
+class UserMapping(viewsets.ModelViewSet):
+    queryset = UserNameAndIdMapping.objects.all()
+    serializer_class = UserNameAndIdMappingSerializer
