@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .models import SocialWorker
+from .models import SocialWorker, Homeless
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,6 +24,13 @@ class SocialWorkerSerializer(ModelSerializer):
     class Meta:
         model = SocialWorker
         fields = ('id', 'clearanceLevel', 'address', 'serviceProvider')
+
+
+class HomelessSerializer(ModelSerializer):
+    class Meta:
+        model = Homeless
+        fields = '__all__'
+        read_only_fields =  '__all__'
 
 
 class UserSerializer(ModelSerializer):
