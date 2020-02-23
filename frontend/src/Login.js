@@ -13,11 +13,11 @@ import WrappedRegistrationForm from './Registration'
 
     super(props);
     this.state = {
-      loggedInStatus: this.props.loggedInStatus,
       loginPageStatus: "LOGIN_HEADER"
     };
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
   }
+
 
 
   handleLoginSubmit = e => {
@@ -33,10 +33,8 @@ import WrappedRegistrationForm from './Registration'
         })
           .then(res => res.json())
           .then(json => {
-            localStorage.setItem('token', json.access);
-            localStorage.setItem('refresh_token', json.refresh);
+            this.props.handleLogin(json,values.username);
             this.props.history.push('/socialWorkerRegister');
-            this.props.handleLogin();
           });
         }
     });

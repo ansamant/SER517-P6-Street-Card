@@ -90,3 +90,37 @@ body {
 .login-form {
 
 }
+
+.caseworker-homeless-registration-button {
+  width: 50%;
+  height: 60px;
+  border-radius: 4px;
+  border: 2px solid #4CAF50; /* Green */
+  position:relative;
+  top:50%; 
+  left:25%;
+  right: 50%;
+}
+
+.caseworker-homeless-registration-button:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.caseworker-homeless-field {
+  padding: 100px;
+  margin: 100px;
+}
+
+.personId-form {
+  width: 80%;
+  height: 50px;
+}
+
+.personId-form-input {
+  padding: 50px;
+  margin: 50px;
+}
+.ant-calendar-picker {
+  width: 100%;
+}

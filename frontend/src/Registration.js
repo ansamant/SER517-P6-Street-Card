@@ -55,11 +55,12 @@ const TITLE = 'Register Social worker'
 class RegistrationForm extends React.Component {
 
   constructor(props) {
-
     super(props);
-
+    console.log(this.props.username)
+    console.log(this.props.homelessPersonId)
     this.handleSocialWorkerRegistrationSubmit = this.handleSocialWorkerRegistrationSubmit.bind(this);
     this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
+    this.homelessRegistration = this.homelessRegistration.bind(this);
   }
 
   state = {
@@ -67,15 +68,55 @@ class RegistrationForm extends React.Component {
     autoCompleteResult: []
   };
 
+  componentDidMount() {
+    console.log("componentDidMount");
+    if(this.props.loggedInStatus === "LOGGED_IN" && this.props.username !== "shivamverma"){
+     var localClearanceLevel = ''
+     fetch('http://localhost:8000/user/' + this.props.username + '/', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+          .then(res => res.json())
+          .then(json => {
+            console.log("something", json);
+          localClearanceLevel = json.user.socialWorker.clearanceLevel;
+          console.log(localClearanceLevel);
+          this.setState({
+              clearanceLevel: localClearanceLevel
+            });
+      });
+    }
+  }
 
   handleSuccessfulLogoutAction() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refresh_token');
+    this.props.handleLogout();
     this.props.history.push('/login');
   }
 
-  handleSocialWorkerRegistrationSubmit = e => {
+   handlePersonalIdSubmit = e => {
     e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+
+      if (!err) {
+
+        console.log("personId",values.personId);
+        fetch('http://localhost:8000/homeless/'+ values.personId + '/', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+          .then(res => res.json())
+          .then(json => {
+            this.props.handleHomelessPersonData(json);
+            this.props.history.push('/homelessRegistration');
+          });
+      }
+    });
+  };
+
+  handleSocialWorkerRegistrationSubmit = e => {
+      e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
 
       if (!err) {
@@ -98,18 +139,17 @@ class RegistrationForm extends React.Component {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify(registerRequestObject)
         })
           .then(res => res.json())
           .then(json => {
-            console.log("register response:", json);
             this.props.history.push('/login');
           });
       }
     });
-  };
+  }
 
   handleConfirmBlur = e => {
     const { value } = e.target;
@@ -132,6 +172,11 @@ class RegistrationForm extends React.Component {
     }
     callback();
   };
+
+
+  homelessRegistration() {
+    this.props.history.push('/homelessRegistration');
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -160,7 +205,40 @@ class RegistrationForm extends React.Component {
       }
     };
 
-    return (
+    if(this.state.clearanceLevel === "caseworker" && "shivamverma" !== this.props.username){
+      return (
+      <div>
+      <Header 
+        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+        loggedInStatus={this.state.loggedInStatus}
+      />
+      <div className="caseworker-homeless-field">
+        <Button onClick={this.homelessRegistration} className="caseworker-homeless-registration-button" type="primary" block>Register Homeless Person</Button>
+      </div>
+      <div className="personId-form-input">
+        <Form {...formItemLayout} onSubmit={this.handlePersonalIdSubmit} className="personId-form">
+        <Form.Item label="Homeless Person Identification Number">
+          {getFieldDecorator("personId", {
+            rules: [
+              {
+                required: true,
+                message: "Please input Identification Number!",
+                whitespace: true
+              }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit">
+            Search
+          </Button>
+        </Form.Item>
+      </Form>
+      </div>
+      </div>
+    );
+    }else{
+      return (
       <div>
       <Header 
         handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
@@ -281,6 +359,8 @@ class RegistrationForm extends React.Component {
       </Form>
       </div>
     );
+    }
+    
   }
 }
 

@@ -4,6 +4,7 @@ import LandingPage from './LandingPage';
 import Login from './Login';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Registration from './Registration'
+import HomelessRegistration from './HomelessRegistration'
 
 
 export default class App extends React.Component {
@@ -13,11 +14,16 @@ export default class App extends React.Component {
     super();
 
     this.state = {
-      loggedInStatus: "NOT_LOGGED_IN"
+      loggedInStatus: localStorage.getItem('token') ? "LOGGED_IN" : "NOT_LOGGED_IN",
+      username: '',
+      homelessPersonId: 0,
+      homelessData: {}
     };
 
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleHomelessPersonId = this.handleHomelessPersonId.bind(this);
+    this.handleHomelessPersonData = this.handleHomelessPersonData.bind(this);
   }
 
 
@@ -31,23 +37,39 @@ export default class App extends React.Component {
   }
 
   handleLogout() {
-    this.setState({
-      loggedInStatus: "NOT_LOGGED_IN"
-    });
-  }
-
-  componentDidMount() {
-   // this.checkLoginStatus();
-  }
-
-   handleLogin() {
-    this.setState({
-      loggedInStatus: "LOGGED_IN"
-    });    
+      localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
   }
 
 
+   handleLogin(json,user_name) {
+     localStorage.setItem('token', json.access);
+     localStorage.setItem('refresh_token', json.refresh);
+     console.log(user_name);
+     this.setState({ 
+              username: user_name,
+              loggedInStatus: "LOGGED_IN"
+            });
+     console.log(this.state.username);
+     console.log(this.state.loggedInStatus);
+  }
 
+  handleHomelessPersonId(person_id){
+      this.setState({ 
+              homelessPersonId: person_id
+            });
+  }
+
+  handleHomelessPersonData(data){
+    console.log("data",data);
+   
+      this.setState({ 
+              homelessData: data
+            });
+      console.log(this.state.homelessData);
+    
+      
+  }
   render() {
     return (
       <div>
@@ -70,8 +92,6 @@ export default class App extends React.Component {
                 <Login
                   {...props}
                   handleLogin={this.handleLogin}
-                  handleLogout={this.handleLogout}
-                  loggedInStatus={this.state.loggedInStatus}
                 />
               )}
             />
@@ -81,9 +101,27 @@ export default class App extends React.Component {
               render={props => (
                 <Registration
                   {...props}
-                  handleLogin={this.handleLogin}
                   handleLogout={this.handleLogout}
                   loggedInStatus={this.state.loggedInStatus}
+                  handlUser={this.handlUser}
+                  username={this.state.username}
+                  homelessPersonId={this.state.homelessPersonId}
+                  handleHomelessPersonData={this.handleHomelessPersonData}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={"/homelessRegistration"}
+              render={props => (
+                <HomelessRegistration
+                  {...props}
+                  handleLogout={this.handleLogout}
+                  loggedInStatus={this.state.loggedInStatus}
+                  handlUser={this.handlUser}
+                  username ={this.state.username}
+                  handleHomelessPersonId={this.handleHomelessPersonId}
+                  homelessData={this.state.homelessData}
                 />
               )}
             />
