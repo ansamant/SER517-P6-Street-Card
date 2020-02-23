@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
-    IncomeSerializer, NonCashBenefitsSerializer
-from .models import SocialWorker, Enrollment, IncomeAndSources, NonCashBenefits, Homeless
+    NonCashBenefitsSerializer, IncomeSerializer
+from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources
 
 from collections import namedtuple
 

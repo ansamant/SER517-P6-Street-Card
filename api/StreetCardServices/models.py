@@ -1,7 +1,8 @@
-from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from .utils import primary_key_generator
 
 
 class ResponseCategory(models.IntegerChoices):
@@ -111,17 +112,8 @@ class SocialWorker(models.Model):
 
 
 # Work in Progress
-class ProjectCategory(models.IntegerChoices):
-    HUD_COC_HOMELESS_PREVENTION = 0, _('HUD:CoC-HomelessPrevention')
-
-
-class ProjectCategoryName(models.TextChoices):
+class ProjectCategory(models.TextChoices):
     HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
-
-
-class Project(models.Model):
-    ProjectName = models.TextField(choices=ProjectCategoryName.choices)
-    ProjectType = models.IntegerField(choices=ProjectCategory.choices, null=True)
 
 
 class SubstanceAbuseCategory(models.IntegerChoices):
@@ -146,10 +138,10 @@ class DomesticViolenceOccurrence(models.IntegerChoices):
 
 class Enrollment(models.Model):
     DisablingCondition = models.IntegerField(choices=YesNoResponse.choices, default=YesNoResponse.NO)
-    EnrollmentID = models.CharField(max_length=32, primary_key=True)
+    EnrollmentID = models.CharField(max_length=32, primary_key=True, default=primary_key_generator())
     PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None,
                                    related_name='Enrollment_PersonalId')
-    Project = models.IntegerField(choices=ProjectCategory.choices, null=True)
+    ProjectCategory = models.TextField(choices=ProjectCategory.choices, default=None, null=True)
     EntryDate = models.DateField(null=True)
     ExitDate = models.DateField(null=True)
 
@@ -157,7 +149,6 @@ class Enrollment(models.Model):
 class DomesticViolence(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='DomesticViolence_EnrollmentID')
-    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='DomesticViolence_PersonalId')
     InformationDate = models.DateField()
     DomesticViolenceVictim = models.IntegerField(choices=YesNoResponse.choices)
     WhenOccurred = models.IntegerField(choices=DomesticViolenceOccurrence.choices)
@@ -167,23 +158,22 @@ class DomesticViolence(models.Model):
 class DisablingCondition(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='DisablingCondition_EnrollmentID')
-    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='DisablingCondition_PersonalId')
     InformationDate = models.DateField()
-    PHYSICAL_DISABILITY = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
-    PHYSICAL_DISABILITY_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
+    physical_disability = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    physical_disability_impairing = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
                                                         default=None)
-    DEVELOPMENTAL_DISABILITY = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
-    DEVELOPMENTAL_DISABILITY_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
+    developmental_disability = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    developmental_disability_impairing = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
                                                              default=None)
-    CHRONIC_HEALTH = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
-    CHRONIC_HEALTH_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
+    chronic_health = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    chronic_health_impairing = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
                                                    default=None)
-    HIV_AIDS = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
-    HIV_AIDS_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True, default=None)
-    MENTAL_HEALTH = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
-    MENTAL_HEALTH_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True, default=None)
-    SUBSTANCE_ABUSE = models.IntegerField(choices=SubstanceAbuseCategory.choices, null=True, default=None)
-    SUBSTANCE_ABUSE_IMPAIRING = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
+    hiv_aids = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    hiv_aids_impairing = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True, default=None)
+    mental_health = models.IntegerField(choices=ResponseCategory.choices, null=True, default=None)
+    mental_health_impairing = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True, default=None)
+    substance_abuse = models.IntegerField(choices=SubstanceAbuseCategory.choices, null=True, default=None)
+    substance_abuse_impairing = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
                                                     default=None)
 
     # Work in Progress
@@ -192,8 +182,6 @@ class DisablingCondition(models.Model):
 class IncomeAndSources(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='IncomeAndSources_EnrollmentID',
                                      default=None)
-    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='IncomeAndSources_PersonalId',
-                                   default=None)
     InformationDate = models.DateField()
     IncomeFromAnySources = models.IntegerField(choices=ResponseCategory.choices)
     Earned = models.IntegerField(choices=YesNoResponse.choices, default=0)
@@ -233,8 +221,6 @@ class IncomeAndSources(models.Model):
 class NonCashBenefits(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='NonCashBenefits_EnrollmentID',
                                      default=None)
-    PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, related_name='NonCashBenefits_PersonalId',
-                                   default=None)
     InformationDate = models.DateField()
     BenefitsFromAnySource = models.IntegerField(choices=ResponseCategory.choices)
     SNAP = models.IntegerField(choices=YesNoResponse.choices)
@@ -259,6 +245,8 @@ class HealthInsurance(models.Model):
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='HealthInsurance_EnrollmentID',
+                                     default=None)
     InformationDate = models.DateField()
     CoveredByHealthInsurance = models.IntegerField(choices=ResponseCategory.choices)
     Medicaid = models.IntegerField(choices=YesNoResponse.choices)

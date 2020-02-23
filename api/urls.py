@@ -16,8 +16,9 @@ Including another URLconf
 from django.urls import include, path
 from rest_framework import routers
 from api.StreetCardServices import views
-from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails, EnrollmentViewSet, \
-    IncomeDetails, NonCashDetails
+from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails, \
+    NonCashDetails, IncomeDetails, EnrollmentViewSet
+
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib import admin
 
