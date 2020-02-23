@@ -292,7 +292,7 @@ class W1ServicesProvidedHOPWA(models.Model):
         OTHER_HOPWA_FUNDED_SERVICE = 14, _('Other HOPWA funded service')
 
     DateOfService = models.DateField()
-    TypeOfService = models.ImageField(choices=HOPWAServiceType.choices)
+    TypeOfService = models.IntegerField(choices=HOPWAServiceType.choices)
 
 
 class FinancialAssistanceHOPWA(models.Model):
@@ -304,8 +304,8 @@ class FinancialAssistanceHOPWA(models.Model):
         MORTGAGE_ASSISTANCE = 7, _('Mortgage assistance')
 
     DateOfFinancialAssistance = models.DateField()
-    FinancialAssistanceType = models.IntegerChoices(choices=FinancialAssistanceTypeCategory.choices)
-    FinancialAssistanceAmount = models.ImageField(default=0)
+    FinancialAssistanceType = models.IntegerField(choices=FinancialAssistanceTypeCategory.choices)
+    FinancialAssistanceAmount = models.IntegerField(default=0)
 
 
 class MedicalAssistanceHOPWA(models.Model):
@@ -319,10 +319,10 @@ class MedicalAssistanceHOPWA(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     InformationDate = models.DateField()
-    ReceivingPublicHIVAIDSMedicalAssistance = models.IntegerChoices(choices=ResponseCategory.choices)
-    IfNoReason = models.IntegerChoices(choices=IfNoReasonTypeCategory.choices)
-    ReceivingAIDSDrugAssistanceProgram = models.IntegerChoices(choices=ResponseCategory.choices)
-    IfNoReason = models.IntegerChoices(choices=IfNoReasonTypeCategory.choices)
+    ReceivingPublicHIVAIDSMedicalAssistance = models.IntegerField(choices=ResponseCategory.choices)
+    IfNoReason = models.IntegerField(choices=IfNoReasonTypeCategory.choices)
+    ReceivingAIDSDrugAssistanceProgram = models.IntegerField(choices=ResponseCategory.choices)
+    IfNoReason = models.IntegerField(choices=IfNoReasonTypeCategory.choices)
 
 
 class TCellCD4AndViralLoadHOPWA(models.Model):
@@ -332,12 +332,12 @@ class TCellCD4AndViralLoadHOPWA(models.Model):
         OTHER = 3, _('Other')
 
     InformationDate = models.DateField()
-    TCellCD4CountAvailable = models.IntegerChoices(choices=ResponseCategory.choices)
+    TCellCD4CountAvailable = models.IntegerField(choices=ResponseCategory.choices)
     IfYesTCellCount = models.IntegerField(validators=[MaxValueValidator(0), MinValueValidator(1500)])
-    HowWasTheInformationObtained = models.IntegerChoices(choices=InformationObtainedResponseCategory.choices)
-    ViralLoadInformationAvailable = models.IntegerChoices(choices=ResponseCategory.choices)
+    HowWasTheInformationObtained = models.IntegerField(choices=InformationObtainedResponseCategory.choices)
+    ViralLoadInformationAvailable = models.IntegerField(choices=ResponseCategory.choices)
     ViralLoadCount = models.IntegerField(validators=[MaxValueValidator(0), MinValueValidator(999999)])
-    HowWasTheInformationObtained = models.IntegerChoices(choices=InformationObtainedResponseCategory.choices)
+    HowWasTheInformationObtained = models.IntegerField(choices=InformationObtainedResponseCategory.choices)
 
 
 class HousingAssessmentAtExitHOPWA(models.Model):
@@ -369,6 +369,6 @@ class HousingAssessmentAtExitHOPWA(models.Model):
         WITH_ONGOING_SUBSIDY = 1, _('With ongoing subsidy')
         WITHOUT_AN_ONGOING_SUBSIDY = 2, _('Without an ongoing subsidy')
 
-    HousingAssessmentAtExit = models.IntegerChoices(choices=HousingAssessmentAtExitResponseCategory.choices)
-    SubsidyInformation = models.IntegerChoices(choices=SubsidyInformationResponseCategory.choices)
-    SubsidyInformation = models.IntegerChoices(choices=AnotherSubsidyInformationResponseCategory.choices)
+    HousingAssessmentAtExit = models.IntegerField(choices=HousingAssessmentAtExitResponseCategory.choices)
+    SubsidyInformation = models.IntegerField(choices=SubsidyInformationResponseCategory.choices)
+    SubsidyInformation = models.IntegerField(choices=AnotherSubsidyInformationResponseCategory.choices)
