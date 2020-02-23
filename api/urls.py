@@ -16,7 +16,9 @@ Including another URLconf
 from django.urls import include, path
 from rest_framework import routers
 from api.StreetCardServices import views
-from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails, HomelessDetails
+from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails, \
+    NonCashDetails, IncomeDetails, EnrollmentViewSet, HomelessDetails, AppointmentViewSet
+
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib import admin
 
@@ -26,7 +28,10 @@ router.register(r'groups', views.GroupViewSet)
 router.register('register', SocialWorkerRegistration)
 router.register('socialinfo', SocialWorkerDetails)
 router.register('homeless', HomelessDetails)
-
+router.register('enrollment', EnrollmentViewSet)
+router.register('income', IncomeDetails)
+router.register('noncash', NonCashDetails)
+router.register('homeless/<char:pk>/appointment/', AppointmentViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
