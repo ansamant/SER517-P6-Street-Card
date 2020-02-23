@@ -95,3 +95,19 @@ class SocialWorker(models.Model):
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+class Appointments(models.Model):
+    class ServiceProvider(models.TextChoices):
+        FOOD_PANTRY = "FP", _("Food Pantry")
+        DROP_IN_CENTRE = "DIC", _("Drop-in Centre")
+        SHELTER_HOMES = "SH", _("Shelter Home")
+        SOUP_KITCHEN = "SK", _("Soup Kitchen")
+        NOT_AVAILABLE = "NA", _("Not Available")
+        OTHERS = "OTH", _("Others")
+
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    appointmentId = models.IntegerField(primary_key=True)
+    venue = models.CharField(max_length=500, blank=True, null=False)
+    DateTime = models.DateTimeField(auto_now=False, auto_now_add=False)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
