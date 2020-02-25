@@ -54,4 +54,4 @@ class HomelessSerializer(ModelSerializer):
     class Meta:
         model = Homeless
         fields = '__all__'
-        read_only_fields =  '__all__'
+        

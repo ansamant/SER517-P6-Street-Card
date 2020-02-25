@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, HomelessSerializer, LogSerializer
 from .models import SocialWorker, Homeless, Log
-
+from rest_framework.response import Response
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -30,11 +30,16 @@ class SocialWorkerDetails(viewsets.ModelViewSet):
     serializer_class = SocialWorkerSerializer
 
 class HomelessEntry(viewsets.ModelViewSet):
-    def create(self, request, pk=None):
-        queryset= Homeless.objects.all()
-        serializer_class = HomelessSerializer
+    queryset= Homeless.objects.all()
+    serializer_class = HomelessSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
 
 class LogEntry(viewsets.ModelViewSet):
-    def create(self, request, pk=None):
-        queryset= Log.objects.all()
-        serializer_class = LogSerializer
+    queryset= Log.objects.all()
+    serializer_class = LogSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    
