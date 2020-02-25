@@ -116,14 +116,17 @@ class SocialWorker(models.Model):
 # Work in Progress
 class ProjectCategory(models.TextChoices):
     HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
-    HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 1, _('HUD:HOPWA – Hotel/Motel Vouchers')
-    HUD_HOPWA_HOUSING_INFORMATION = 2, _('HUD:HOPWA – Housing Information')
-    HUD_HOPWA_PERMANENT_HOUSING = 3, _('HUD:HOPWA – Permanent Housing (facility based or TBRA)')
-    HUD_HOPWA_PERMANENT_HOUSING_PLACEMENT = 4, _('HUD:HOPWA – Permanent Housing Placement')
-    HUD_HOPWA_SHORT_TERM_RENT_MORTGAGE_UTILITY_ASSISTANCE = 5, _(
+    HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 'HUD:HOPWA – Hotel/Motel Vouchers', _('HUD:HOPWA – Hotel/Motel Vouchers')
+    HUD_HOPWA_HOUSING_INFORMATION = 'HUD:HOPWA – Housing Information', _('HUD:HOPWA – Housing Information')
+    HUD_HOPWA_PERMANENT_HOUSING = 'HUD:HOPWA – Permanent Housing (facility based or TBRA)', _(
+        'HUD:HOPWA – Permanent Housing (facility based or TBRA)')
+    HUD_HOPWA_PERMANENT_HOUSING_PLACEMENT = 'HUD:HOPWA – Permanent Housing Placement', _(
+        'HUD:HOPWA – Permanent Housing Placement')
+    HUD_HOPWA_SHORT_TERM_RENT_MORTGAGE_UTILITY_ASSISTANCE = 'HUD:HOPWA – Short-Term Rent, Mortgage, Utility assistance', _(
         'HUD:HOPWA – Short-Term Rent, Mortgage, Utility assistance')
-    HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 6, _('HUD:HOPWA – Short-Term Supportive Facility')
-    HUD_HOPWA_TransitionalHousing = 7, _('HUD:HOPWA – Transitional Housing')
+    HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 'HUD:HOPWA – Short-Term Supportive Facility', _(
+        'HUD:HOPWA – Short-Term Supportive Facility')
+    HUD_HOPWA_TransitionalHousing = 'HUD:HOPWA – Transitional Housing', _('HUD:HOPWA – Transitional Housing')
 
 
 class SubstanceAbuseCategory(models.IntegerChoices):

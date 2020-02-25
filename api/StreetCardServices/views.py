@@ -7,10 +7,6 @@ from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer
     NonCashBenefitsSerializer, IncomeSerializer
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources
 
-from collections import namedtuple
-
-Combined = namedtuple('Combined', ('income', 'noncash'))
-
 
 class UserViewSet(viewsets.ModelViewSet):
     """
