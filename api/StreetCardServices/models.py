@@ -393,3 +393,90 @@ class HousingAssessmentAtExitHOPWA(models.Model):
                                      default=None)
     HousingAssessmentAtExit = models.IntegerField(choices=HousingAssessmentAtExitResponseCategory.choices)
     SubsidyInformation = models.IntegerField(choices=SubsidyInformationResponseCategory.choices)
+
+
+class LivingSituationResponse(models.IntegerChoices):
+    HOMELESS_SITUATION = 1, _("Homeless")
+    INSTITUTIONAL_SITUATION = 2, _("Institutional Housing")
+    TEMPORARY_AND_PERMANENT_HOUSING_SITUATION = 3, _("Temporary or Permanent Housing")
+    OTHER = 4, _("Other")
+
+
+class CurrentLivingSituation(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='CurrentLivingSituation_EnrollmentID',
+                                     default=None)
+    InformationDate = models.DateField()
+    CurrentLivingSituation = models.IntegerField(choices=LivingSituationResponse.choices)
+    VerifiedByProject = models.TextField(choices=ProjectCategory.choices)
+    HasToLeaveCurrentSituation = models.IntegerField(choices=ResponseCategory.choices)
+    HasASubsequentResidence = models.IntegerField(choices=ResponseCategory.choices)
+    HasResourcesToObtainPermanentHousing = models.IntegerField(choices=ResponseCategory.choices)
+    OwnershipInPermanentHousing = models.IntegerField(choices=ResponseCategory.choices)
+    HasClientMoved = models.IntegerField(choices=ResponseCategory.choices)
+    LocationDetails = models.TextField(blank=True, null=True)
+
+
+class DateOfEngagement(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='DateOfEngagement_EnrollmentID',
+                                     default=None)
+    DateOfEngagement = models.DateField()
+
+
+class BedNightDate(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='BedNightDate_EnrollmentID',
+                                     default=None)
+    BedNightDate = models.DateField()
+
+
+class AssessmentTypeCategory(models.IntegerChoices):
+    PHONE = 1, _("Phone")
+    VIRTUAL = 2, _("Virtual")
+    IN_PERSON = 3, _("In Person")
+
+
+class AssessmentLevelCategory(models.IntegerChoices):
+    CRISIS_NEED_ASSESSMENT = 1, _("Crisis Need Assessment")
+    HOUSING_NEED_ASSESSMENT = 2, _("Housing Need Assessment")
+
+
+class PrioritizationStatusCategory(models.IntegerChoices):
+    ON_PRIORITY_LIST = 1, _("On Priority List")
+    NOT_ON_PRIORITY_LIST = 2, _("Not on Priority List")
+
+
+class CoordinatedEntryAssessment(models.Model):
+    DateOfAssessment = models.DateField()
+    AssessmentLocation = models.TextField(max_length=250)  # Admin-managed list of locations
+    AssessmentType = models.IntegerField(choices=AssessmentTypeCategory.choices)
+    AssessmentLevel = models.IntegerField(choices=AssessmentLevelCategory.choices)
+    AssessmentQuestion = models.TextField(max_length=250)
+    AssessmentAnswer = models.TextField(max_length=250)
+    AssessmentResultType = models.TextField(max_length=250)
+    AssessmentResult = models.TextField(max_length=250)
+    PrioritizationStatus = models.IntegerField(choices=PrioritizationStatusCategory.choices)
+
+
+# class EventCategoryType(models.TextField):
+#     PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
+#     DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
+#     _("Scheduled Coordinated Entry Crisis Assessment")
+#     _("Scheduled Coordinated Entry Housing Needs Assessment")
+#     _("Post Placement/ Follow-up Case Management")
+#     _("Street Outreach Project or Services")
+#     _("Housing Navigation Project or Services")
+#     _("Ineligible for continuum services")
+#     _("No availability in continuum services")
+#     _("Emergency Shelter bed opening")
+#     _("Transitional Housing bed/unit opening")
+#     _("Joint TH-RRH project/unit/resource opening")
+#     _("RRH Project Resource Opening")
+#     _("PSH Project Resource Opening")
+#     _("Other Project/Unit/Resource Opening")
+
+#
+# class CoordinatedEntryEvent(models.Model):
+#     DateOfEvent = models.DateField()
+#     Event = models.IntegerField(choices=EventCategoryType.choices)
