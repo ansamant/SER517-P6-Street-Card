@@ -29,7 +29,7 @@ class ViewAppointments extends React.Component {
 
 
   componentDidMount() {
-     fetch('http://127.0.0.1:8000/appointment/', {
+     fetch('http://127.0.0.1:8000/homeless/' + 4808684002 + '/appointment/' , {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

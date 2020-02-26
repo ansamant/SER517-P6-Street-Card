@@ -83,6 +83,10 @@ class Homeless(models.Model):
     LastName = models.CharField(max_length=128, blank=True, null=True)
     NameSuffix = models.CharField(max_length=128, blank=True, null=True)
     NameDataQuality = models.IntegerField(choices=NameDataQuality.choices)
+    # TODO
+    # Update with proper regex to validate SSN
+    # Remove MaxLengthValidator and MinLengthValidator as they will throw an error for integer fields.
+    # Convert to CharField because this would also contain '-' (hyphens)
     SSN = models.IntegerField(validators=[MaxLengthValidator(9), MinLengthValidator(4)], blank=True, null=True)
     SSNDataQuality = models.IntegerField(choices=SSNDataQuality.choices)
     DOB = models.DateField(blank=True, null=True)
@@ -116,7 +120,7 @@ class SocialWorker(models.Model):
 
 class Appointments(models.Model):
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    appointmentId = models.CharField(primary_key=True, default=primary_key_generator(),max_length=32)
+    appointmentId = models.CharField(primary_key=True, default=primary_key_generator(), max_length=32)
     venue = models.CharField(max_length=500, blank=True, null=False)
     DateTime = models.DateTimeField(auto_now=False, auto_now_add=False)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
@@ -125,14 +129,17 @@ class Appointments(models.Model):
 # Work in Progress
 class ProjectCategory(models.TextChoices):
     HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
-    HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 1, _('HUD:HOPWA – Hotel/Motel Vouchers')
-    HUD_HOPWA_HOUSING_INFORMATION = 2, _('HUD:HOPWA – Housing Information')
-    HUD_HOPWA_PERMANENT_HOUSING = 3, _('HUD:HOPWA – Permanent Housing (facility based or TBRA)')
-    HUD_HOPWA_PERMANENT_HOUSING_PLACEMENT = 4, _('HUD:HOPWA – Permanent Housing Placement')
-    HUD_HOPWA_SHORT_TERM_RENT_MORTGAGE_UTILITY_ASSISTANCE = 5, _(
+    HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 'HUD:HOPWA – Hotel/Motel Vouchers', _('HUD:HOPWA – Hotel/Motel Vouchers')
+    HUD_HOPWA_HOUSING_INFORMATION = 'HUD:HOPWA – Housing Information', _('HUD:HOPWA – Housing Information')
+    HUD_HOPWA_PERMANENT_HOUSING = 'HUD:HOPWA – Permanent Housing (facility based or TBRA)', _(
+        'HUD:HOPWA – Permanent Housing (facility based or TBRA)')
+    HUD_HOPWA_PERMANENT_HOUSING_PLACEMENT = 'HUD:HOPWA – Permanent Housing Placement', _(
+        'HUD:HOPWA – Permanent Housing Placement')
+    HUD_HOPWA_SHORT_TERM_RENT_MORTGAGE_UTILITY_ASSISTANCE = 'HUD:HOPWA – Short-Term Rent, Mortgage, Utility assistance', _(
         'HUD:HOPWA – Short-Term Rent, Mortgage, Utility assistance')
-    HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 6, _('HUD:HOPWA – Short-Term Supportive Facility')
-    HUD_HOPWA_TransitionalHousing = 7, _('HUD:HOPWA – Transitional Housing')
+    HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 'HUD:HOPWA – Short-Term Supportive Facility', _(
+        'HUD:HOPWA – Short-Term Supportive Facility')
+    HUD_HOPWA_TransitionalHousing = 'HUD:HOPWA – Transitional Housing', _('HUD:HOPWA – Transitional Housing')
 
 
 class SubstanceAbuseCategory(models.IntegerChoices):
@@ -394,3 +401,89 @@ class HousingAssessmentAtExitHOPWA(models.Model):
                                      default=None)
     HousingAssessmentAtExit = models.IntegerField(choices=HousingAssessmentAtExitResponseCategory.choices)
     SubsidyInformation = models.IntegerField(choices=SubsidyInformationResponseCategory.choices)
+
+
+class LivingSituationResponse(models.IntegerChoices):
+    HOMELESS_SITUATION = 1, _("Homeless")
+    INSTITUTIONAL_SITUATION = 2, _("Institutional Housing")
+    TEMPORARY_AND_PERMANENT_HOUSING_SITUATION = 3, _("Temporary or Permanent Housing")
+    OTHER = 4, _("Other")
+
+
+class CurrentLivingSituation(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='CurrentLivingSituation_EnrollmentID',
+                                     default=None)
+    InformationDate = models.DateField()
+    CurrentLivingSituation = models.IntegerField(choices=LivingSituationResponse.choices)
+    VerifiedByProject = models.TextField(choices=ProjectCategory.choices)
+    HasToLeaveCurrentSituation = models.IntegerField(choices=ResponseCategory.choices)
+    HasASubsequentResidence = models.IntegerField(choices=ResponseCategory.choices)
+    HasResourcesToObtainPermanentHousing = models.IntegerField(choices=ResponseCategory.choices)
+    OwnershipInPermanentHousing = models.IntegerField(choices=ResponseCategory.choices)
+    HasClientMoved = models.IntegerField(choices=ResponseCategory.choices)
+    LocationDetails = models.TextField(blank=True, null=True)
+
+
+class DateOfEngagement(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='DateOfEngagement_EnrollmentID',
+                                     default=None)
+    DateOfEngagement = models.DateField()
+
+
+class BedNightDate(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='BedNightDate_EnrollmentID',
+                                     default=None)
+    BedNightDate = models.DateField()
+
+
+class AssessmentTypeCategory(models.IntegerChoices):
+    PHONE = 1, _("Phone")
+    VIRTUAL = 2, _("Virtual")
+    IN_PERSON = 3, _("In Person")
+
+
+class AssessmentLevelCategory(models.IntegerChoices):
+    CRISIS_NEED_ASSESSMENT = 1, _("Crisis Need Assessment")
+    HOUSING_NEED_ASSESSMENT = 2, _("Housing Need Assessment")
+
+
+class PrioritizationStatusCategory(models.IntegerChoices):
+    ON_PRIORITY_LIST = 1, _("On Priority List")
+    NOT_ON_PRIORITY_LIST = 2, _("Not on Priority List")
+
+
+class CoordinatedEntryAssessment(models.Model):
+    DateOfAssessment = models.DateField()
+    AssessmentLocation = models.TextField(max_length=250)  # Admin-managed list of locations
+    AssessmentType = models.IntegerField(choices=AssessmentTypeCategory.choices)
+    AssessmentLevel = models.IntegerField(choices=AssessmentLevelCategory.choices)
+    AssessmentQuestion = models.TextField(max_length=250)
+    AssessmentAnswer = models.TextField(max_length=250)
+    AssessmentResultType = models.TextField(max_length=250)
+    AssessmentResult = models.TextField(max_length=250)
+    PrioritizationStatus = models.IntegerField(choices=PrioritizationStatusCategory.choices)
+
+# class EventCategoryType(models.TextField):
+#     PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
+#     DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
+#     _("Scheduled Coordinated Entry Crisis Assessment")
+#     _("Scheduled Coordinated Entry Housing Needs Assessment")
+#     _("Post Placement/ Follow-up Case Management")
+#     _("Street Outreach Project or Services")
+#     _("Housing Navigation Project or Services")
+#     _("Ineligible for continuum services")
+#     _("No availability in continuum services")
+#     _("Emergency Shelter bed opening")
+#     _("Transitional Housing bed/unit opening")
+#     _("Joint TH-RRH project/unit/resource opening")
+#     _("RRH Project Resource Opening")
+#     _("PSH Project Resource Opening")
+#     _("Other Project/Unit/Resource Opening")
+
+#
+# class CoordinatedEntryEvent(models.Model):
+#     DateOfEvent = models.DateField()
+#     Event = models.IntegerField(choices=EventCategoryType.choices)

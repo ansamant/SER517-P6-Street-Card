@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Form, DatePicker, TimePicker, Button, Icon,  Cascader, Input } from 'antd';
+import { Form, DatePicker, TimePicker, Button, Icon,  Cascader, Input, Descriptions } from 'antd';
 import WrappedViewAppointments from "./ViewAppointments";
 import Header from './HeaderCommon.js'
 import StreetCardFooter from './StreetCardFooter'
@@ -32,7 +32,7 @@ class SetAppointments extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [],
+            items: {},
             isLoaded: false,
         }
     }
@@ -56,7 +56,7 @@ class SetAppointments extends React.Component {
 
 
   componentDidMount() {
-     fetch('http://127.0.0.1:8000/homeless/', {
+     fetch('http://127.0.0.1:8000/homeless/' + 4808684002 + '/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -65,6 +65,7 @@ class SetAppointments extends React.Component {
         })
          .then(res => res.json())
          .then(json => {
+             console.log(json)
              this.setState({
                  isLoaded: true,
                  items:json,
@@ -78,7 +79,7 @@ class SetAppointments extends React.Component {
 
 
   render() {
-      const {isLoaded, items} = this.state;
+      const {items} = this.state;
       const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
           labelCol: {
@@ -97,9 +98,12 @@ class SetAppointments extends React.Component {
         <div>
           <Header/>
       <Form {...formItemLayout} onSubmit={this.handleSubmit} className="set-appointment-form">
-          <h1>Client Details:</h1>
           <Form.Item >
-        <div>{items.map(item => (<li key={item.PersonalId}>PersonalId : {item.PersonalId} | FirstName : {item.FirstName} | LastName : {item.LastName}</li>))}</div>
+              <Descriptions title="Client Details: ">
+                <Descriptions.Item label="PersonalId">{items.PersonalId}</Descriptions.Item>
+                <Descriptions.Item label="FirstName">{items.FirstName}</Descriptions.Item>
+                <Descriptions.Item label="LastName">{items.LastName}</Descriptions.Item>
+              </Descriptions>,
        </Form.Item>
         <h1>Fill the details of new appointment here:</h1>
           <Form.Item label="Service Provider">

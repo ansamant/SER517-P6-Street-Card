@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api.StreetCardServices',
     'corsheaders',
+    'rest_framework_nested'
 ]
 
 MIDDLEWARE = [

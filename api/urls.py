@@ -14,10 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import include, path
-from rest_framework import routers
+# from rest_framework import routers
+from rest_framework_nested import routers
 from api.StreetCardServices import views
 from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails, \
-    NonCashDetails, IncomeDetails, EnrollmentViewSet, HomelessDetails, AppointmentViewSet
+    NonCashDetails, IncomeDetails, EnrollmentViewSet, HomelessViewSet, AppointmentViewSet
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib import admin
@@ -27,16 +28,19 @@ router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register('register', SocialWorkerRegistration)
 router.register('socialinfo', SocialWorkerDetails)
-router.register('homeless', HomelessDetails)
-router.register('enrollment', EnrollmentViewSet)
 router.register('income', IncomeDetails)
 router.register('noncash', NonCashDetails)
-router.register('appointment', AppointmentViewSet)
+router.register('homeless', HomelessViewSet, basename='homeless')
+enroll_router = routers.NestedSimpleRouter(router, r'homeless', lookup='homeless')
+enroll_router.register(r'enrollment', EnrollmentViewSet, basename='enrollment')
+enroll_router.register(r'appointment', AppointmentViewSet, basename='appointment')
+
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('', include(enroll_router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
