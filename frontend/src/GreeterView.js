@@ -2,12 +2,45 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Form, Input, Button, Descriptions} from 'antd';
+import { Form, Input, Button} from 'antd';
 import Header from './HeaderCommon.js'
 import StreetCardFooter from './StreetCardFooter'
 
-class Greeter extends React.Component{
+class GreeterView extends React.Component{
+
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        items: {},
+        isLoaded: false,
+    }
+  }
+  
+
+  componentDidMount() {
+    fetch('http://127.0.0.1:8000/homeless/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          },
+        })
+         .then(res => res.json())
+         .then(json => {
+           console.log(json)
+             this.setState({
+                 isLoaded: true,
+                 items: json.results,
+                 }
+             )
+         })
+      console.log(this.items);
+  }
+  
+
     render(){
+        const {isLoaded, items} = this.state;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: {
@@ -34,9 +67,9 @@ class Greeter extends React.Component{
         return(
             <div>
                 <Header/>,
-                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="registration-form ">
+                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="log-form ">
                     <h1>Enter Magstripe Id:</h1>
-                    <Form.Item label="homelessID">
+                    <Form.Item label="clientID">
                         {getFieldDecorator("username", {
                             rules: [
                             {
@@ -52,14 +85,20 @@ class Greeter extends React.Component{
                             Submit
                         </Button>
                     </Form.Item>
+                    <Form.Item >
+                      <div>{items.map(item => (<li key={item.PersonalId}>PersonalId : {item.PersonalId} | FirstName : {item.FirstName} </li>))}</div>
+                    </Form.Item>
                 </Form>
+                <StreetCardFooter/>
             </div>
-        )
+        );
     }
 }
 
+//ReactDOM.render(<Greeter/>, document.getElementById('greeter'));
+
 const WrappedGreeterForm = Form.create({ name: "greeter" })(
-    Greeter
+    GreeterView
   );
   
   export default WrappedGreeterForm;

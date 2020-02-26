@@ -4,6 +4,7 @@ import 'antd/dist/antd.css';
 import './index.css';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import Header from './HeaderCommon.js'
+import WrappedGreeterForm from './GreeterView'
 import StreetCardFooter from './StreetCardFooter'
 import WrappedRegistrationForm from './Registration'
 
@@ -84,7 +85,7 @@ import WrappedRegistrationForm from './Registration'
                 </div>;
         break;
       case 'signup':
-        form = <WrappedRegistrationForm />;
+        form = <WrappedGreeterForm />;
         break;
       default:
         form = null;

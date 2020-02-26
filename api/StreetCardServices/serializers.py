@@ -49,9 +49,10 @@ class LogSerializer(ModelSerializer):
         model = Log
         fields = '__all__'
 
+
 # Serializing and Deserializing data from the Homeless DB table
 class HomelessSerializer(ModelSerializer):
     class Meta:
         model = Homeless
         fields = '__all__'
-        
+   
