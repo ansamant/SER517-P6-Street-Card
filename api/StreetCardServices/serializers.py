@@ -130,6 +130,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
                   'tCellCD4AndViralLoadHOPWA', 'housingAssessmentAtExitHOPWA']
 
     def create(self, validated_data):
+
         income_and_sources_data = check_and_assign('income_and_sources', validated_data)
         non_cash_benefits_data = check_and_assign('non_cash_benefits', validated_data)
         disabling_condition_data = check_and_assign('disabling_condition', validated_data)
@@ -142,6 +143,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         housing_assessment_at_exit_hopwa_data = check_and_assign('housingAssessmentAtExitHOPWA', validated_data)
 
         enroll = Enrollment.objects.create(**validated_data)
+
         if income_and_sources_data is not None:
             IncomeAndSources.objects.create(EnrollmentID_id=enroll.EnrollmentID, **income_and_sources_data)
         if non_cash_benefits_data is not None:
@@ -152,6 +154,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             DomesticViolence.objects.create(EnrollmentID_id=enroll.EnrollmentID, **domestic_violence_data)
         if health_insurance_data is not None:
             HealthInsurance.objects.create(EnrollmentID_id=enroll.EnrollmentID, **health_insurance_data)
+
         if w1_services_provided_hopwa_data is not None:
             W1ServicesProvidedHOPWA.objects.create(EnrollmentID_id=enroll.EnrollmentID,
                                                    **w1_services_provided_hopwa_data)
@@ -168,6 +171,9 @@ class EnrollmentSerializer(serializers.ModelSerializer):
                                                         **housing_assessment_at_exit_hopwa_data)
 
         return enroll
+
+    def update(self, instance, validated_data):
+        pass
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
