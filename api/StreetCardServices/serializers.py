@@ -4,7 +4,7 @@ from rest_framework.serializers import ModelSerializer
 from .utils import check_and_assign
 
 from .models import SocialWorker, IncomeAndSources, NonCashBenefits, Enrollment, DisablingCondition, \
-    DomesticViolence, HealthInsurance
+    DomesticViolence, HealthInsurance, Homeless
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -70,6 +70,12 @@ class DomesticViolenceSerializer(serializers.ModelSerializer):
 class HealthInsuranceSerializer(serializers.ModelSerializer):
     class Meta:
         model = HealthInsurance
+        fields = '__all__'
+
+
+class HomelessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Homeless
         fields = '__all__'
 
 

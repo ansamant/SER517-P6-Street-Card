@@ -93,19 +93,20 @@ class Homeless(models.Model):
     VeteranStatus = models.IntegerField(choices=VeteranStatus.choices)
 
 
+class ServiceProvider(models.TextChoices):
+    FOOD_PANTRY = "FP", _("Food Pantry")
+    DROP_IN_CENTRE = "DIC", _("Drop-in Centre")
+    SHELTER_HOMES = "SH", _("Shelter Home")
+    SOUP_KITCHEN = "SK", _("Soup Kitchen")
+    NOT_AVAILABLE = "NA", _("Not Available")
+    OTHERS = "OTH", _("Others")
+
+
 class SocialWorker(models.Model):
     class ClearanceLevel(models.TextChoices):
         GREETER = "greeter", _("Greeter")
         CASEWORKER = "caseworker", _("CaseWorker")
         SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
-
-    class ServiceProvider(models.TextChoices):
-        FOOD_PANTRY = "FP", _("Food Pantry")
-        DROP_IN_CENTRE = "DIC", _("Drop-in Centre")
-        SHELTER_HOMES = "SH", _("Shelter Home")
-        SOUP_KITCHEN = "SK", _("Soup Kitchen")
-        NOT_AVAILABLE = "NA", _("Not Available")
-        OTHERS = "OTH", _("Others")
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)

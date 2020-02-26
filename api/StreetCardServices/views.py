@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
-    NonCashBenefitsSerializer, IncomeSerializer
+    NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources
 
 from collections import namedtuple
@@ -48,14 +48,34 @@ class NonCashDetails(viewsets.ModelViewSet):
     serializer_class = NonCashBenefitsSerializer
 
 
-class EnrollmentViewSet(viewsets.ModelViewSet):
-    queryset = Enrollment.objects.all()
-    serializer_class = EnrollmentSerializer
+class HomelessViewSet(viewsets.ModelViewSet):
+    queryset = Homeless.objects.all()
+    serializer_class = HomelessSerializer
+
+
+class EnrollmentViewSet(viewsets.ViewSet):
+
+    @staticmethod
+    def list(request, homeless_pk=None):
+        queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
+        serializer = EnrollmentSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @staticmethod
+    def retrieve(request, pk=None, enroll_pk=None):
+        queryset = Enrollment.objects.filter(PersonalId_id=pk, EnrollmentID=enroll_pk)
+        enroll = Enrollment.objects.get(queryset, PersonalId_id=pk)
+        serializer = EnrollmentSerializer(enroll)
+        return Response(serializer.data)
 
     def create(self, request):
-        serializer = EnrollmentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        pass
+
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
