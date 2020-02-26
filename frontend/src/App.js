@@ -2,11 +2,24 @@ import React from 'react';
 import './App.css';
 import LandingPage from './LandingPage';
 import Login from './Login';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Registration from './Registration'
-import HomelessRegistration from './HomelessRegistration'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import Registration from './Registration';
+import HomelessRegistration from './HomelessRegistration';
 
 
+const PrivateRoute = ({ component: Component, loggedInStatus: loggedInStatus, ...rest }) => (
+  <Route render={(props) => (
+    loggedInStatus === "LOGGED_IN"
+      ? <Component 
+          {...props}
+          {...rest}
+        />
+      : <Redirect to='/login' />
+
+  )} />
+
+
+)
 export default class App extends React.Component {
 
 
@@ -16,14 +29,14 @@ export default class App extends React.Component {
     this.state = {
       loggedInStatus: localStorage.getItem('token') ? "LOGGED_IN" : "NOT_LOGGED_IN",
       username: '',
-      homelessPersonId: 0,
-      homelessData: {}
+      homelessPersonId: 0
     };
 
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleHomelessPersonId = this.handleHomelessPersonId.bind(this);
     this.handleHomelessPersonData = this.handleHomelessPersonData.bind(this);
+    this.isEmpty = this.isEmpty.bind(this);
   }
 
 
@@ -60,16 +73,29 @@ export default class App extends React.Component {
             });
   }
 
-  handleHomelessPersonData(data){
-    console.log("data",data);
-   
-      this.setState({ 
-              homelessData: data
+isEmpty(object) {
+    for (var key in object) {
+        if (object.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+    return true;
+}
+  handleHomelessPersonData(personId){
+    if(personId){
+      console.log("data kadam",personId);
+       this.setState({ 
+              homelessPersonId: personId
             });
-      console.log(this.state.homelessData);
-    
+    }else{
+      
+       this.setState({ 
+              homelessPersonId: ''
+            });
+    }  
       
   }
+
   render() {
     return (
       <div>
@@ -95,35 +121,27 @@ export default class App extends React.Component {
                 />
               )}
             />
-            <Route
+            <PrivateRoute
               exact
               path={"/socialWorkerRegister"}
-              render={props => (
-                <Registration
-                  {...props}
-                  handleLogout={this.handleLogout}
-                  loggedInStatus={this.state.loggedInStatus}
-                  handlUser={this.handlUser}
-                  username={this.state.username}
-                  homelessPersonId={this.state.homelessPersonId}
-                  handleHomelessPersonData={this.handleHomelessPersonData}
-                />
-              )}
+              component={Registration}
+              handleLogout={this.handleLogout}
+              loggedInStatus={this.state.loggedInStatus}
+              username={this.state.username}
+              handleHomelessPersonData={this.handleHomelessPersonData}
+              handleLogin={this.handleLogin}
             />
-            <Route
+            <PrivateRoute
               exact
               path={"/homelessRegistration"}
-              render={props => (
-                <HomelessRegistration
-                  {...props}
-                  handleLogout={this.handleLogout}
-                  loggedInStatus={this.state.loggedInStatus}
-                  handlUser={this.handlUser}
-                  username ={this.state.username}
-                  handleHomelessPersonId={this.handleHomelessPersonId}
-                  homelessData={this.state.homelessData}
-                />
-              )}
+              component={HomelessRegistration}
+              handleLogout={this.handleLogout}
+              loggedInStatus={this.state.loggedInStatus}
+              handlUser={this.handlUser}
+              username ={this.state.username}
+              handleHomelessPersonId={this.handleHomelessPersonId}
+              homelessPersonId={this.state.homelessPersonId}
+              handleLogin={this.handleLogin}
             />
           </Switch>
         </BrowserRouter>

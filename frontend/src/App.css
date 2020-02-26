@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #FFC627;
+  background-color: #EEE2DC;
 }
 
 .App-logo {
@@ -34,6 +34,8 @@ body {
   max-width: 1000px;
   padding: 50px;
   margin: 100px;
+  position: relative;
+  left: 500px;
 }
 
 .App-link {
@@ -115,12 +117,39 @@ body {
 .personId-form {
   width: 80%;
   height: 50px;
+  margin-left: 200px;
 }
 
 .personId-form-input {
-  padding: 50px;
-  margin: 50px;
+  padding: 100px;
+  margin: 100px;
 }
 .ant-calendar-picker {
   width: 100%;
+}
+
+.page-header .ant-page-header-heading .ant-avatar-image {
+  width: 300px;
+}
+
+.registration-submit-button {
+  width: 300px;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+
+.ant-col-sm-offset-8 {
+  margin-left: 0%;
+}
+
+.ant-form-item-control{
+  line-height: 50px;
+}
+
+::placeholder {
+  font-size: 16px;
+}
+
+.personId-form .ant-form-item-control-wrapper .ant-form-item-control{
+  margin-left: 150px;
 }

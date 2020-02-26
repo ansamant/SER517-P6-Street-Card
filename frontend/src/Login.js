@@ -19,7 +19,6 @@ import WrappedRegistrationForm from './Registration'
   }
 
 
-
   handleLoginSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
