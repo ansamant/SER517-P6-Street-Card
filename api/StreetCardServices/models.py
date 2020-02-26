@@ -83,6 +83,10 @@ class Homeless(models.Model):
     LastName = models.CharField(max_length=128, blank=True, null=True)
     NameSuffix = models.CharField(max_length=128, blank=True, null=True)
     NameDataQuality = models.IntegerField(choices=NameDataQuality.choices)
+    # TODO
+    # Update with proper regex to validate SSN
+    # Remove MaxLengthValidator and MinLengthValidator as they will throw an error for integer fields.
+    # Convert to CharField because this would also contain '-' (hyphens)
     SSN = models.IntegerField(validators=[MaxLengthValidator(9), MinLengthValidator(4)], blank=True, null=True)
     SSNDataQuality = models.IntegerField(choices=SSNDataQuality.choices)
     DOB = models.DateField(blank=True, null=True)
