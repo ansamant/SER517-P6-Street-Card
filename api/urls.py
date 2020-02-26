@@ -31,7 +31,7 @@ router.register('homeless', HomelessDetails)
 router.register('enrollment', EnrollmentViewSet)
 router.register('income', IncomeDetails)
 router.register('noncash', NonCashDetails)
-router.register('homeless/<char:pk>/appointment/', AppointmentViewSet)
+router.register('appointment', AppointmentViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
