@@ -81,10 +81,7 @@ class EnrollmentViewSet(viewsets.ViewSet):
     def list(self, request, homeless_pk=None):
         queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
         serializer = EnrollmentSerializer(queryset, many=True)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
         queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
