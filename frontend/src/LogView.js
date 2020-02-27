@@ -5,17 +5,66 @@ import './index.css';
 import {Form, Button, Table} from 'antd';
 import Header from './HeaderCommon.js'
 import StreetCardFooter from './StreetCardFooter'
+import { withRouter } from 'react-router-dom';
 /**
  * Creating a table for rendering the timestamp logo.
  * Table should display info based on what is known about the user
  */
 
- const dataSource = [{'datetime': '12034', 'service provider': 'Soup kitchen'}];
- const columns = ['datetime', 'service provider'];
-
+ //dataSource will come based on 
+ 
 class LogView extends React.Component{
+  constructor(props){
+      super(props);
+      this.state ={
+        isLoaded: false,
+        columns : [
+          {
+            title: 'DateTime',
+            dataIndex: 'datetime',
+          },
+          {
+            title: 'Personal ID',
+            dataIndex: 'personalId',
+          },
+          {
+            title: 'Service Provider',
+            dataIndex: 'serviceProvider',
+          },
+         ],
+         dataSource : [
+           {
+             id: '',
+            datetime : '',
+            serviceProvider : '',
+            personalId: '',
+          }
+        ]
+
+      }
+  }
+
+  componentDidMount () {
+    //fetch('http://127.0.0.1:8000/homeless/' + this.props.personalId +'/logs/',{
+    fetch('http://127.0.0.1:8000/homeless/' + 4808684002 + '/logs/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      },
+    })
+     .then(res => res.json())
+     .then(json => {
+         console.log(json)
+         this.setState({
+             isLoaded: true,
+             dataSource: json,
+             }
+         )
+     })
+  console.log(this.items);
+}
     render(){
-        const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: {
               xs: { span: 24 },
@@ -34,26 +83,47 @@ class LogView extends React.Component{
               },
               sm: {
                 span: 16,
-                offset: 8
+                offset: 4
               }
             }
+            
+
           };
-          return(
+          if(this.state.isLoaded== true){
+            return(
               <div>
-                <Header/> 
-                <Form {...formItemLayout} className="logView">
-                  <Form.Item  onSubmit={this.handleSubmit}label="LogTable">
-                  <Table dataSource={dataSource} columns={columns}  />
+                <Header/>
+                <Form {...formItemLayout} className="log-view-table">
+                  <Form.Item name="log-table">
+                      <center><h1>Time Log</h1></center>
                   </Form.Item>
                   <Form.Item {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit">
-                            Refresh
-                        </Button>
-                  </Form.Item>     
-                </Form>    
+                     <Table dataSource={this.state.dataSource} columns={this.state.columns}/>
+                    </Form.Item>
+                </Form>
+                <StreetCardFooter/>
+              </div>
+            );
+          }
+          else{
+            return(
+              <div>
+                <Header/>
+                <Form {...formItemLayout} onSubmit={this.handleSubmit}className="log-view-table">
+                  <Form.Item name="log-table">
+                      <center><h1>Time Log</h1></center>
+                  </Form.Item>
+                  <Form.Item {...tailFormItemLayout}>
+                        
+                        <center><h1>Table is not loaded, please click refresh button </h1></center>
+                        
+                    </Form.Item>
+                </Form>
                 <StreetCardFooter/>
               </div>
           );
+          }
+          
     }
 }
 

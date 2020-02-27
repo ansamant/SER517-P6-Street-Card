@@ -12,35 +12,63 @@ class GreeterView extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-        items: {},
         isLoaded: false,
+        name : "",
     }
   }
   
 
   componentDidMount() {
-    fetch('http://127.0.0.1:8000/homeless/', {
-          method: 'GET',
+    
+  }
+  
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+
+      if (!err) {
+        
+        var registerRequestObject = {};
+        registerRequestObject.serviceProvider = "FP";
+        //registerRequestObject.serviceProvider = this.props.clearanceLevel;
+        fetch('http://localhost:8000/homeless/' + values.personalId + '/logs/', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('access_token')}`
           },
+          body: JSON.stringify(registerRequestObject)
         })
-         .then(res => res.json())
-         .then(json => {
-           console.log(json)
-             this.setState({
-                 isLoaded: true,
-                 items: json.results,
-                 }
-             )
-         })
-      console.log(this.items);
-  }
-  
+          .then(res => res.json())
+          .then(
+            json => {
+            console.log("register response:", json);
+          });
+
+          fetch('http://localhost:8000/homeless/' + values.personalId+'/',{
+            method : 'GET',
+            headers: {
+              'Content-Type' : 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('access_token')}`
+            }
+            
+          })
+          .then(res => res.json())
+          .then(json=>{
+            console.log("JSON" + json)
+            this.setState({
+              isLoaded: true,
+              name : json['FirstName'] + ' ' + json['LastName'],
+            })
+          });
+      }
+    });
+  };
 
     render(){
-        const {isLoaded, items} = this.state;
+       // const {items} = this.state;
+        const {name}  = this.state;
+        const{isLoaded} = this.state;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: {
@@ -64,13 +92,15 @@ class GreeterView extends React.Component{
               }
             }
           };
-        return(
+        if(this.state.isLoaded == true){
+          return(
             <div>
+
                 <Header/>,
-                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="log-form ">
+                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="log-post-form ">
                     <h1>Enter Magstripe Id:</h1>
                     <Form.Item label="clientID">
-                        {getFieldDecorator("username", {
+                        {getFieldDecorator("personalId", {
                             rules: [
                             {
                                 required: true,
@@ -85,13 +115,40 @@ class GreeterView extends React.Component{
                             Submit
                         </Button>
                     </Form.Item>
-                    <Form.Item >
-                      <div>{items.map(item => (<li key={item.PersonalId}>PersonalId : {item.PersonalId} | FirstName : {item.FirstName} </li>))}</div>
+                     <center><h2>Hello {this.state.name}</h2></center> 
+                </Form>
+                <StreetCardFooter/>
+            </div>
+          );
+        }else{
+          return(
+            <div>
+
+                <Header/>,
+                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="log-form ">
+                    <h1>Enter Magstripe Id:</h1>
+                    <Form.Item label="clientID">
+                        {getFieldDecorator("personalId", {
+                            rules: [
+                            {
+                                required: true,
+                                message: "Please input personalId!",
+                                whitespace: true
+                            }
+                            ]
+                        })(<Input />)}
+                    </Form.Item>
+                    <Form.Item {...tailFormItemLayout}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
                     </Form.Item>
                 </Form>
                 <StreetCardFooter/>
             </div>
         );
+        }
+        
     }
 }
 
