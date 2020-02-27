@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from .utils import primary_key_generator
 
 
 # Create your models here.
@@ -77,7 +77,7 @@ class Homeless(models.Model):
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
-    PersonalId = models.CharField(max_length=32, primary_key=True, default=primary_key_generator())
+    PersonalId = models.CharField(max_length=32, primary_key=True, default=None)
     FirstName = models.CharField(max_length=128, blank=True, null=True)
     MiddleName = models.CharField(max_length=128, blank=True, null=True)
     LastName = models.CharField(max_length=128, blank=True, null=True)
@@ -156,7 +156,7 @@ class DomesticViolenceOccurrence(models.IntegerChoices):
 
 class Enrollment(models.Model):
     DisablingCondition = models.IntegerField(choices=YesNoResponse.choices, default=YesNoResponse.NO)
-    EnrollmentID = models.CharField(max_length=32, primary_key=True, default=primary_key_generator())
+    EnrollmentID = models.CharField(max_length=32, primary_key=True, default=None)
     PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None,
                                    related_name='Enrollment_PersonalId')
     ProjectCategory = models.TextField(choices=ProjectCategory.choices, default=None, null=True)
@@ -449,6 +449,8 @@ class PrioritizationStatusCategory(models.IntegerChoices):
 
 class CoordinatedEntryAssessment(models.Model):
     DateOfAssessment = models.DateField()
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='CoordinatedEntryAssessment_EnrollmentID', default=None)
     AssessmentLocation = models.TextField(max_length=250)  # Admin-managed list of locations
     AssessmentType = models.IntegerField(choices=AssessmentTypeCategory.choices)
     AssessmentLevel = models.IntegerField(choices=AssessmentLevelCategory.choices)
@@ -459,24 +461,72 @@ class CoordinatedEntryAssessment(models.Model):
     PrioritizationStatus = models.IntegerField(choices=PrioritizationStatusCategory.choices)
 
 
-# class EventCategoryType(models.TextField):
-#     PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
-#     DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
-#     _("Scheduled Coordinated Entry Crisis Assessment")
-#     _("Scheduled Coordinated Entry Housing Needs Assessment")
-#     _("Post Placement/ Follow-up Case Management")
-#     _("Street Outreach Project or Services")
-#     _("Housing Navigation Project or Services")
-#     _("Ineligible for continuum services")
-#     _("No availability in continuum services")
-#     _("Emergency Shelter bed opening")
-#     _("Transitional Housing bed/unit opening")
-#     _("Joint TH-RRH project/unit/resource opening")
-#     _("RRH Project Resource Opening")
-#     _("PSH Project Resource Opening")
-#     _("Other Project/Unit/Resource Opening")
+class EventCategoryType(models.TextChoices):
+    PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
+    DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
+    COORDINATED_ENTRY_CRISIS_ASSESSMENT = 3, _("Scheduled Coordinated Entry Crisis Assessment")
+    COORDINATED_ENTRY_HOUSING_NEED_ASSESSMENT = 4, _("Scheduled Coordinated Entry Housing Needs Assessment")
+    CASE_MANAGEMENT = 5, _("Post Placement/ Follow-up Case Management")
+    STREET_OUTREACH = 6, _("Street Outreach Project or Services")
+    HOUSING_NAVIGATION = 7, _("Housing Navigation Project or Services")
+    INELIGIBLE_CONTINUUM_SERVICES = 8, _("Ineligible for continuum services")
+    NA_CONTINUUM_SERVICES = 9, _("No availability in continuum services")
+    EMERGENCY_SHELTER = 10, _("Emergency Shelter bed opening")
+    TRANSITIONAL_HOUSING = 11, _("Transitional Housing bed/unit opening")
+    JOINT_TH_RRH = 12, _("Joint TH-RRH project/unit/resource opening")
+    RRH_PROJECT_RESOURCE = 13, _("RRH Project Resource Opening")
+    PSH_PROJECT_RESOURCE = 14, _("PSH Project Resource Opening")
+    OTHER_PROJECT = 15, _("Other Project/Unit/Resource Opening")
 
-#
-# class CoordinatedEntryEvent(models.Model):
-#     DateOfEvent = models.DateField()
-#     Event = models.IntegerField(choices=EventCategoryType.choices)
+
+class ReferralResultCategory(models.IntegerChoices):
+    CLIENT_ACCEPTED = 1, _("Successful Referral: Client Accepted")
+    CLIENT_REJECTED = 2, _("Unsuccessful Referral: Client Rejected")
+    PROVIDER_REJECTED = 3, _("Unsuccessful Referral: Provider Rejected")
+
+
+class CoordinatedEntryEvent(models.Model):
+    DateOfEvent = models.DateField()
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='CoordinatedEntryEvent_EnrollmentID', default=None)
+    Event = models.IntegerField(choices=EventCategoryType.choices)
+    ClientHousedOrReHoused = models.CharField(choices=YesNoResponse.choices, max_length=3)
+    EnrolledInAfterCareProject = models.CharField(choices=YesNoResponse.choices, max_length=3)
+    LocationOfHousing = models.TextField(choices=ProjectCategory.choices)
+    ReferralResult = models.IntegerField(choices=ReferralResultCategory.choices)
+    DateOfResult = models.DateField()
+
+
+class Log(models.Model):
+    # datetime field can be retrieved relative to timezone and converted later.
+    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+class Appointments(models.Model):
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
+    venue = models.CharField(max_length=500, blank=True, null=False)
+    Time = models.TimeField(auto_now=False, auto_now_add=False, default=timezone.now)
+    Date = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+class SexualOrientationCategory(models.TextChoices):
+    HETEROSEXUAL = 1, _("Heterosexual")
+    GAY = 2, _("Gay")
+    LESBIAN = 3, _("Lesbian")
+    BISEXUAL = 4, _("Bisexual")
+    UNSURE = 5, _("Questioning / Unsure")
+    OTHERS = 6, _("Others")
+    CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+    CLIENT_REFUSED = 9, _('Client Refused')
+    DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+
+class SexualOrientation(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='SexualOrientation_EnrollmentID', default=None)
+    SexualOrientation = models.TextField(choices=SexualOrientationCategory.choices)
+    Description = models.TextField()
