@@ -120,9 +120,10 @@ class SocialWorker(models.Model):
 
 class Appointments(models.Model):
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    appointmentId = models.CharField(primary_key=True, default=primary_key_generator(), max_length=32)
+    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
     venue = models.CharField(max_length=500, blank=True, null=False)
-    DateTime = models.DateTimeField(auto_now=False, auto_now_add=False)
+    Time = models.TimeField(auto_now=False, auto_now_add=False)
+    Date = models.DateField(auto_now=False, auto_now_add=False)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 

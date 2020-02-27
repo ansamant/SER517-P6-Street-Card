@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
     NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer, AppointmentSerializer
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources, Appointments
+from .utils import primary_key_generator
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -130,6 +131,7 @@ class AppointmentViewSet(viewsets.ViewSet):
     def create(self, request, homeless_pk=None):
         enroll = request.data
         enroll['personalId'] = homeless_pk
+        enroll['appointmentId'] = primary_key_generator()
         serializer = AppointmentSerializer(data=enroll)
         if serializer.is_valid():
             serializer.save()

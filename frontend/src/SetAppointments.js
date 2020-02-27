@@ -39,17 +39,35 @@ class SetAppointments extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    this.props.form.validateFields((err, fieldsValue) => {
-      if (err) {
-        return;
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+          var appointmentRequestObject = {};
+        appointmentRequestObject.venue = values.venue;
+        appointmentRequestObject.Date = values['DatePicker'].format('YYYY-MM-DD');
+        appointmentRequestObject.Time = values['TimePicker'].format('hh:mm[:ss[.uuuuuu]]');
+        appointmentRequestObject.serviceProvider = values.serviceProvider[0];
+
+        console.log(appointmentRequestObject);
+        fetch('http://localhost:8000/homeless/' + 4808584002 + '/appointment/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          },
+          body: JSON.stringify(appointmentRequestObject)
+        })
+          .then(res => res.json())
+          .then(json => {
+            console.log("appointment response:", json);
+          });
       }
 
       // Should format date value before submit.
-      const values = {
-        ...fieldsValue,
-        'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
-        'time-picker': fieldsValue['time-picker'].format('HH:mm:ss'),
-      };
+     // const values = {
+      //  ...fieldsValue,
+       // 'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
+       // 'time-picker': fieldsValue['time-picker'].format('HH:mm:ss'),
+     // };
       console.log('Received values of form: ', values);
     });
   };
@@ -68,7 +86,7 @@ class SetAppointments extends React.Component {
              console.log(json)
              this.setState({
                  isLoaded: true,
-                 items:json,
+                 items:json
                  }
              )
          })
@@ -127,11 +145,29 @@ class SetAppointments extends React.Component {
             ]
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="DatePicker">
-          {getFieldDecorator('date-picker', config)(<DatePicker />)}
+          <Form.Item label="Appointment Date : ">
+          {getFieldDecorator('DatePicker', {
+          //	initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+          	rules: [
+              {
+              	type: "object",
+                required: true,
+                message: "Please input your Date!"
+              }
+            ]
+          })(<DatePicker/>)}
         </Form.Item>
-        <Form.Item label="TimePicker">
-          {getFieldDecorator('time-picker', config)(<TimePicker />)}
+          <Form.Item label="Time Date : ">
+          {getFieldDecorator('TimePicker', {
+          //	initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+          	rules: [
+              {
+              	type: "object",
+                required: true,
+                message: "Please input your Time!"
+              }
+            ]
+          })(<TimePicker/>)}
         </Form.Item>
         <Form.Item
           wrapperCol={{
@@ -152,16 +188,6 @@ class SetAppointments extends React.Component {
           <Button type="primary" htmlType="back">
                <Icon type="left" />
             Back
-          </Button>
-        </Form.Item>
-           <Form.Item
-          wrapperCol={{
-            xs: { span: 24, offset: 0 },
-            sm: { span: 16, offset: 8 },
-          }}
-        >
-          <Button type="primary" htmlType="view">
-            View Appointments
           </Button>
         </Form.Item>
       </Form>
