@@ -67,10 +67,23 @@ class HomelessViewSet(viewsets.ViewSet):
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
-        pass
+        queryset = Homeless.objects.filter(pk=pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = HomelessSerializer(enroll, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk=None):
-        pass
+        queryset = Homeless.objects.filter(pk=pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = HomelessSerializer(enroll, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
         pass
@@ -100,9 +113,24 @@ class EnrollmentViewSet(viewsets.ViewSet):
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None, homeless_pk=None):
-        pass
+        queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = EnrollmentSerializer(enroll, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def partial_update(self, request, pk=None):
+    def partial_update(self, request, pk=None, homeless_pk=None):
+        # enroll = request.data
+        # enroll['PersonalId'] = homeless_pk
+        # serializer = EnrollmentSerializer(data=enroll)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data, status=status.HTTP_200_OK)
+        # else:
+        #     return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         pass
 
     def destroy(self, request, pk=None):
