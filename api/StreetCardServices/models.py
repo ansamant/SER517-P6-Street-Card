@@ -239,8 +239,6 @@ class DisablingCondition(models.Model):
     substance_abuse_impairing = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
                                                     default=None)
 
-    # Work in Progress
-
 
 class IncomeAndSources(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='IncomeAndSources_EnrollmentID',

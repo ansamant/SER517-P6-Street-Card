@@ -5,7 +5,8 @@ from .utils import check_and_assign
 
 from .models import SocialWorker, IncomeAndSources, NonCashBenefits, Enrollment, DisablingCondition, \
     DomesticViolence, HealthInsurance, W1ServicesProvidedHOPWA, FinancialAssistanceHOPWA, MedicalAssistanceHOPWA, \
-    TCellCD4AndViralLoadHOPWA, HousingAssessmentAtExitHOPWA, Homeless
+    TCellCD4AndViralLoadHOPWA, HousingAssessmentAtExitHOPWA, Homeless, CurrentLivingSituation, DateOfEngagement, \
+    BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -110,6 +111,42 @@ class HousingAssessmentAtExitHOPWASerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CurrentLivingSituationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CurrentLivingSituation
+        fields = '__all__'
+
+
+class DateOfEngagementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DateOfEngagement
+        fields = '__all__'
+
+
+class BedNightDateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BedNightDate
+        fields = '__all__'
+
+
+class CoordinatedEntryAssessmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CoordinatedEntryAssessment
+        fields = '__all__'
+
+
+class CoordinatedEntryEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CoordinatedEntryEvent
+        fields = '__all__'
+
+
+class SexualOrientationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SexualOrientation
+        fields = '__all__'
+
+
 class EnrollmentSerializer(serializers.ModelSerializer):
     income_and_sources = IncomeSerializer(required=False)
     non_cash_benefits = NonCashBenefitsSerializer(required=False)
@@ -121,13 +158,21 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     medicalAssistanceHOPWA = MedicalAssistanceHOPWASerializer(required=False)
     tCellCD4AndViralLoadHOPWA = TCellCD4AndViralLoadHOPWASerializer(required=False)
     housingAssessmentAtExitHOPWA = HousingAssessmentAtExitHOPWASerializer(required=False)
+    current_living_situation = CurrentLivingSituationSerializer(required=False)
+    date_of_engagement = DateOfEngagementSerializer(required=False)
+    bed_night_date = BedNightDateSerializer(required=False)
+    coordinated_entry_assessment = CoordinatedEntryAssessmentSerializer(required=False)
+    coordinated_entry_event = CoordinatedEntryEventSerializer(required=False)
+    sexual_orientation = SexualOrientationSerializer(required=False)
 
     class Meta:
         model = Enrollment
         fields = ['EnrollmentID', 'DisablingCondition', 'PersonalId', 'ProjectCategory', 'income_and_sources',
                   'non_cash_benefits', 'disabling_condition', 'domestic_violence', 'health_insurance',
                   'w1ServicesProvidedHOPWA', 'financialAssistanceHOPWA', 'medicalAssistanceHOPWA',
-                  'tCellCD4AndViralLoadHOPWA', 'housingAssessmentAtExitHOPWA']
+                  'tCellCD4AndViralLoadHOPWA', 'housingAssessmentAtExitHOPWA', 'current_living_situation',
+                  'date_of_engagement', 'bed_night_date', 'coordinated_entry_assessment', 'coordinated_entry_event',
+                  'sexual_orientation']
 
     def create(self, validated_data):
 
@@ -141,6 +186,12 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         medical_assistance_hopwa_data = check_and_assign('medicalAssistanceHOPWA', validated_data)
         tcellcd4_and_viral_load_hopwa_data = check_and_assign('tCellCD4AndViralLoadHOPWA', validated_data)
         housing_assessment_at_exit_hopwa_data = check_and_assign('housingAssessmentAtExitHOPWA', validated_data)
+        current_living_situation_data = check_and_assign('current_living_situation', validated_data)
+        date_of_engagement_data = check_and_assign('date_of_engagement', validated_data)
+        bed_night_date_data = check_and_assign('bed_night_date', validated_data)
+        coordinated_entry_assessment_data = check_and_assign('coordinated_entry_assessment', validated_data)
+        coordinated_entry_event_data = check_and_assign('coordinated_entry_event', validated_data)
+        sexual_orientation_data = check_and_assign('sexual_orientation', validated_data)
 
         enroll = Enrollment.objects.create(**validated_data)
 
@@ -154,7 +205,6 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             DomesticViolence.objects.create(EnrollmentID_id=enroll.EnrollmentID, **domestic_violence_data)
         if health_insurance_data is not None:
             HealthInsurance.objects.create(EnrollmentID_id=enroll.EnrollmentID, **health_insurance_data)
-
         if w1_services_provided_hopwa_data is not None:
             W1ServicesProvidedHOPWA.objects.create(EnrollmentID_id=enroll.EnrollmentID,
                                                    **w1_services_provided_hopwa_data)
@@ -169,6 +219,19 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         if housing_assessment_at_exit_hopwa_data is not None:
             HousingAssessmentAtExitHOPWA.objects.create(EnrollmentID_id=enroll.EnrollmentID,
                                                         **housing_assessment_at_exit_hopwa_data)
+        if current_living_situation_data is not None:
+            CurrentLivingSituation.objects.create(EnrollmentID_id=enroll.EnrollmentID, **current_living_situation_data)
+        if date_of_engagement_data is not None:
+            DateOfEngagement.objects.create(EnrollmentID_id=enroll.EnrollmentID, **date_of_engagement_data)
+        if bed_night_date_data is not None:
+            BedNightDate.objects.create(EnrollmentID_id=enroll.EnrollmentID, **bed_night_date_data)
+        if coordinated_entry_assessment_data is not None:
+            CoordinatedEntryAssessment.objects.create(EnrollmentID_id=enroll.EnrollmentID,
+                                                      **coordinated_entry_assessment_data)
+        if coordinated_entry_event_data is not None:
+            CoordinatedEntryEvent.objects.create(EnrollmentID_id=enroll.EnrollmentID, **coordinated_entry_event_data)
+        if sexual_orientation_data is not None:
+            SexualOrientation.objects.create(EnrollmentID_id=enroll.EnrollmentID, **sexual_orientation_data)
 
         return enroll
 
@@ -207,5 +270,23 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         if HousingAssessmentAtExitHOPWA.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
             response['housing_assessment_at_exit_hopwa'] = HousingAssessmentAtExitHOPWASerializer(
                 HousingAssessmentAtExitHOPWA.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
+        if CurrentLivingSituation.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
+            response['current_living_situation'] = CurrentLivingSituationSerializer(
+                CurrentLivingSituation.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
+        if DateOfEngagement.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
+            response['date_of_engagement_data'] = DateOfEngagementSerializer(
+                DateOfEngagement.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
+        if BedNightDate.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
+            response['bed_night_date_data'] = BedNightDateSerializer(
+                BedNightDate.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
+        if CoordinatedEntryAssessment.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
+            response['coordinated_entry_assessment'] = CoordinatedEntryAssessmentSerializer(
+                CoordinatedEntryAssessment.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
+        if CoordinatedEntryEvent.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
+            response['coordinated_entry_event'] = CoordinatedEntryEventSerializer(
+                CoordinatedEntryEvent.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
+        if SexualOrientation.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
+            response['sexual_orientation'] = SexualOrientationSerializer(
+                SexualOrientation.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
 
         return response
