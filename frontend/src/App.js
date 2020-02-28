@@ -13,6 +13,7 @@ const PrivateRoute = ({ component: Component, loggedInStatus: loggedInStatus, ..
       ? <Component 
           {...props}
           {...rest}
+          loggedInStatus ={loggedInStatus}
         />
       : <Redirect to='/login' />
 

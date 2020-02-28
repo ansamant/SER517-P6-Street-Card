@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api.StreetCardServices',
     'corsheaders',
+    'rest_framework_nested'
 ]
 
 MIDDLEWARE = [
@@ -136,8 +137,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10,
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),

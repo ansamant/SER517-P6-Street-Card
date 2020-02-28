@@ -71,7 +71,7 @@ class RegistrationForm extends React.Component {
   };
 
   componentDidMount() {
-    console.log("componentDidMount");
+    console.log(this.props.loggedInStatus);
     if(this.props.loggedInStatus === "LOGGED_IN" && this.props.username !== "shivamverma"){
      var localClearanceLevel = ''
      fetch('http://localhost:8000/user/' + this.props.username + '/', {

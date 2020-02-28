@@ -262,7 +262,7 @@ componentDidMount() {
 
       if (!err) {
         var registerRequestObject = {};
-        registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? this.state.homelessData.PersonalId : Math.floor(100000 + Math.random() * 900000);
+        //registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? this.state.homelessData.PersonalId : Math.floor(100000 + Math.random() * 900000);
         registerRequestObject.FirstName =  values.FirstName ? values.FirstName : null;
         registerRequestObject.MiddleName = values.MiddleName ? values.MiddleName : null;
         registerRequestObject.LastName = values.LastName ? values.LastName : null;
@@ -306,7 +306,7 @@ componentDidMount() {
       if (!err) {
 
         var registerRequestObject = {};
-       // registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? Number(this.state.homelessData.PersonalId) : Math.floor(100000 + Math.random() * 900000);
+        //registerRequestObject.PersonalId = Number(this.state.homelessData.PersonalId);
         registerRequestObject.FirstName =  values.FirstName ? values.FirstName : null;
         registerRequestObject.MiddleName = values.MiddleName ? values.MiddleName : null;
         registerRequestObject.LastName = values.LastName ? values.LastName : null;
@@ -324,7 +324,7 @@ componentDidMount() {
         console.log(registerRequestObject);
 
         fetch('http://localhost:8000/homeless/' + this.state.homelessData.PersonalId + '/', {
-          method: 'PATCH',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('token')}`
