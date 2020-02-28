@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
 import {Form, Button, Table} from 'antd';
-import Header from './HeaderCommon.js'
+import StreetCardHeader from './HeaderCommon.js'
 import StreetCardFooter from './StreetCardFooter'
 import { withRouter } from 'react-router-dom';
 /**
@@ -85,15 +85,16 @@ class LogView extends React.Component{
                 span: 16,
                 offset: 4
               }
+              
             }
-            
 
           };
+
           if(this.state.isLoaded== true){
             return(
               <div>
-                <Header/>
-                <Form {...formItemLayout} className="log-view-table">
+                <StreetCardHeader/>
+                  <Form {...formItemLayout} className="log-view-table" style={{padding: 40}}>
                   <Form.Item name="log-table">
                       <center><h1>Time Log</h1></center>
                   </Form.Item>
@@ -101,25 +102,29 @@ class LogView extends React.Component{
                      <Table dataSource={this.state.dataSource} columns={this.state.columns}/>
                     </Form.Item>
                 </Form>
+                
+                
                 <StreetCardFooter/>
+                
               </div>
             );
           }
           else{
             return(
               <div>
-                <Header/>
-                <Form {...formItemLayout} onSubmit={this.handleSubmit}className="log-view-table">
+                <StreetCardHeader/>
+                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="log-view-table" padding="80px">
                   <Form.Item name="log-table">
                       <center><h1>Time Log</h1></center>
                   </Form.Item>
-                  <Form.Item {...tailFormItemLayout}>
+                  <Form.Item {...tailFormItemLayout} >
                         
                         <center><h1>Table is not loaded, please click refresh button </h1></center>
                         
                     </Form.Item>
                 </Form>
                 <StreetCardFooter/>
+                
               </div>
           );
           }

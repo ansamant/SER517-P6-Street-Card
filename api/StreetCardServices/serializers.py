@@ -49,7 +49,7 @@ class LogSerializer(ModelSerializer):
     class Meta:
         model = Log
         fields = '__all__'
-    datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    # datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', )
 
 class IncomeSerializer(serializers.ModelSerializer):
     class Meta:
