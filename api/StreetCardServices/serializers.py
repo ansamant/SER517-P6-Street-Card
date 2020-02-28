@@ -80,24 +80,6 @@ class HomelessSerializer(serializers.ModelSerializer):
         model = Homeless
         fields = '__all__'
 
-    # def update(self, instance, validated_data):
-    # print("Hello World")
-    # instance.FirstName = validated_data.get('FirstName', instance.FirstName)
-    # instance.MiddleName = validated_data.get('MiddleName', instance.MiddleName)
-    # instance.LastName = validated_data.get('LastName', instance.LastName)
-    # instance.NameSuffix = validated_data.get('NameSuffix', instance.NameSuffix)
-    # instance.NameDataQuality = validated_data.get('NameDataQuality', instance.NameDataQuality)
-    # instance.SSN = validated_data.get('SSN', instance.SSN)
-    # instance.SSNDataQuality = validated_data.get('SSNDataQuality', instance.SSNDataQuality)
-    # instance.DOB = validated_data.get('DOB', instance.DOB)
-    # instance.DOBDataQuality = validated_data.get('DOBDataQuality', instance.DOBDataQuality)
-    # instance.Race = validated_data.get('Race', instance.Race)
-    # instance.Ethnicity = validated_data.get('Ethnicity', instance.Ethnicity)
-    # instance.Gender = validated_data.get('Gender', instance.Gender)
-    # instance.VeteranStatus = validated_data.get('VeteranStatus', instance.VeteranStatus)
-    # instance.save()
-    # return instance
-
 
 class W1ServicesProvidedHOPWASerializer(serializers.ModelSerializer):
     class Meta:
@@ -252,6 +234,10 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             SexualOrientation.objects.create(EnrollmentID_id=enroll.EnrollmentID, **sexual_orientation_data)
 
         return enroll
+
+    # TODO:
+    # 1. Complete the update function for PUT request.
+    # 2. Include all the project specific elements from JSON request.
 
     def update(self, instance, validated_data):
 

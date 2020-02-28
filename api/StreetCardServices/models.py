@@ -6,8 +6,6 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
-# Create your models here.
-
 class ResponseCategory(models.IntegerChoices):
     NO = 0, _('No')
     YES = 1, _('Yes')
@@ -118,7 +116,6 @@ class SocialWorker(models.Model):
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
-# Work in Progress
 class ProjectCategory(models.TextChoices):
     HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
     HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 'HUD:HOPWA – Hotel/Motel Vouchers', _('HUD:HOPWA – Hotel/Motel Vouchers')
