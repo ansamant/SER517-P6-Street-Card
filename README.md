@@ -1,10 +1,10 @@
 # SER517 StreetCard
-###**Project Info:**
+### **Project Info:**
 
 The StreetCard is a carefully reasoned, comprehensive social program that seeks to connect Homeless
 Persons with Information Technology to optimize the process of providing benefits and housing. 
 
-###**Motivation:**
+### **Motivation:**
 
 This is a humanitarian project: the intent being to remedy the needless suffering of our poorest citizens.
 Homeless persons are a vulnerable and essentially un-represented population. The services that are
@@ -14,12 +14,12 @@ the cracks in the system, through which taxpayer dollars are profligately wasted
 then reinvested in improving services, building shelters and low-cost housing, and improving pay and
 benefits for Service Providers.
 
-###**Technology Stack:**
+### **Technology Stack:**
 - Backend: Django REST Framework
 - Frontend: React
 - Database: Postgres (Hosted on Amazon RDS)
 
-###Useful Commands:
+### Useful Commands:
 **Database setup:**
 <br> Setup your own database by modifying this piece of code within the settings.py file.
 ~~~
