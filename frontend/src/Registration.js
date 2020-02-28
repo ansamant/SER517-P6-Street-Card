@@ -8,9 +8,11 @@ import {
   Cascader,
   Select,
   Button,
-  AutoComplete
+  AutoComplete,
+  Icon
 } from "antd";
-import Header from "./HeaderRegistration";
+import Header from "./Header";
+import StreetCardFooter from './StreetCardFooter'
 
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
@@ -53,17 +55,47 @@ const serviceProvider = [
 const TITLE = 'Register Social worker'
 
 class RegistrationForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    console.log(this.props.username)
+    this.setState({ username: this.props.username ? this.props.username : ''})
+    this.handleSocialWorkerRegistrationSubmit = this.handleSocialWorkerRegistrationSubmit.bind(this);
+    this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
+    this.homelessRegistration = this.homelessRegistration.bind(this);
+  }
+
   state = {
     confirmDirty: false,
     autoCompleteResult: []
   };
 
-  handleSubmit = e => {
+  componentDidMount() {
+    
+  }
+
+  handleSuccessfulLogoutAction() {
+    this.props.handleLogout();
+    this.props.history.push('/login');
+  }
+
+   handlePersonalIdSubmit = e => {
     e.preventDefault();
+    this.props.history.push('/homelessRegistration');
     this.props.form.validateFieldsAndScroll((err, values) => {
 
       if (!err) {
+        this.props.handleHomelessPersonData(values.personId);
+        this.props.history.push('/homelessRegistration');
+      }
+    });
+  };
 
+  handleSocialWorkerRegistrationSubmit = e => {
+      e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+
+      if (!err) {
         var registerRequestObject = {};
         registerRequestObject.username = values.username;
         registerRequestObject.email = values.email;
@@ -78,21 +110,26 @@ class RegistrationForm extends React.Component {
 
         registerRequestObject.socialWorker = socialWorker;
 
+        console.log(registerRequestObject);
+
         fetch('http://localhost:8000/register/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify(registerRequestObject)
         })
-          .then(res => res.json())
-          .then(json => {
-            console.log("register response:", json);
+          .then(res => {
+            console.log("akash");
+            if(res.status == 201){
+              this.props.history.push('/login');
+            }
           });
+          
       }
     });
-  };
+  }
 
   handleConfirmBlur = e => {
     const { value } = e.target;
@@ -115,6 +152,12 @@ class RegistrationForm extends React.Component {
     }
     callback();
   };
+
+
+  homelessRegistration() {
+    this.props.handleHomelessPersonData('');
+    this.props.history.push('/homelessRegistration');
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -143,14 +186,52 @@ class RegistrationForm extends React.Component {
       }
     };
 
-    return (
+    if(this.props.clearanceLevel === "caseworker" && "shivamverma" !== this.props.username){
+      return (
       <div>
-      <Header/>
+      <Header 
+        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+        loggedInStatus={this.state.loggedInStatus}
+      />
+      <div className="caseworker-homeless-field">
+        <Button onClick={this.homelessRegistration} className="caseworker-homeless-registration-button" type="primary" block>Register Homeless Person</Button>
+      </div>
+      <div className="personId-form-input">
+        <Form {...formItemLayout} onSubmit={this.handlePersonalIdSubmit} className="personId-form">
+          <Form.Item>
+            {getFieldDecorator("personId", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please input Identification Number!",
+                  whitespace: true
+                }
+              ]
+            })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)'}} />} placeholder="Homeless Person Identification Number" />)}
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit" style={{ width: '150px', marginLeft: '160px' }}>
+              Search
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+      <StreetCardFooter/>
+      </div>
+    );
+    }else{
+      return (
+      <div>
+      <Header 
+        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+        loggedInStatus={this.state.loggedInStatus}
+      />
 
-        <Form {...formItemLayout} onSubmit={this.handleSubmit} className="registration-form ">
-          <h1>Fill the details of social worker for registration:</h1>
-        <Form.Item label="User Name">
+        <Form {...formItemLayout} onSubmit={this.handleSocialWorkerRegistrationSubmit} className="registration-form ">
+          <h1 style={{marginLeft: '90px'}}>Register Social Worker</h1>
+        <Form.Item>
           {getFieldDecorator("username", {
+            initialValue: this.state.username,
             rules: [
               {
                 required: true,
@@ -158,9 +239,9 @@ class RegistrationForm extends React.Component {
                 whitespace: true
               }
             ]
-          })(<Input />)}
+          })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />)}
         </Form.Item>
-        <Form.Item label="Password" hasFeedback>
+        <Form.Item hasFeedback>
           {getFieldDecorator("password", {
             rules: [
               {
@@ -171,9 +252,9 @@ class RegistrationForm extends React.Component {
                 validator: this.validateToNextPassword
               }
             ]
-          })(<Input.Password />)}
+          })(<Input.Password  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Password"/>)}
         </Form.Item>
-        <Form.Item label="Confirm Password" hasFeedback>
+        <Form.Item hasFeedback>
           {getFieldDecorator("confirm", {
             rules: [
               {
@@ -184,9 +265,9 @@ class RegistrationForm extends React.Component {
                 validator: this.compareToFirstPassword
               }
             ]
-          })(<Input.Password onBlur={this.handleConfirmBlur} />)}
+          })(<Input.Password prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Confirm Password" onBlur={this.handleConfirmBlur} />)}
         </Form.Item>
-        <Form.Item label="E-mail">
+        <Form.Item u>
           {getFieldDecorator("email", {
             rules: [
               {
@@ -198,9 +279,9 @@ class RegistrationForm extends React.Component {
                 message: "Please input your E-mail!"
               }
             ]
-          })(<Input />)}
+          })(<Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="E-mail"/>)}
         </Form.Item>
-        <Form.Item label="Frist Name">
+        <Form.Item >
           {getFieldDecorator("first_name", {
             rules: [
               {
@@ -209,9 +290,9 @@ class RegistrationForm extends React.Component {
                 whitespace: true
               }
             ]
-          })(<Input />)}
+          })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="First Name"/>)}
         </Form.Item>
-        <Form.Item label="Last Name">
+        <Form.Item >
           {getFieldDecorator("last_name", {
             rules: [
               {
@@ -219,9 +300,9 @@ class RegistrationForm extends React.Component {
                 whitespace: true
               }
             ]
-          })(<Input />)}
+          })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Last Name"/>)}
         </Form.Item>
-        <Form.Item label="Address">
+        <Form.Item >
           {getFieldDecorator("address", {
             rules: [
               {
@@ -229,9 +310,9 @@ class RegistrationForm extends React.Component {
                 whitespace: true
               }
             ]
-          })(<Input />)}
+          })(<Input prefix={<Icon type="home" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Address"/>)}
         </Form.Item>
-        <Form.Item label="Clearence Level">
+        <Form.Item >
           {getFieldDecorator("clearanceLevel", {
             rules: [
               {
@@ -240,9 +321,9 @@ class RegistrationForm extends React.Component {
                 message: "Please select your role!"
               }
             ]
-          })(<Cascader options={clearanceLevel} />)}
+          })(<Cascader options={clearanceLevel} placeholder="Clearence Level" />)}
         </Form.Item>
-        <Form.Item label="Service Provider">
+        <Form.Item >
           {getFieldDecorator("serviceProvider", {
             rules: [
               {
@@ -251,16 +332,19 @@ class RegistrationForm extends React.Component {
                 message: "Please select your role!"
               }
             ]
-          })(<Cascader options={serviceProvider} />)}
+          })(<Cascader options={serviceProvider} placeholder="Service Provider"/>)}
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" className="registration-submit-button">
             Submit
           </Button>
         </Form.Item>
       </Form>
+      <StreetCardFooter/>
       </div>
     );
+    }
+    
   }
 }
 
