@@ -80,6 +80,24 @@ class HomelessSerializer(serializers.ModelSerializer):
         model = Homeless
         fields = '__all__'
 
+    # def update(self, instance, validated_data):
+    # print("Hello World")
+    # instance.FirstName = validated_data.get('FirstName', instance.FirstName)
+    # instance.MiddleName = validated_data.get('MiddleName', instance.MiddleName)
+    # instance.LastName = validated_data.get('LastName', instance.LastName)
+    # instance.NameSuffix = validated_data.get('NameSuffix', instance.NameSuffix)
+    # instance.NameDataQuality = validated_data.get('NameDataQuality', instance.NameDataQuality)
+    # instance.SSN = validated_data.get('SSN', instance.SSN)
+    # instance.SSNDataQuality = validated_data.get('SSNDataQuality', instance.SSNDataQuality)
+    # instance.DOB = validated_data.get('DOB', instance.DOB)
+    # instance.DOBDataQuality = validated_data.get('DOBDataQuality', instance.DOBDataQuality)
+    # instance.Race = validated_data.get('Race', instance.Race)
+    # instance.Ethnicity = validated_data.get('Ethnicity', instance.Ethnicity)
+    # instance.Gender = validated_data.get('Gender', instance.Gender)
+    # instance.VeteranStatus = validated_data.get('VeteranStatus', instance.VeteranStatus)
+    # instance.save()
+    # return instance
+
 
 class W1ServicesProvidedHOPWASerializer(serializers.ModelSerializer):
     class Meta:
@@ -236,15 +254,30 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         return enroll
 
     def update(self, instance, validated_data):
-        pass
+
+        financial_assistance_hopwa_data = check_and_assign('financialAssistanceHOPWA', validated_data)
+
+        temp = FinancialAssistanceHOPWA.objects.filter(EnrollmentID_id=instance.EnrollmentID)
+        for objects in temp:
+            print(objects.FinancialAssistanceAmount)
+            objects.FinancialAssistanceAmount = financial_assistance_hopwa_data['FinancialAssistanceAmount']
+            objects.FinancialAssistanceType = financial_assistance_hopwa_data['FinancialAssistanceType']
+            objects.DateOfFinancialAssistance = financial_assistance_hopwa_data['DateOfFinancialAssistance']
+            objects.save()
+        instance.DisablingCondition = validated_data.get('DisablingCondition', instance.DisablingCondition)
+        instance.ProjectCategory = validated_data.get('ProjectCategory', instance.ProjectCategory)
+        instance.EntryDate = validated_data.get('EntryDate', instance.EntryDate)
+        instance.ExitDate = validated_data.get('ExitDate', instance.ExitDate)
+        instance.save()
+        return instance
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
         if IncomeAndSources.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
-            response['income'] = IncomeSerializer(
+            response['income_and_sources'] = IncomeSerializer(
                 IncomeAndSources.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
         if NonCashBenefits.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
-            response['non_cash'] = NonCashBenefitsSerializer(
+            response['non_cash_benefits'] = NonCashBenefitsSerializer(
                 NonCashBenefits.objects.get(EnrollmentID_id=response['EnrollmentID'])).data
         if DisablingCondition.objects.filter(EnrollmentID_id=response['EnrollmentID']).exists():
             response['disabling_condition'] = DisablingConditionSerializer(
