@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User, Group
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .utils import check_and_assign
-
 from .models import SocialWorker, IncomeAndSources, NonCashBenefits, Enrollment, DisablingCondition, \
     DomesticViolence, HealthInsurance, W1ServicesProvidedHOPWA, FinancialAssistanceHOPWA, MedicalAssistanceHOPWA, \
     TCellCD4AndViralLoadHOPWA, HousingAssessmentAtExitHOPWA, Homeless, CurrentLivingSituation, DateOfEngagement, \
-    BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation,UserNameAndIdMapping
+    BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation,UserNameAndIdMapping,Log
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -44,7 +44,21 @@ class UserSerializer(ModelSerializer):
         SocialWorker.objects.create(user=user, **profile_data)
         UserNameAndIdMapping.objects.create(user_id=user.id,user_name=user.username)
         return user
+        
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        print(response)
+        response['socialWorker'] = SocialWorkerSerializer(
+            SocialWorker.objects.get(user_id=response['id'])).data
+        return response
 
+# Serializing and Deserializing data from the Log DB table
+# ensuring rendering is correct on frontend
+class LogSerializer(ModelSerializer):
+    class Meta:
+        model = Log
+        fields = '__all__'
+    # datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', )
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
@@ -72,6 +86,8 @@ class UserNameAndIdMappingSerializer(ModelSerializer):
         response = super().to_representation(instance)
         response['user'] = UserSerializer(
             User.objects.get(id=response['user_id'])).data
+        response['socialWorker'] = SocialWorkerSerializer(
+            SocialWorker.objects.get(user_id=response['user_id'])).data
         return response
 
 

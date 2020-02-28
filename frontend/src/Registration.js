@@ -71,24 +71,7 @@ class RegistrationForm extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.loggedInStatus);
-    if(this.props.loggedInStatus === "LOGGED_IN" && this.props.username !== "shivamverma"){
-     var localClearanceLevel = ''
-     fetch('http://localhost:8000/user/' + this.props.username + '/', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-          .then(res => res.json())
-          .then(json => {
-            console.log("something", json);
-          localClearanceLevel = json.user.socialWorker.clearanceLevel;
-          console.log(localClearanceLevel);
-          this.setState({
-              clearanceLevel: localClearanceLevel
-            });
-      });
-    }
+    
   }
 
   handleSuccessfulLogoutAction() {
@@ -203,7 +186,7 @@ class RegistrationForm extends React.Component {
       }
     };
 
-    if(this.state.clearanceLevel === "caseworker" && "shivamverma" !== this.props.username){
+    if(this.props.clearanceLevel === "caseworker" && "shivamverma" !== this.props.username){
       return (
       <div>
       <Header 

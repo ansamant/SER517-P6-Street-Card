@@ -5,7 +5,8 @@ import Login from './Login';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Registration from './Registration';
 import HomelessRegistration from './HomelessRegistration';
-
+import WrappedLogTable from './LogView';
+import WrappedGreeterForm from './GreeterView';
 
 const PrivateRoute = ({ component: Component, loggedInStatus: loggedInStatus, ...rest }) => (
   <Route render={(props) => (
@@ -64,8 +65,28 @@ export default class App extends React.Component {
               username: user_name,
               loggedInStatus: "LOGGED_IN"
             });
-     console.log(this.state.username);
-     console.log(this.state.loggedInStatus);
+
+     if(this.state.loggedInStatus === "LOGGED_IN" && this.state.username !== "shivamverma"){
+     var localClearanceLevel = '';
+     var localserviceProvider = '';
+     fetch('http://localhost:8000/user/' + this.state.username + '/', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+          .then(res => res.json())
+          .then(json => {
+            console.log("something", json);
+          localClearanceLevel = json.user.socialWorker.clearanceLevel;
+          localserviceProvider = json.user.socialWorker.serviceProvider;
+          console.log(localClearanceLevel,localserviceProvider);
+          this.setState({
+              clearanceLevel: localClearanceLevel,
+              serviceProvider: localserviceProvider
+            });
+      });
+    }
+
   }
 
   handleHomelessPersonId(person_id){
@@ -119,6 +140,7 @@ isEmpty(object) {
                 <Login
                   {...props}
                   handleLogin={this.handleLogin}
+                  clearanceLevel={this.state.clearanceLevel}
                 />
               )}
             />
@@ -131,6 +153,7 @@ isEmpty(object) {
               username={this.state.username}
               handleHomelessPersonData={this.handleHomelessPersonData}
               handleLogin={this.handleLogin}
+              clearanceLevel={this.state.clearanceLevel}
             />
             <PrivateRoute
               exact
@@ -143,6 +166,17 @@ isEmpty(object) {
               handleHomelessPersonId={this.handleHomelessPersonId}
               homelessPersonId={this.state.homelessPersonId}
               handleLogin={this.handleLogin}
+            />
+            <Route path="/log" exact component={WrappedLogTable}/>
+            <PrivateRoute 
+              exact 
+              path={"/greeter"} 
+              component={WrappedGreeterForm}
+              clearanceLevel ={this.state.clearanceLevel}
+              username ={this.state.username}
+              loggedInStatus={this.state.loggedInStatus}
+              clearanceLevel={this.state.clearanceLevel}
+              serviceProvider={this.state.serviceProvider}
             />
           </Switch>
         </BrowserRouter>

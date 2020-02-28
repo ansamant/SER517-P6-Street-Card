@@ -1,13 +1,12 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
-    NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer,UserNameAndIdMappingSerializer
-from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping
+    NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer,UserNameAndIdMappingSerializer,LogSerializer
+from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping,Log
 from .utils import primary_key_generator
-
 
 class UserViewSet(viewsets.ModelViewSet):
     
@@ -32,6 +31,38 @@ class SocialWorkerDetails(viewsets.ModelViewSet):
     queryset = SocialWorker.objects.all()
     serializer_class = SocialWorkerSerializer
 
+class LogEntry(viewsets.ModelViewSet):
+    
+
+    def list(self, request, homeless_pk=None):
+        queryset = Log.objects.filter(personalId_id=homeless_pk)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, homeless_pk=None):
+        queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = LogSerializer(enroll)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, homeless_pk=None):
+        enroll = request.data
+        enroll['personalId'] = homeless_pk
+        serializer = LogSerializer(data=enroll)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
 
 class UserMapping(viewsets.ModelViewSet):
     queryset = UserNameAndIdMapping.objects.all()
