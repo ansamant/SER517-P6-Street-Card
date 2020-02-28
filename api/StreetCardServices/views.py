@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -33,6 +33,7 @@ class SocialWorkerDetails(viewsets.ModelViewSet):
     serializer_class = SocialWorkerSerializer
 
 class LogEntry(viewsets.ModelViewSet):
+    
 
     def list(self, request, homeless_pk=None):
         queryset = Log.objects.filter(personalId_id=homeless_pk)
@@ -40,7 +41,7 @@ class LogEntry(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
-        queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk)
+        queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = LogSerializer(enroll)
         return Response(serializer.data, status=status.HTTP_200_OK)

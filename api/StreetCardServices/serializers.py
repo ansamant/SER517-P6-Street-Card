@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .utils import check_and_assign
@@ -43,10 +44,12 @@ class UserSerializer(ModelSerializer):
         return user
 
 # Serializing and Deserializing data from the Log DB table
+# ensuring rendering is correct on frontend
 class LogSerializer(ModelSerializer):
     class Meta:
         model = Log
         fields = '__all__'
+    datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
 class IncomeSerializer(serializers.ModelSerializer):
     class Meta:
