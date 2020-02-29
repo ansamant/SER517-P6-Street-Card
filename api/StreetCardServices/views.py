@@ -1,22 +1,16 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework import status
-
+from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
-    NonCashBenefitsSerializer, IncomeSerializer
-from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources
-
-from collections import namedtuple
-
-Combined = namedtuple('Combined', ('income', 'noncash'))
-
+    NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer,UserNameAndIdMappingSerializer,LogSerializer
+from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping,Log
+from .utils import primary_key_generator
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
+    
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
@@ -37,6 +31,42 @@ class SocialWorkerDetails(viewsets.ModelViewSet):
     queryset = SocialWorker.objects.all()
     serializer_class = SocialWorkerSerializer
 
+class LogEntry(viewsets.ModelViewSet):
+    
+
+    def list(self, request, homeless_pk=None):
+        queryset = Log.objects.filter(personalId_id=homeless_pk)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, homeless_pk=None):
+        queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = LogSerializer(enroll)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, homeless_pk=None):
+        enroll = request.data
+        enroll['personalId'] = homeless_pk
+        serializer = LogSerializer(data=enroll)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+class UserMapping(viewsets.ModelViewSet):
+    queryset = UserNameAndIdMapping.objects.all()
+    serializer_class = UserNameAndIdMappingSerializer
 
 class IncomeDetails(viewsets.ModelViewSet):
     queryset = IncomeAndSources.objects.all()
@@ -48,14 +78,88 @@ class NonCashDetails(viewsets.ModelViewSet):
     serializer_class = NonCashBenefitsSerializer
 
 
-class EnrollmentViewSet(viewsets.ModelViewSet):
-    queryset = Enrollment.objects.all()
-    serializer_class = EnrollmentSerializer
+class HomelessViewSet(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = Homeless.objects.filter()
+        serializer = HomelessSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None):
+        queryset = Homeless.objects.filter(pk=pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = HomelessSerializer(enroll)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        serializer = EnrollmentSerializer(data=request.data)
+        homeless = request.data
+        homeless['PersonalId'] = primary_key_generator()
+        serializer = HomelessSerializer(data=homeless)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None):
+        queryset = Homeless.objects.filter(pk=pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = HomelessSerializer(enroll, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def partial_update(self, request, pk=None):
+        queryset = Homeless.objects.filter(pk=pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = HomelessSerializer(enroll, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+class EnrollmentViewSet(viewsets.ViewSet):
+
+    def list(self, request, homeless_pk=None):
+        queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
+        serializer = EnrollmentSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, homeless_pk=None):
+        queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = EnrollmentSerializer(enroll)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, homeless_pk=None):
+        enroll = request.data
+        enroll['PersonalId'] = homeless_pk
+        enroll['EnrollmentID'] = primary_key_generator()
+        serializer = EnrollmentSerializer(data=enroll)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, homeless_pk=None):
+        queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = EnrollmentSerializer(enroll, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def partial_update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass

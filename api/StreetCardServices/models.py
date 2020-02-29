@@ -1,12 +1,11 @@
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from .utils import primary_key_generator
 
-
-# Create your models here.
 
 class ResponseCategory(models.IntegerChoices):
     NO = 0, _('No')
@@ -31,7 +30,7 @@ class Homeless(models.Model):
 
     class SSNDataQuality(models.IntegerChoices):
         FULL_SSN_REPORTED = 1, _('Full SSN Reported')
-        PARTIAL_SSN_REPORTED = 2, _('Partial Name Reported')
+        PARTIAL_SSN_REPORTED = 2, _('Partial SSN Reported')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
@@ -46,7 +45,7 @@ class Homeless(models.Model):
     class Race(models.IntegerChoices):
         AMERICAN_INDIAN_OR_ALASKAN_NATIVE = 1, _('American India or Alaskan Native')
         ASIAN = 2, _('Asian')
-        BLACK_OR_AFRICAN_AMERICAN = 3, _('Balck or African American')
+        BLACK_OR_AFRICAN_AMERICAN = 3, _('Black or African American')
         NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER = 4, _('Native Hawaiian or Pacific Islander')
         WHITE = 5, _('White')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -77,12 +76,18 @@ class Homeless(models.Model):
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
-    PersonalId = models.CharField(max_length=32, primary_key=True, default=primary_key_generator())
+
+
+    PersonalId = models.CharField(max_length=32, primary_key=True, default=None)
     FirstName = models.CharField(max_length=128, blank=True, null=True)
     MiddleName = models.CharField(max_length=128, blank=True, null=True)
     LastName = models.CharField(max_length=128, blank=True, null=True)
     NameSuffix = models.CharField(max_length=128, blank=True, null=True)
     NameDataQuality = models.IntegerField(choices=NameDataQuality.choices)
+    # TODO
+    # Update with proper regex to validate SSN
+    # Remove MaxLengthValidator and MinLengthValidator as they will throw an error for integer fields.
+    # Convert to CharField because this would also contain '-' (hyphens)
     SSN = models.IntegerField(validators=[MaxLengthValidator(9), MinLengthValidator(4)], blank=True, null=True)
     SSNDataQuality = models.IntegerField(choices=SSNDataQuality.choices)
     DOB = models.DateField(blank=True, null=True)
@@ -93,37 +98,59 @@ class Homeless(models.Model):
     VeteranStatus = models.IntegerField(choices=VeteranStatus.choices)
 
 
+class ServiceProvider(models.TextChoices):
+    FOOD_PANTRY = "FP", _("Food Pantry")
+    DROP_IN_CENTRE = "DIC", _("Drop-in Centre")
+    SHELTER_HOMES = "SH", _("Shelter Home")
+    SOUP_KITCHEN = "SK", _("Soup Kitchen")
+    NOT_AVAILABLE = "NA", _("Not Available")
+    OTHERS = "OTH", _("Others")
+
+
 class SocialWorker(models.Model):
     class ClearanceLevel(models.TextChoices):
         GREETER = "greeter", _("Greeter")
         CASEWORKER = "caseworker", _("CaseWorker")
         SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
 
-    class ServiceProvider(models.TextChoices):
-        FOOD_PANTRY = "FP", _("Food Pantry")
-        DROP_IN_CENTRE = "DIC", _("Drop-in Centre")
-        SHELTER_HOMES = "SH", _("Shelter Home")
-        SOUP_KITCHEN = "SK", _("Soup Kitchen")
-        NOT_AVAILABLE = "NA", _("Not Available")
-        OTHERS = "OTH", _("Others")
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
+# Log table, used to display information on Case Worker page
+# Log should be recorded whenever greeter swipes card
+# Log should also be recorded whenever caseworker swipes card.
+# Greeter should retrieve model based on the worker's info.
 
-# Work in Progress
+class Log(models.Model):
+    #datetime field can be retrieved relative to timezone and converted later.
+    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None, related_name='Log_PersonalId')
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+
+class UserNameAndIdMapping(models.Model):
+    
+   user_name = models.CharField(max_length=32, primary_key=True, unique=True)
+   user_id = models.IntegerField()
+
+
+
 class ProjectCategory(models.TextChoices):
     HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
-    HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 1, _('HUD:HOPWA – Hotel/Motel Vouchers')
-    HUD_HOPWA_HOUSING_INFORMATION = 2, _('HUD:HOPWA – Housing Information')
-    HUD_HOPWA_PERMANENT_HOUSING = 3, _('HUD:HOPWA – Permanent Housing (facility based or TBRA)')
-    HUD_HOPWA_PERMANENT_HOUSING_PLACEMENT = 4, _('HUD:HOPWA – Permanent Housing Placement')
-    HUD_HOPWA_SHORT_TERM_RENT_MORTGAGE_UTILITY_ASSISTANCE = 5, _(
+    HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 'HUD:HOPWA – Hotel/Motel Vouchers', _('HUD:HOPWA – Hotel/Motel Vouchers')
+    HUD_HOPWA_HOUSING_INFORMATION = 'HUD:HOPWA – Housing Information', _('HUD:HOPWA – Housing Information')
+    HUD_HOPWA_PERMANENT_HOUSING = 'HUD:HOPWA – Permanent Housing (facility based or TBRA)', _(
+        'HUD:HOPWA – Permanent Housing (facility based or TBRA)')
+    HUD_HOPWA_PERMANENT_HOUSING_PLACEMENT = 'HUD:HOPWA – Permanent Housing Placement', _(
+        'HUD:HOPWA – Permanent Housing Placement')
+    HUD_HOPWA_SHORT_TERM_RENT_MORTGAGE_UTILITY_ASSISTANCE = 'HUD:HOPWA – Short-Term Rent, Mortgage, Utility assistance', _(
         'HUD:HOPWA – Short-Term Rent, Mortgage, Utility assistance')
-    HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 6, _('HUD:HOPWA – Short-Term Supportive Facility')
-    HUD_HOPWA_TransitionalHousing = 7, _('HUD:HOPWA – Transitional Housing')
+    HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 'HUD:HOPWA – Short-Term Supportive Facility', _(
+        'HUD:HOPWA – Short-Term Supportive Facility')
+    HUD_HOPWA_TransitionalHousing = 'HUD:HOPWA – Transitional Housing', _('HUD:HOPWA – Transitional Housing')
 
 
 class SubstanceAbuseCategory(models.IntegerChoices):
@@ -148,7 +175,7 @@ class DomesticViolenceOccurrence(models.IntegerChoices):
 
 class Enrollment(models.Model):
     DisablingCondition = models.IntegerField(choices=YesNoResponse.choices, default=YesNoResponse.NO)
-    EnrollmentID = models.CharField(max_length=32, primary_key=True, default=primary_key_generator())
+    EnrollmentID = models.CharField(max_length=32, primary_key=True, default=None)
     PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None,
                                    related_name='Enrollment_PersonalId')
     ProjectCategory = models.TextField(choices=ProjectCategory.choices, default=None, null=True)
@@ -230,8 +257,6 @@ class DisablingCondition(models.Model):
     substance_abuse = models.IntegerField(choices=SubstanceAbuseCategory.choices, null=True, default=None)
     substance_abuse_impairing = models.IntegerField(choices=ResponseCategory.choices, blank=True, null=True,
                                                     default=None)
-
-    # Work in Progress
 
 
 class IncomeAndSources(models.Model):
@@ -385,3 +410,140 @@ class HousingAssessmentAtExitHOPWA(models.Model):
                                      default=None)
     HousingAssessmentAtExit = models.IntegerField(choices=HousingAssessmentAtExitResponseCategory.choices)
     SubsidyInformation = models.IntegerField(choices=SubsidyInformationResponseCategory.choices)
+
+
+class LivingSituationResponse(models.IntegerChoices):
+    HOMELESS_SITUATION = 1, _("Homeless")
+    INSTITUTIONAL_SITUATION = 2, _("Institutional Housing")
+    TEMPORARY_AND_PERMANENT_HOUSING_SITUATION = 3, _("Temporary or Permanent Housing")
+    OTHER = 4, _("Other")
+
+
+class CurrentLivingSituation(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='CurrentLivingSituation_EnrollmentID',
+                                     default=None)
+    InformationDate = models.DateField()
+    CurrentLivingSituation = models.IntegerField(choices=LivingSituationResponse.choices)
+    VerifiedByProject = models.TextField(choices=ProjectCategory.choices)
+    HasToLeaveCurrentSituation = models.IntegerField(choices=ResponseCategory.choices)
+    HasASubsequentResidence = models.IntegerField(choices=ResponseCategory.choices)
+    HasResourcesToObtainPermanentHousing = models.IntegerField(choices=ResponseCategory.choices)
+    OwnershipInPermanentHousing = models.IntegerField(choices=ResponseCategory.choices)
+    HasClientMoved = models.IntegerField(choices=ResponseCategory.choices)
+    LocationDetails = models.TextField(blank=True, null=True)
+
+
+class DateOfEngagement(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='DateOfEngagement_EnrollmentID',
+                                     default=None)
+    DateOfEngagement = models.DateField()
+
+
+class BedNightDate(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='BedNightDate_EnrollmentID',
+                                     default=None)
+    BedNightDate = models.DateField()
+
+
+class AssessmentTypeCategory(models.IntegerChoices):
+    PHONE = 1, _("Phone")
+    VIRTUAL = 2, _("Virtual")
+    IN_PERSON = 3, _("In Person")
+
+
+class AssessmentLevelCategory(models.IntegerChoices):
+    CRISIS_NEED_ASSESSMENT = 1, _("Crisis Need Assessment")
+    HOUSING_NEED_ASSESSMENT = 2, _("Housing Need Assessment")
+
+
+class PrioritizationStatusCategory(models.IntegerChoices):
+    ON_PRIORITY_LIST = 1, _("On Priority List")
+    NOT_ON_PRIORITY_LIST = 2, _("Not on Priority List")
+
+
+class CoordinatedEntryAssessment(models.Model):
+    DateOfAssessment = models.DateField()
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='CoordinatedEntryAssessment_EnrollmentID', default=None)
+    AssessmentLocation = models.TextField(max_length=250)  # Admin-managed list of locations
+    AssessmentType = models.IntegerField(choices=AssessmentTypeCategory.choices)
+    AssessmentLevel = models.IntegerField(choices=AssessmentLevelCategory.choices)
+    AssessmentQuestion = models.TextField(max_length=250)
+    AssessmentAnswer = models.TextField(max_length=250)
+    AssessmentResultType = models.TextField(max_length=250)
+    AssessmentResult = models.TextField(max_length=250)
+    PrioritizationStatus = models.IntegerField(choices=PrioritizationStatusCategory.choices)
+
+
+class EventCategoryType(models.TextChoices):
+    PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
+    DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
+    COORDINATED_ENTRY_CRISIS_ASSESSMENT = 3, _("Scheduled Coordinated Entry Crisis Assessment")
+    COORDINATED_ENTRY_HOUSING_NEED_ASSESSMENT = 4, _("Scheduled Coordinated Entry Housing Needs Assessment")
+    CASE_MANAGEMENT = 5, _("Post Placement/ Follow-up Case Management")
+    STREET_OUTREACH = 6, _("Street Outreach Project or Services")
+    HOUSING_NAVIGATION = 7, _("Housing Navigation Project or Services")
+    INELIGIBLE_CONTINUUM_SERVICES = 8, _("Ineligible for continuum services")
+    NA_CONTINUUM_SERVICES = 9, _("No availability in continuum services")
+    EMERGENCY_SHELTER = 10, _("Emergency Shelter bed opening")
+    TRANSITIONAL_HOUSING = 11, _("Transitional Housing bed/unit opening")
+    JOINT_TH_RRH = 12, _("Joint TH-RRH project/unit/resource opening")
+    RRH_PROJECT_RESOURCE = 13, _("RRH Project Resource Opening")
+    PSH_PROJECT_RESOURCE = 14, _("PSH Project Resource Opening")
+    OTHER_PROJECT = 15, _("Other Project/Unit/Resource Opening")
+
+
+class ReferralResultCategory(models.IntegerChoices):
+    CLIENT_ACCEPTED = 1, _("Successful Referral: Client Accepted")
+    CLIENT_REJECTED = 2, _("Unsuccessful Referral: Client Rejected")
+    PROVIDER_REJECTED = 3, _("Unsuccessful Referral: Provider Rejected")
+
+
+class CoordinatedEntryEvent(models.Model):
+    DateOfEvent = models.DateField()
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='CoordinatedEntryEvent_EnrollmentID', default=None)
+    Event = models.IntegerField(choices=EventCategoryType.choices)
+    ClientHousedOrReHoused = models.CharField(choices=YesNoResponse.choices, max_length=3)
+    EnrolledInAfterCareProject = models.CharField(choices=YesNoResponse.choices, max_length=3)
+    LocationOfHousing = models.TextField(choices=ProjectCategory.choices)
+    ReferralResult = models.IntegerField(choices=ReferralResultCategory.choices)
+    DateOfResult = models.DateField()
+
+
+class Log(models.Model):
+    # datetime field can be retrieved relative to timezone and converted later.
+    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+class Appointments(models.Model):
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
+    venue = models.CharField(max_length=500, blank=True, null=False)
+    Time = models.TimeField(auto_now=False, auto_now_add=False, default=timezone.now)
+    Date = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+class SexualOrientationCategory(models.TextChoices):
+    HETEROSEXUAL = 1, _("Heterosexual")
+    GAY = 2, _("Gay")
+    LESBIAN = 3, _("Lesbian")
+    BISEXUAL = 4, _("Bisexual")
+    UNSURE = 5, _("Questioning / Unsure")
+    OTHERS = 6, _("Others")
+    CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+    CLIENT_REFUSED = 9, _('Client Refused')
+    DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+
+class SexualOrientation(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='SexualOrientation_EnrollmentID', default=None)
+    SexualOrientation = models.TextField(choices=SexualOrientationCategory.choices)
+    Description = models.TextField()
