@@ -33,9 +33,7 @@ import WrappedRegistrationForm from './Registration'
           .then(res => res.json())
           .then(json => {
             this.props.handleLogin(json,values.username);
-            console.log(this.props.clearanceLevel);
-            console.log(this.props.username);
-            this.props.history.push('/socialWorkerRegister');
+            this.props.history.push('/social');
           });
         }
     });

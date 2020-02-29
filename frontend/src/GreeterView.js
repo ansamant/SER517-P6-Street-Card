@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
 import { Form, Input, Button} from 'antd';
-import Header from './HeaderCommon.js'
+import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
 class GreeterView extends React.Component{
@@ -11,10 +11,15 @@ class GreeterView extends React.Component{
 
   constructor(props) {
     super(props);
+     console.log(this.props.clearanceLevel);
+     console.log(this.props.serviceProvider);
     this.state = {
         isLoaded: false,
-        name : ""
+        name : "",
+        clearanceLevel:this.props.clearanceLevel,
+        serviceProvider:this.props.serviceProvider
     }
+    this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
   }
   
 
@@ -30,14 +35,15 @@ class GreeterView extends React.Component{
         
         var registerRequestObject = {};
         //registerRequestObject.serviceProvider = "FP";
-        registerRequestObject.serviceProvider = this.props.clearanceLevel;
-        registerRequestObject.serviceProvider = this.props.serviceProvider;
+        registerRequestObject.serviceProvider = this.state.clearanceLevel;
+        registerRequestObject.serviceProvider = this.state.serviceProvider;
 
-        fetch('http://localhost:8000/homeless/' + this.value.personalId + '/logs/', {
+        console.log(registerRequestObject);
+        fetch('http://localhost:8000/homeless/' + values.personalId + '/logs/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify(registerRequestObject)
         })
@@ -51,7 +57,7 @@ class GreeterView extends React.Component{
             method : 'GET',
             headers: {
               'Content-Type' : 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('access_token')}`
+              Authorization: `Bearer ${localStorage.getItem('token')}`
             }
             
           })
@@ -66,6 +72,11 @@ class GreeterView extends React.Component{
       }
     });
   };
+
+  handleSuccessfulLogoutAction() {
+    this.props.handleLogout();
+    this.props.history.push('/login');
+  }
 
     render(){
        // const {items} = this.state;
@@ -98,9 +109,12 @@ class GreeterView extends React.Component{
           return(
             <div>
 
-                <Header/>,
-                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="log-post-form ">
-                    <h1>Enter Magstripe Id:</h1>
+                <Header 
+                  handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                  loggedInStatus={this.state.loggedInStatus}
+                />,
+                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="registration-form">
+                    <h1 style={{ marginLeft: '300px'}}>Enter Id </h1>
                     <Form.Item label="clientID">
                         {getFieldDecorator("personalId", {
                             rules: [
@@ -113,7 +127,7 @@ class GreeterView extends React.Component{
                         })(<Input />)}
                     </Form.Item>
                     <Form.Item {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" className="registration-submit-button">
                             Submit
                         </Button>
                     </Form.Item>
@@ -126,9 +140,12 @@ class GreeterView extends React.Component{
           return(
             <div>
 
-                <Header/>,
-                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="log-form ">
-                    <h1>Enter Magstripe Id:</h1>
+                <Header 
+                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                    loggedInStatus={this.state.loggedInStatus}
+                />,
+                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="registration-form">
+                    <h1 style={{ marginLeft: '300px'}}>Enter Id</h1>
                     <Form.Item label="clientID">
                         {getFieldDecorator("personalId", {
                             rules: [
@@ -141,7 +158,7 @@ class GreeterView extends React.Component{
                         })(<Input />)}
                     </Form.Item>
                     <Form.Item {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit">
+                        <Button style={{ left: '300px'}} type="primary" htmlType="submit" className="registration-submit-button">
                             Submit
                         </Button>
                     </Form.Item>

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
 import {Form, Button, Table} from 'antd';
-import StreetCardHeader from './HeaderCommon.js'
+import Header from './Header.js'
 import StreetCardFooter from './StreetCardFooter'
 import { withRouter } from 'react-router-dom';
 /**
@@ -42,15 +42,17 @@ class LogView extends React.Component{
         ]
 
       }
+
+      this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
   }
 
   componentDidMount () {
     //fetch('http://127.0.0.1:8000/homeless/' + this.props.personalId +'/logs/',{
-    fetch('http://127.0.0.1:8000/homeless/' + 4808684002 + '/logs/', {
+    fetch('http://127.0.0.1:8000/homeless/' + 'GhPkvZdFg8Hps9VoFxTgj2eVlftJRQkn' + '/logs/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       },
     })
      .then(res => res.json())
@@ -64,6 +66,14 @@ class LogView extends React.Component{
      })
   console.log(this.items);
 }
+
+
+handleSuccessfulLogoutAction() {
+    this.props.handleLogout();
+    this.props.history.push('/login');
+  }
+
+
     render(){
         const formItemLayout = {
             labelCol: {
@@ -93,7 +103,10 @@ class LogView extends React.Component{
           if(this.state.isLoaded== true){
             return(
               <div>
-                <StreetCardHeader/>
+                <Header 
+                  handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                  loggedInStatus={this.state.loggedInStatus}
+                />,
                   <Form {...formItemLayout} className="log-view-table" style={{padding: 40}}>
                   <Form.Item name="log-table">
                       <center><h1>Time Log</h1></center>
@@ -112,7 +125,10 @@ class LogView extends React.Component{
           else{
             return(
               <div>
-                <StreetCardHeader/>
+                <Header 
+                  handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                  loggedInStatus={this.state.loggedInStatus}
+                />,
                 <Form {...formItemLayout} onSubmit={this.handleSubmit} className="log-view-table" padding="80px">
                   <Form.Item name="log-table">
                       <center><h1>Time Log</h1></center>
