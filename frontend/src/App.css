@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #EEE2DC;
+  font-size: 12px;
 }
 
 .App-logo {
@@ -73,15 +73,17 @@ body {
 .location-map {
   width: 320px;
   padding: 10px;
-  border: 5px solid gray;
+  border: 5px #dddfd4;
   margin: 0;
 }
 
-.login-form {
+.site-layout-content .login-form {
   max-width: 500px;
   padding: 50px;
-  border: 3px solid gray;
+  border: 5px solid gray;
   margin: 100px;
+  background-color: #fff;
+  border-radius: 25px;
 }
 .login-form-forgot {
   float: right;
@@ -134,8 +136,7 @@ body {
 
 .registration-submit-button {
   width: 300px;
-  margin-left: 150px;
-  margin-right: 150px;
+  margin-left: 50px;
 }
 
 .ant-col-sm-offset-8 {
@@ -152,4 +153,56 @@ body {
 
 .personId-form .ant-form-item-control-wrapper .ant-form-item-control{
   margin-left: 100px;
+}
+
+.logo {
+  /* margin-left: -2%; */
+  width: 10vh;
+  height: 10vh;
+  float: left;
+  padding: 1% 1% 0.05% 0%;
+}
+
+
+.site-layout-header {
+  height: 11vh;
+  width: 100%;
+  background-color: #173e43;
+}
+
+.site-layout-sider {
+  background-color: #173e43;
+  flex: 0 0 2500px !important;
+  max-width: 250px !important;
+  min-width: 250px !important;
+  width: 250px !important;
+}
+
+.content{
+  padding: 50px 50px;
+  background-color: #3fb0ac;
+  height: 1023px;
+}
+
+.site-layout-content {
+  background: #3fb0ac;
+  margin-left: 34%;
+  margin-top: 10%;
+}
+
+.site-layout-content-registration {
+  background: #3fb0ac;
+  margin-left: 32%;
+  max-width: 800px;
+  background-color: #fff;
+  border: 5px solid #fae596;
+  border-radius: 25px;
+}
+
+.register-ant-form-item {
+  margin-left: 180px;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #000;
 }
