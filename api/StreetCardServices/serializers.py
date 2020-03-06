@@ -6,7 +6,8 @@ from .utils import check_and_assign
 from .models import SocialWorker, IncomeAndSources, NonCashBenefits, Enrollment, DisablingCondition, \
     DomesticViolence, HealthInsurance, W1ServicesProvidedHOPWA, FinancialAssistanceHOPWA, MedicalAssistanceHOPWA, \
     TCellCD4AndViralLoadHOPWA, HousingAssessmentAtExitHOPWA, Homeless, CurrentLivingSituation, DateOfEngagement, \
-    BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation,UserNameAndIdMapping,Log
+    BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation,UserNameAndIdMapping,Log,Appointments
+
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,6 +26,12 @@ class SocialWorkerSerializer(ModelSerializer):
     class Meta:
         model = SocialWorker
         fields = ('clearanceLevel', 'address', 'serviceProvider')
+
+
+class HomelessSerializer(ModelSerializer):
+    class Meta:
+        model = Homeless
+        fields = '__all__'
 
 
 class UserSerializer(ModelSerializer):
@@ -121,9 +128,9 @@ class HealthInsuranceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class HomelessSerializer(serializers.ModelSerializer):
+class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Homeless
+        model = Appointments
         fields = '__all__'
 
 

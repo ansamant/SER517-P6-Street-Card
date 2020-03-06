@@ -80,10 +80,10 @@ body {
 .site-layout-content .login-form {
   max-width: 500px;
   padding: 50px;
-  border: 5px solid gray;
+  border: 5px solid #fae596;
   margin: 100px;
   background-color: #fff;
-  border-radius: 25px;
+  
 }
 .login-form-forgot {
   float: right;
@@ -123,8 +123,13 @@ body {
 }
 
 .personId-form-input {
-  padding: 100px;
-  margin-left: 220px;
+  background: #3fb0ac;
+  margin-left: 24%;
+  margin-top: 16%;
+  max-width: 800px;
+  background-color: #fff;
+  border: 5px solid #fae596;
+  
 }
 .ant-calendar-picker {
   width: 100%;
@@ -172,7 +177,7 @@ body {
 
 .site-layout-sider {
   background-color: #173e43;
-  flex: 0 0 2500px !important;
+  flex: 0 0 250px !important;
   max-width: 250px !important;
   min-width: 250px !important;
   width: 250px !important;
@@ -186,7 +191,7 @@ body {
 
 .site-layout-content {
   background: #3fb0ac;
-  margin-left: 34%;
+  margin-left: 31%;
   margin-top: 10%;
 }
 
@@ -196,11 +201,46 @@ body {
   max-width: 800px;
   background-color: #fff;
   border: 5px solid #fae596;
-  border-radius: 25px;
+  
 }
 
+.site-layout-content-registration-client{
+  background: #3fb0ac;
+  margin-left: 24%;
+  max-width: 800px;
+  background-color: #fff;
+  border: 5px solid #fae596;
+  
+}
+.site-layout-content-setappointment {
+  background: #3fb0ac;
+  margin-left: 24%;
+  margin-top: 8%;
+  max-width: 800px;
+  background-color: #fff;
+  border: 5px solid #fae596;
+  
+}
+
+.site-layout-content-viewappointment {
+  background: #3fb0ac;
+  margin-top: 2%;
+  background-color: #fff;
+  border: 5px solid #fae596;
+}
 .register-ant-form-item {
   margin-left: 180px;
+}
+
+.register-ant-form-item-3 {
+  margin-left: 100px;
+}
+
+.register-ant-form-item-2 {
+  margin-left: 140px;
+}
+.register-ant-form-item .ant-time-picker {
+  width: 100%;
 }
 
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
