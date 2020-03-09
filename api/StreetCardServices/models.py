@@ -77,7 +77,6 @@ class Homeless(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
 
-
     PersonalId = models.CharField(max_length=32, primary_key=True, default=None)
     FirstName = models.CharField(max_length=128, blank=True, null=True)
     MiddleName = models.CharField(max_length=128, blank=True, null=True)
@@ -136,6 +135,15 @@ class UserNameAndIdMapping(models.Model):
    user_name = models.CharField(max_length=32, primary_key=True, unique=True)
    user_id = models.IntegerField()
 
+
+
+class Appointments(models.Model):
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
+    venue = models.CharField(max_length=500, blank=True, null=False)
+    Time = models.TimeField(auto_now=False, auto_now_add=False)
+    Date = models.DateField(auto_now=False, auto_now_add=False)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
 class ProjectCategory(models.TextChoices):
@@ -478,6 +486,7 @@ class CoordinatedEntryAssessment(models.Model):
     PrioritizationStatus = models.IntegerField(choices=PrioritizationStatusCategory.choices)
 
 
+
 class EventCategoryType(models.TextChoices):
     PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
     DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
@@ -518,15 +527,6 @@ class Log(models.Model):
     # datetime field can be retrieved relative to timezone and converted later.
     datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None)
-    serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
-
-class Appointments(models.Model):
-    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
-    venue = models.CharField(max_length=500, blank=True, null=False)
-    Time = models.TimeField(auto_now=False, auto_now_add=False, default=timezone.now)
-    Date = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
