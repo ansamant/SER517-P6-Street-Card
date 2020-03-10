@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, Layout } from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 import WrappedRegistrationForm from './Registration'
 
+const { Content } = Layout;
  class NormalLoginForm extends React.Component {
 
   constructor(props) {
@@ -43,38 +44,45 @@ import WrappedRegistrationForm from './Registration'
     const { getFieldDecorator } = this.props.form;
 
     let form;
-    form = <div>
+    form =  <Layout className="layout">
               <Header loginPageStatus={this.state.loginPageStatus} />
-              <Form onSubmit={this.handleLoginSubmit} className="login-form">
-                <Form.Item>
-                  {getFieldDecorator('username', {
-                    rules: [{ required: true, message: 'Please input your username!' }],
-                  })(
-                    <Input
-                      prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      placeholder="Username"
-                    />,
-                  )}
-                </Form.Item>
-                <Form.Item>
-                  {getFieldDecorator('password', {
-                    rules: [{ required: true, message: 'Please input your Password!' }],
-                  })(
-                    <Input
-                      prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      type="password"
-                      placeholder="Password"
-                    />,
-                  )}
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit" className="login-form-button">
-                    Log in
-                  </Button>
-                </Form.Item>
-              </Form>
+              <Layout>
+                <Content className="content">
+                  <div className="site-layout-content">
+                    <Form onSubmit={this.handleLoginSubmit} className="login-form">
+                      <img style = {{ borderRadius: '50%', maxWidth: '100px', marginLeft: '140px' }} src = 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4'/>
+                      <Form.Item>
+                        {getFieldDecorator('username', {
+                          rules: [{ required: true, message: 'Please input your username!' }],
+                        })(
+                          <Input
+                            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                            placeholder="Username"
+                          />,
+                        )}
+                      </Form.Item>
+                      <Form.Item>
+                        {getFieldDecorator('password', {
+                          rules: [{ required: true, message: 'Please input your Password!' }],
+                        })(
+                          <Input
+                            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                            type="password"
+                            placeholder="Password"
+                          />,
+                        )}
+                      </Form.Item>
+                      <Form.Item>
+                        <Button type="primary" htmlType="submit" className="login-form-button">
+                          Log in
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  </div>
+                </Content>
+              </Layout>
               <StreetCardFooter/>
-            </div>;
+            </Layout>;
     return (
       <div>{form}</div>
     );
