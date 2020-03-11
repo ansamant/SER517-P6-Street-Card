@@ -35,10 +35,29 @@ class GreeterView extends React.Component{
         
         var registerRequestObject = {};
         //registerRequestObject.serviceProvider = "FP";
-        registerRequestObject.serviceProvider = this.state.clearanceLevel;
+       //registerRequestObject.serviceProvider = this.state.clearanceLevel;
         registerRequestObject.serviceProvider = this.state.serviceProvider;
 
         console.log(registerRequestObject);
+        fetch('http://localhost:8000/homeless/' + values.personalId + '/',{
+          method : 'GET',
+          headers: {
+            'Content-Type' : 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+          
+        })
+        .then(res => res.json())
+        .then(json=>{
+          console.log("JSON" + json)
+          // Need name to be used in the header for easy mapping of client name.
+          registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
+          this.setState({
+            isLoaded: true,
+            name : registerRequestObject.clientName,
+          })
+        });
+
         fetch('http://localhost:8000/homeless/' + values.personalId + '/logs/', {
           method: 'POST',
           headers: {
@@ -51,23 +70,6 @@ class GreeterView extends React.Component{
           .then(
             json => {
             console.log("register response:", json);
-          });
-
-          fetch('http://localhost:8000/homeless/' + values.personalId + '/',{
-            method : 'GET',
-            headers: {
-              'Content-Type' : 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-            
-          })
-          .then(res => res.json())
-          .then(json=>{
-            console.log("JSON" + json)
-            this.setState({
-              isLoaded: true,
-              name : json['FirstName'] + ' ' + json['LastName'],
-            })
           });
       }
     });
