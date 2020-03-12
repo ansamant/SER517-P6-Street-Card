@@ -44,7 +44,7 @@ class UserSerializer(ModelSerializer):
         SocialWorker.objects.create(user=user, **profile_data)
         UserNameAndIdMapping.objects.create(user_id=user.id,user_name=user.username)
         return user
-        
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         print(response)
@@ -86,8 +86,6 @@ class UserNameAndIdMappingSerializer(ModelSerializer):
         response = super().to_representation(instance)
         response['user'] = UserSerializer(
             User.objects.get(id=response['user_id'])).data
-        response['socialWorker'] = SocialWorkerSerializer(
-            SocialWorker.objects.get(user_id=response['user_id'])).data
         return response
 
 

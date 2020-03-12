@@ -140,7 +140,7 @@ class EnrollmentViewSet(viewsets.ViewSet):
     def create(self, request, homeless_pk=None):
         enroll = request.data
         enroll['PersonalId'] = homeless_pk
-        enroll['EnrollmentId'] = primary_key_generator()
+        enroll['EnrollmentID'] = primary_key_generator()
         serializer = EnrollmentSerializer(data=enroll)
         if serializer.is_valid():
             serializer.save()

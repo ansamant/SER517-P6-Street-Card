@@ -9,7 +9,9 @@ import {
   Select,
   Button,
   AutoComplete,
-  Icon
+  Icon,
+  Row,
+  Col
 } from "antd";
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
@@ -81,12 +83,23 @@ class RegistrationForm extends React.Component {
 
    handlePersonalIdSubmit = e => {
     e.preventDefault();
-    this.props.history.push('/homelessRegistration');
     this.props.form.validateFieldsAndScroll((err, values) => {
 
       if (!err) {
         this.props.handleHomelessPersonData(values.personId);
         this.props.history.push('/homelessRegistration');
+      }
+    });
+  };
+
+  viewLongs = e => {
+    e.preventDefault();
+    console.log("view");
+    this.props.form.validateFieldsAndScroll((err, values) => {
+
+      if (!err) {
+        this.props.handleHomelessPersonData(values.personId);
+        this.props.history.push('/log');
       }
     });
   };
@@ -197,7 +210,7 @@ class RegistrationForm extends React.Component {
         <Button onClick={this.homelessRegistration} className="caseworker-homeless-registration-button" type="primary" block>Register Homeless Person</Button>
       </div>
       <div className="personId-form-input">
-        <Form {...formItemLayout} onSubmit={this.handlePersonalIdSubmit} className="personId-form">
+        <Form {...formItemLayout} onSubmit={this.handlePersonalIdSubmit.bind(this)} className="personId-form">
           <Form.Item>
             {getFieldDecorator("personId", {
               rules: [
@@ -210,9 +223,18 @@ class RegistrationForm extends React.Component {
             })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)'}} />} placeholder="Homeless Person Identification Number" />)}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit" style={{ width: '150px', marginLeft: '160px' }}>
-              Search
-            </Button>
+            <Row>
+              <Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 2 }}>
+                <Button type="primary" htmlType="submit" style={{ width: '150px', marginLeft: '160px' }}>
+                Edit
+              </Button>
+              </Col>
+              <Col xs={{ span: 11, offset: 1 }} lg={{ span: 6, offset: 2 }}>
+                <Button type="primary" htmlType="submit"   onClick={this.viewLongs.bind(this)} style={{ width: '150px', marginLeft: '160px' }}>
+                  Logs Info
+                </Button>
+              </Col>
+            </Row>
           </Form.Item>
         </Form>
       </div>

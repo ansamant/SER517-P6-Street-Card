@@ -7,6 +7,8 @@ import Registration from './Registration';
 import HomelessRegistration from './HomelessRegistration';
 import WrappedLogTable from './LogView';
 import WrappedGreeterForm from './GreeterView';
+import SocialWorker from './SocialWorker';
+import LogView from './LogView';
 
 const PrivateRoute = ({ component: Component, loggedInStatus: loggedInStatus, ...rest }) => (
   <Route render={(props) => (
@@ -39,6 +41,7 @@ export default class App extends React.Component {
     this.handleHomelessPersonId = this.handleHomelessPersonId.bind(this);
     this.handleHomelessPersonData = this.handleHomelessPersonData.bind(this);
     this.isEmpty = this.isEmpty.bind(this);
+    this.method = this.method.bind(this);
   }
 
 
@@ -56,6 +59,18 @@ export default class App extends React.Component {
       localStorage.removeItem('refresh_token');
   }
 
+  method(clearanceLevel,serviceProvider) {
+    console.log("method");
+    console.log(clearanceLevel);
+    console.log(serviceProvider);
+     this.setState({ 
+              clearanceLevel: clearanceLevel,
+              serviceProvider: serviceProvider
+            });
+     console.log(this.state.clearanceLevel);
+     console.log(this.state.serviceProvider);
+  }
+
 
    handleLogin(json,user_name) {
      localStorage.setItem('token', json.access);
@@ -65,27 +80,6 @@ export default class App extends React.Component {
               username: user_name,
               loggedInStatus: "LOGGED_IN"
             });
-
-     if(this.state.loggedInStatus === "LOGGED_IN" && this.state.username !== "shivamverma"){
-     var localClearanceLevel = '';
-     var localserviceProvider = '';
-     fetch('http://localhost:8000/user/' + this.state.username + '/', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-          .then(res => res.json())
-          .then(json => {
-            console.log("something", json);
-          localClearanceLevel = json.user.socialWorker.clearanceLevel;
-          localserviceProvider = json.user.socialWorker.serviceProvider;
-          console.log(localClearanceLevel,localserviceProvider);
-          this.setState({
-              clearanceLevel: localClearanceLevel,
-              serviceProvider: localserviceProvider
-            });
-      });
-    }
 
   }
 
@@ -167,7 +161,14 @@ isEmpty(object) {
               homelessPersonId={this.state.homelessPersonId}
               handleLogin={this.handleLogin}
             />
-            <Route path="/log" exact component={WrappedLogTable}/>
+            <PrivateRoute 
+             exact 
+            path={"/log"} 
+            component={LogView}
+            loggedInStatus={this.state.loggedInStatus}
+            handleHomelessPersonId={this.handleHomelessPersonId}
+            handleLogout={this.handleLogout}
+            />
             <PrivateRoute 
               exact 
               path={"/greeter"} 
@@ -177,6 +178,18 @@ isEmpty(object) {
               loggedInStatus={this.state.loggedInStatus}
               clearanceLevel={this.state.clearanceLevel}
               serviceProvider={this.state.serviceProvider}
+              handleLogout={this.handleLogout}
+            />
+            <PrivateRoute 
+              exact 
+              path={"/social"} 
+              component={SocialWorker}
+              clearanceLevel ={this.state.clearanceLevel}
+              username ={this.state.username}
+              loggedInStatus={this.state.loggedInStatus}
+              clearanceLevel={this.state.clearanceLevel}
+              serviceProvider={this.state.serviceProvider}
+              method={this.method}
             />
           </Switch>
         </BrowserRouter>
