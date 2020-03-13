@@ -12,6 +12,7 @@ import LogView from './LogView';
 import SetAppointments from './SetAppointments'
 import EditAppointment from './EditAppointment'
 import ViewAppointmentsTable from './ViewAppointmentTable'
+import enrollmentForm from './component/enrollmentForm'
 
 const PrivateRoute = ({ component: Component, loggedInStatus: loggedInStatus, ...rest }) => (
   <Route render={(props) => (
@@ -249,6 +250,15 @@ isEmpty(object) {
               homelessPersonId={this.state.homelessPersonId}
               handleLogout={this.handleLogout}
               updateAppointmentId={this.updateAppointmentId}
+              updatePageComponent={this.updatePageComponent}
+            />
+             <PrivateRoute
+              exact
+              path={"/enrollment"}
+              component={enrollmentForm}
+              loggedInStatus={this.state.loggedInStatus}
+              homelessPersonId={this.state.homelessPersonId}
+              handleLogout={this.handleLogout}
               updatePageComponent={this.updatePageComponent}
             />
           </Switch>
