@@ -49,7 +49,6 @@ class LogView extends React.Component{
   }
 
   componentDidMount () {
-    console.log(this.props.homelessPersonId)
     fetch('http://127.0.0.1:8000/homeless/' + this.props.handleHomelessPersonId +'/logs/',{
       method: 'GET',
       headers: {
