@@ -49,15 +49,16 @@ class GreeterView extends React.Component{
         })
         .then(res => res.json())
         .then(json=>{
-          console.log("JSON" + json)
+          
           // Need name to be used in the header for easy mapping of client name.
           registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
+          //console.log("REG " + registerRequestObject.clientName)
           this.setState({
             isLoaded: true,
             name : registerRequestObject.clientName,
           })
         });
-
+        
         fetch('http://localhost:8000/homeless/' + values.personalId + '/logs/', {
           method: 'POST',
           headers: {
