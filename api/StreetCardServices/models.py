@@ -140,7 +140,12 @@ class UserNameAndIdMapping(models.Model):
 class Appointments(models.Model):
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
     appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
-    venue = models.CharField(max_length=500, blank=True, null=False)
+    office = models.CharField(max_length=500, blank=True, null=False)
+    streetAddress1 = models.CharField(max_length=500, blank=True, null=False)
+    streetAddress2 = models.CharField(max_length=500, blank=True, null=True)
+    city = models.CharField(max_length=500, blank=True, null=False)
+    zipCode = models.CharField(max_length=500, blank=True, null=False)
+    state = models.CharField(max_length=500, blank=True, null=False)
     Time = models.TimeField(auto_now=False, auto_now_add=False)
     Date = models.DateField(auto_now=False, auto_now_add=False)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
