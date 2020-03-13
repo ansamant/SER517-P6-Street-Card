@@ -696,3 +696,99 @@ class LastPermanentAddress(models.Model):
     ZipCode = models.TextField()
     AddressDataQuality = models.IntegerField(choices=AddressDataQualityCategory.choices)
 
+
+# class VAMCStationNumber(models.Model):
+
+class SSVFHPTargetingCriteria(models.Model):
+    class CurrentHousingLossExpectedWithinCategory(models.IntegerChoices):
+        ZERO_TO_SIX_DAYS = 0, _('0-6 days')
+        SEVEN_TO_THIRTEEN_DAYS = 1, _('7-13 days')
+        FOURTEEN_TO_TWENTYONE_DAYS = 2, _('14-21 days')
+        MORE_THAN_TWENTYONE_DAYS = 3, _('More than 21 days (0 points)')
+
+    class AnnualHouseholdGrossIncomeAmountCategory(models.IntegerChoices):
+        ZERO_TO_FOURTEEN_PERC_OF_AREA_MEDIAN_INCOME = 0, _('0-14% of Area Median Income (AMI) for household size')
+        FIFTEEN_TO_THIRTY_PERC_OF_AMI = 1, _('15-30% of AMI for household size')
+        MORE_THAN_THIRTY_PERC_OF_AMI = 2, _('More than 30% of AMI for household size (0 points)')
+
+    class RentalEvictionsWithinThePastSevenYearsCategory(models.IntegerChoices):
+        FOUR_OR_MORE_PRIOR_RENTAL_EVICTIONS = 0, _('4 or more prior rental evictions')
+        TWO_TO_THREE_PRIOR_RENTAL_EVICTIONS = 1, _('2-3 prior rental evictions')
+        ONE_PRIOR_RENTAL_EVICTION = 2, _('1 prior rental eviction')
+        NO_PRIOR_RENTAL_EVICTION = 3, _('No prior rental eviction (0 points)')
+
+    class HistoryOfLiteralHomelessnessCategory(models.IntegerChoices):
+        FOUR_OR_MORE_TIMES = 0, _('4 or more times or total of at least 12 months in past three years')
+        TWO_OR_THREE_TIMES = 1, _('2-3 times in past three years')
+        ONE_TIME_IN_PAST_THREE_YEARS = 2, _('1 time in past three years')
+        NONE = 3, _('None (0 points)')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='SSVFHPTargetingCriteria_EnrollmentID', default=None)
+    ReferredByCoordinatedEntry = models.IntegerField(choices=YesNoResponse.choices)
+    CurrentHousingLossExpectedWithin = models.IntegerField(choices=CurrentHousingLossExpectedWithinCategory.choices)
+    CurrentHouseholdIncomeIsZeroDollars = models.IntegerField(choices=YesNoResponse.choices)
+    AnnualHouseholdGrossIncomeAmount = models.IntegerField(choices=AnnualHouseholdGrossIncomeAmountCategory.choices)
+    SuddenAndSignificantDecreaseIncashIncome = models.IntegerField(choices=YesNoResponse.choices)
+    MajorChangeInHouseholdCompositionInPastTwelveMonths = models.IntegerField(choices=YesNoResponse.choices)
+    RentalEvictionsWithinThePastSevenYears = models.IntegerField(
+        choices=RentalEvictionsWithinThePastSevenYearsCategory.choices)
+    CurrentlyAtRiskOfLosingATenantBasedHousingSubsidy = models.IntegerField(choices=YesNoResponse.choices)
+    HistoryOfLiteralHomelessness = models.IntegerField(choices=HistoryOfLiteralHomelessnessCategory.choices)
+    HeadOfHouseholdWithDisablingCondition = models.IntegerField(choices=YesNoResponse.choices)
+    CriminalRecordForArsonDrugDealing = models.IntegerField(choices=YesNoResponse.choices)
+    RegisteredSexOffender = models.IntegerField(choices=YesNoResponse.choices)
+    AtLeastOneDependentChildUnderAgeSix = models.IntegerField(choices=YesNoResponse.choices)
+    SingleParentWithMinorChild = models.IntegerField(choices=YesNoResponse.choices)
+    HouseholdSizeOfFiveOrMore = models.IntegerField(choices=YesNoResponse.choices)
+    AnyVeteranInHouseholdServedInIraqOrAfghanistan = models.IntegerField(choices=YesNoResponse.choices)
+    FemaleVeteran = models.IntegerField(choices=YesNoResponse.choices)
+    HPApplicantTotalPoints = models.IntegerField()
+    GranteeTargetingThresholdScore = models.IntegerField()
+
+
+class HUDVASHVoucherTracking(models.Model):
+    class VoucherChangeCategory(models.IntegerChoices):
+        REFERRAL_PACKAGE_FORWARDED_TO_PHA = 1, _('Referral package forwarded to PHA')
+        VOUCHER_DENIED_BY_PHA = 2, _('Voucher denied by PHA')
+        VOUCHER_ISSUED_BY_PHA = 3, _('Voucher issued by PHA')
+        VOUCHER_REVOKED_OR_EXPIRED = 4, _('Voucher revoked or expired')
+        VOUCHER_IN_USE_VETERAN_MOVED_INTO_HOUSING = 5, _('Voucher in use- veteran moved into housing')
+        VOUCHER_WAS_PORTED_LOCALLY = 6, _('Voucher was ported locally')
+        VOUCHER_WAS_ADMINISTRATIVELY_ABSORBED_BY_NEW_PHA = 7, _('Voucher was administratively absorbed by new PHA')
+        VOUCHER_WAS_CONVERTED_TO_HOUSING_CHOICE_VOUCHER = 8, _('Voucher was converted to Housing Choice Voucher')
+        VETERAN_EXITED_VOUCHER_WAS_RETURNED = 9, _('Veteran exited - voucher was returned')
+        VETERAN_EXITED_FAMILY_MAINTAINED_THE_VOUCHER = 10, _('0 Veteran exited - family maintained the voucher')
+        VETERAN_EXITED_PRIOR_TO_EVERRECEIVING_A_VOUCHER = 11, _('Veteran exited - prior to ever receiving a voucher')
+        OTHER = 12, _('Other')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='HUDVASHVoucherTracking_EnrollmentID', default=None)
+    InformationDate = models.DateField()
+    VoucherChange = models.IntegerField(choices=VoucherChangeCategory.choices)
+    IfOther = models.TextField()
+
+
+class HUDVASHExitInformation(models.Model):
+    class CaseManagementExitReasonCategory(models.IntegerChoices):
+        ACCOMPLISHED_GOALS = 1, _('Accomplished goals and /or obtained services and no longer needs CM')
+        TRANSFERRED_TO_ANOTHER_HUDVASH_PROGRAM_SITE = 2, _('Transferred to another HUD - VASH program site')
+        FOUND_OR_CHOSE_OTHER_HOUSING = 3, _('Found/chose other housing')
+        DID_NOT_COMPLY_WITH_HUDVASH_CM = 4, _('Did not comply with HUD - VASH CM')
+        EVICTION_OR_OTHER_HOUSING_RELATED_ISSUES = 5, _('Eviction and/or other housing related issues')
+        UNHAPPY_WITH_HUD_VASH_HOUSING = 6, _('Unhappy with HUD-VASH housing')
+        NO_LONGER_FINANCIALLY_ELIGIBLE_FOR_HUD_VASH_VOUCHER = 7, _(
+            'No longer financially eligible for HUD-VASH voucher')
+        NO_LONGER_INTERESTED_IN_PARTICIPATING_IN_THIS_PROGRAM = 8, _(
+            'No longer interested in participating in this program')
+        VETERAN_CANNOT_BE_LOCATED = 9, _('Veteran cannot be located')
+        VETERAN_TOO_ILL_TO_PARTICIPATE_AT_THIS_TIME = 10, _('Veteran too ill to participate at this time')
+        VETERAN_IS_INCARCERATED = 11, _('Veteran is incarcerated')
+        VETERAN_IS_DECEASED = 12, _('Veteran is deceased')
+        OTHER = 13, _('Other')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='HUDVASHExitInformation_EnrollmentID', default=None)
+    CaseManagementExitReason = models.IntegerField(choices=CaseManagementExitReasonCategory.choices)
+    IfOther = models.TextField()
+
