@@ -792,3 +792,52 @@ class HUDVASHExitInformation(models.Model):
     CaseManagementExitReason = models.IntegerField(choices=CaseManagementExitReasonCategory.choices)
     IfOther = models.TextField()
 
+
+# RHY and PATH models
+
+class ConnectionWithSOAR(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='ConnectionWithSOAR_EnrollmentID', default=None)
+    ConnectionWithSOAR = models.IntegerField(choices=ResponseCategory.choices)
+
+
+class LastGradeCompleted(models.Model):
+    class LastGradeCompletedCategory(models.IntegerChoices):
+        LESS_THAN_GRADE_FIVE = 1, _('Less than Grade 5')
+        GRADES_FIVE_TO_SIX = 2, _('Grades 5-6')
+        GRADES_SEVEN_EIGHT = 3, _('Grades 7-8 ')
+        GRADES_NINE_TO_ELEVEN = 4, _('Grades 9-11')
+        GRADE_TWELVE_OR_HIGH_SCHOOL_DIPLOMA = 5, _('Grade 12/High school diploma')
+        SCHOOL_PROGRAM_DOES_NOT_HAVE_GRADE_LEVELS = 6, _('School program does not have grade levels')
+        GED = 7, _('GED')
+        SOME_COLLEGE = 10, _('Some college')
+        ASSOCIATES_DEGREE = 11, _('Associates degree')
+        BACHELORS_DEGREE = 12, _('Bachelors degree')
+        GRADUATE_DEGREE = 13, _('Graduate degree')
+        VOCATIONAL_CERTIFICATION = 14, _('Vocational Certification')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='LastGradeCompleted_EnrollmentID', default=None)
+    LastGradeCompleted = models.IntegerField(choices=LastGradeCompletedCategory.choices)
+
+
+class EmploymentStatus(models.Model):
+    class TypeOfEmploymentCategory(models.IntegerChoices):
+        FULL_TIME = 1, _('Full-time')
+        PART_TIME = 2, _('Part-time')
+
+    class WhyNotEmployedCategory(models.IntegerChoices):
+        LOOKING_FOR_WORK = 1, _(' Looking for work')
+        UNABLE_TO_WORK = 2, _('Unable to work')
+        NOT_LOOKING_FOR_WORK = 3, _('Not looking for work')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='EmploymentStatus_EnrollmentID', default=None)
+    InformationDate = models.DateField()
+    Employed = models.IntegerField(choices=YesNoResponse.choices)
+    TypeOfEmployment = models.IntegerField(choices=TypeOfEmploymentCategory.choices)
+    WhyNotEmployed = models.IntegerField(choices=WhyNotEmployedCategory.choices)
+
