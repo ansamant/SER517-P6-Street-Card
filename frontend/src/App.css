@@ -143,7 +143,10 @@ body {
   width: 300px;
   margin-left: 50px;
 }
-
+.edit-appointment-button {
+  width: 100px;
+  margin-left: 10px;
+}
 .ant-col-sm-offset-8 {
   margin-left: 0%;
 }
