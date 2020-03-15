@@ -37,7 +37,7 @@ class GreeterView extends React.Component{
         //registerRequestObject.serviceProvider = "FP";
        //registerRequestObject.serviceProvider = this.state.clearanceLevel;
         registerRequestObject.serviceProvider = this.state.serviceProvider;
-
+        registerRequestObject.clientName= "";
         console.log(registerRequestObject);
         fetch('http://localhost:8000/homeless/' + values.personalId + '/',{
           method : 'GET',
@@ -51,30 +51,34 @@ class GreeterView extends React.Component{
         .then(json=>{
           // Need name to be used in the header for easy mapping of client name.
           registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
-          //console.log("REG " + registerRequestObject.clientName)
+          //console.log("REG1 " + registerRequestObject.clientName)
           this.setState({
             isLoaded: true,
             name : registerRequestObject.clientName,
           })
-        });
-        
-        fetch('http://localhost:8000/homeless/' + values.personalId + '/logs/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify(registerRequestObject)
-        })
-          .then(res => res.json())
-          .then(
-            json => {
-            console.log("register response:", json);
+          
+        }).then(json=>{
+          //should only run after get request has successfully 
+          //console.log("REG2 "+ JSON.stringify(registerRequestObject));
+          fetch('http://localhost:8000/homeless/' + values.personalId + '/logs/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(registerRequestObject)
+          })
+            .then(res => res.json())
+            .then(
+              json => {
+              console.log("register response:", json);
+            });
           });
-      }
+        }
     });
   };
 
+  
   handleSuccessfulLogoutAction() {
     this.props.handleLogout();
     this.props.history.push('/login');
