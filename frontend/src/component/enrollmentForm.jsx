@@ -189,7 +189,6 @@ const DomesticViolenceOccurrence = [
         label: "Data Not Collected"
     },
 ];
-
 const SubstanceAbuseCategory = [
     {
         value: 0,
@@ -309,13 +308,13 @@ class EnrollmentForm extends Component {
                 var nonCashBenefitsObject = {};
                 nonCashBenefitsObject.InformationDate = values['informationdateNonCash'] != null ? values['informationdateNonCash'].format('YYYY-MM-DD') : null;
                 nonCashBenefitsObject.BenefitsFromAnySource = values.benefitsfromanysources != null ? values.benefitsfromanysources[0] : null;
-                nonCashBenefitsObject.SNAP = values.snap[0];
-                nonCashBenefitsObject.WIC = values.wic[0];
-                nonCashBenefitsObject.TANFChildCare = values.tanfchildcare[0];
-                nonCashBenefitsObject.TANFTransportation = values.tanftransportation[0];
-                nonCashBenefitsObject.OtherTANF = values.othertanf[0];
-                nonCashBenefitsObject.OtherSource = values.othersources[0];
-                nonCashBenefitsObject.SpecifySource = values.specifysource;
+                nonCashBenefitsObject.SNAP = values.snap != null ? values.snap[0]: null;
+                nonCashBenefitsObject.WIC = values.wic != null ? values.wic[0]: null;
+                nonCashBenefitsObject.TANFChildCare = values.tanfchildcare != null ? values.tanfchildcare[0]: null;
+                nonCashBenefitsObject.TANFTransportation = values.tanftransportation != null ? values.tanftransportation[0]: null;
+                nonCashBenefitsObject.OtherTANF = values.othertanf !=null ? values.othertanf[0]: null;
+                nonCashBenefitsObject.OtherSource = values.othersources != null ? values.othersources[0] : null;
+                nonCashBenefitsObject.SpecifySource = values.specifysource !=null ? values.specifysource : null;
                 enrollmentRequestObject.non_cash_benefits = nonCashBenefitsObject;
                 var incomeAndSourcesObject = {};
                 incomeAndSourcesObject.InformationDate = values['informationdateIncome'] != null ? values['informationdateIncome'].format('YYYY-MM-DD') : null;
