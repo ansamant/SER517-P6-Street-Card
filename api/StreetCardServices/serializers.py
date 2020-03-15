@@ -9,7 +9,7 @@ from .models import SocialWorker, IncomeAndSources, NonCashBenefits, Enrollment,
     BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation, UserNameAndIdMapping, Log, \
     VeteranInformation, ServicesProvidedSSVF, FinancialAssistanceSSVF, PercentOfAMI, LastPermanentAddress, \
     SSVFHPTargetingCriteria, HUDVASHVoucherTracking, HUDVASHExitInformation, ConnectionWithSOAR, LastGradeCompleted, \
-    EmploymentStatus
+    EmploymentStatus, Appointments
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -28,6 +28,12 @@ class SocialWorkerSerializer(ModelSerializer):
     class Meta:
         model = SocialWorker
         fields = ('clearanceLevel', 'address', 'serviceProvider')
+
+
+class HomelessSerializer(ModelSerializer):
+    class Meta:
+        model = Homeless
+        fields = '__all__'
 
 
 class UserSerializer(ModelSerializer):
@@ -123,9 +129,9 @@ class HealthInsuranceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class HomelessSerializer(serializers.ModelSerializer):
+class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Homeless
+        model = Appointments
         fields = '__all__'
 
 

@@ -134,6 +134,15 @@ class UserNameAndIdMapping(models.Model):
     user_id = models.IntegerField()
 
 
+class Appointments(models.Model):
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
+    venue = models.CharField(max_length=500, blank=True, null=False)
+    Time = models.TimeField(auto_now=False, auto_now_add=False)
+    Date = models.DateField(auto_now=False, auto_now_add=False)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
 class ProjectCategory(models.TextChoices):
     HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
     HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 'HUD:HOPWA – Hotel/Motel Vouchers', _('HUD:HOPWA – Hotel/Motel Vouchers')
@@ -517,15 +526,6 @@ class Log(models.Model):
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
-class Appointments(models.Model):
-    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
-    venue = models.CharField(max_length=500, blank=True, null=False)
-    Time = models.TimeField(auto_now=False, auto_now_add=False, default=timezone.now)
-    Date = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
-    serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
-
 class SexualOrientationCategory(models.TextChoices):
     HETEROSEXUAL = 1, _("Heterosexual")
     GAY = 2, _("Gay")
@@ -840,4 +840,3 @@ class EmploymentStatus(models.Model):
     Employed = models.IntegerField(choices=YesNoResponse.choices)
     TypeOfEmployment = models.IntegerField(choices=TypeOfEmploymentCategory.choices)
     WhyNotEmployed = models.IntegerField(choices=WhyNotEmployedCategory.choices)
-

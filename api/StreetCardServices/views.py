@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
-    NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer,UserNameAndIdMappingSerializer,LogSerializer
-from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping,Log
+    NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer,UserNameAndIdMappingSerializer,LogSerializer,AppointmentSerializer
+from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping,Log,Appointments
 from .utils import primary_key_generator
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -25,6 +25,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 class SocialWorkerRegistration(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class HomelessDetails(viewsets.ModelViewSet):
+    queryset = Homeless.objects.all()
+    serializer_class = HomelessSerializer
 
 
 class SocialWorkerDetails(viewsets.ModelViewSet):
@@ -159,6 +164,48 @@ class EnrollmentViewSet(viewsets.ViewSet):
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+class AppointmentViewSet(viewsets.ViewSet):
+
+    def list(self, request, homeless_pk=None):
+        queryset = Appointments.objects.filter(personalId_id=homeless_pk)
+        serializer = AppointmentSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, homeless_pk=None):
+        queryset = Appointments.objects.filter(pk=pk, personalId_id=homeless_pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = AppointmentSerializer(enroll)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, homeless_pk=None):
+        enroll = request.data
+        enroll['personalId'] = homeless_pk
+        enroll['appointmentId'] = primary_key_generator()
+        serializer = AppointmentSerializer(data=enroll)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, homeless_pk=None):
+        queryset = Appointments.objects.filter(personalId_id=homeless_pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = AppointmentSerializer(enroll, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    def partial_update(self, request, pk=None):
         pass
 
     def destroy(self, request, pk=None):
