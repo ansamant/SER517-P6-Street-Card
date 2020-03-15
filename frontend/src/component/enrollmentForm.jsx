@@ -218,6 +218,40 @@ const SubstanceAbuseCategory = [
         value: 99,
         label: "Data Not Collected"
     }];
+const InsuranceReasonCategory = [
+    {
+        value: 0,
+        label:"Applied;decision pending"
+    },
+    {
+        value: 1,
+        label: "Applied;client not eligible"
+    },
+    {
+        value: 2,
+        label: "Applied;client not eligible"
+    },
+    {
+        value: 3,
+        label: "Client did not apply"
+    },
+    {
+        value: 4,
+        label: "Insurance type N/A for this client"
+    },
+    {
+        value: 8,
+        label: "Client Doesn\'t Know"
+    },
+    {
+        value: 9,
+        label: "Client Refused"
+    },
+    {
+        value: 99,
+        label: "Data Not Collected"
+    }];
+
 const formItemLayout = {
     labelCol: {
         xs: {
@@ -295,65 +329,85 @@ class EnrollmentForm extends Component {
 
     }
 
+    handleValue = e => {
+        if (e !== null) {
+            return e[0];
+        } else
+            return null;
+    }
     handleOnSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 var enrollmentRequestObject = {};
                 enrollmentRequestObject.PersonalId = this.props.homelessPersonId;
-                enrollmentRequestObject.DisablingCondition = values.disablingcondition[0];
+                enrollmentRequestObject.DisablingCondition = this.handleValue(values.disablingcondition);
                 enrollmentRequestObject.ProjectCategory = values.projectcategory[0];
                 enrollmentRequestObject.EntryDate = values['entrydate'].format('YYYY-MM-DD');
                 enrollmentRequestObject.ExitDate = values['exitdate'].format('YYYY-MM-DD');
                 var nonCashBenefitsObject = {};
                 nonCashBenefitsObject.InformationDate = values['informationdateNonCash'] != null ? values['informationdateNonCash'].format('YYYY-MM-DD') : null;
                 nonCashBenefitsObject.BenefitsFromAnySource = values.benefitsfromanysources != null ? values.benefitsfromanysources[0] : null;
-                nonCashBenefitsObject.SNAP = values.snap != null ? values.snap[0]: null;
-                nonCashBenefitsObject.WIC = values.wic != null ? values.wic[0]: null;
-                nonCashBenefitsObject.TANFChildCare = values.tanfchildcare != null ? values.tanfchildcare[0]: null;
-                nonCashBenefitsObject.TANFTransportation = values.tanftransportation != null ? values.tanftransportation[0]: null;
-                nonCashBenefitsObject.OtherTANF = values.othertanf !=null ? values.othertanf[0]: null;
+                nonCashBenefitsObject.SNAP = values.snap != null ? values.snap[0] : null;
+                nonCashBenefitsObject.WIC = values.wic != null ? values.wic[0] : null;
+                nonCashBenefitsObject.TANFChildCare = values.tanfchildcare != null ? values.tanfchildcare[0] : null;
+                nonCashBenefitsObject.TANFTransportation = values.tanftransportation != null ? values.tanftransportation[0] : null;
+                nonCashBenefitsObject.OtherTANF = values.othertanf != null ? values.othertanf[0] : null;
                 nonCashBenefitsObject.OtherSource = values.othersources != null ? values.othersources[0] : null;
-                nonCashBenefitsObject.SpecifySource = values.specifysource !=null ? values.specifysource : null;
+                nonCashBenefitsObject.SpecifySource = values.specifysource
                 enrollmentRequestObject.non_cash_benefits = nonCashBenefitsObject;
                 var incomeAndSourcesObject = {};
                 incomeAndSourcesObject.InformationDate = values['informationdateIncome'] != null ? values['informationdateIncome'].format('YYYY-MM-DD') : null;
-                incomeAndSourcesObject.IncomeFromAnySources = values.incomefromanysources[0];
-                incomeAndSourcesObject.Earned = values.earned[0];
+                incomeAndSourcesObject.IncomeFromAnySources = values.incomefromanysources != null ? values.incomefromanysources[0] : null;
+                incomeAndSourcesObject.Earned = values.earned != null ? values.earned[0] : null;
                 incomeAndSourcesObject.EarnedIncome = values.earnedincome;
-                incomeAndSourcesObject.Unemployment = values.unemployment[0];
+                incomeAndSourcesObject.Unemployment = values.unemployment != null ? values.unemployment[0] : null;
                 incomeAndSourcesObject.UnemploymentAmount = values.unemploymentamount;
-                incomeAndSourcesObject.SSI = values.ssi[0];
+                incomeAndSourcesObject.SSI = values.ssi != null ? values.ssi[0] : null;
                 incomeAndSourcesObject.SSIAmount = values.ssiamount;
-                incomeAndSourcesObject.SSDI = values.ssdi[0];
+                incomeAndSourcesObject.SSDI = values.ssdi != null ? values.ssdi[0] : null;
                 incomeAndSourcesObject.SSDIAmount = values.ssdiamount;
-                incomeAndSourcesObject.VADisabilityService = values.vadisabilityservice[0];
+                incomeAndSourcesObject.VADisabilityService = values.vadisabilityservice != null ? values.vadisabilityservice[0] : null;
                 incomeAndSourcesObject.VADisabilityServiceAmount = values.vadisabilityserviceamount;
-                incomeAndSourcesObject.VADisabilityNonService = values.vadisabilitynonservice[0];
+                incomeAndSourcesObject.VADisabilityNonService = values.vadisabilitynonservice != null ? values.vadisabilitynonservice[0] : null;
                 incomeAndSourcesObject.VADisabilityNonServiceNonAmount = values.vadisabilitynonserviceamount;
-                incomeAndSourcesObject.PrivateDisability = values.privatedisability[0];
+                incomeAndSourcesObject.PrivateDisability = values.privatedisability != null ? values.privatedisability[0] : null;
                 incomeAndSourcesObject.PrivateDisabilityAmount = values.privatedisabilityamount;
-                incomeAndSourcesObject.WorkersComp = values.workerscomp[0];
+                incomeAndSourcesObject.WorkersComp = values.workerscomp != null ? values.workerscomp[0] : null;
                 incomeAndSourcesObject.WorkersCompAmount = values.workerscompamount;
-                incomeAndSourcesObject.TANF = values.tanf[0];
+                incomeAndSourcesObject.TANF = values.tanf != null ? values.tanf[0] : null;
                 incomeAndSourcesObject.TANFAmount = values.tanfamount;
-                incomeAndSourcesObject.GA = values.ga[0];
+                incomeAndSourcesObject.GA = values.ga!=null? values.ga[0] : null;
                 incomeAndSourcesObject.GAAmount = values.gaamount;
-                incomeAndSourcesObject.SocSecRetirement = values.socsecretirement[0];
+                incomeAndSourcesObject.SocSecRetirement = this.handleValue(values.socsecretirement);
                 incomeAndSourcesObject.SocSecRetirementAmount = values.socsecretirementamount;
-                incomeAndSourcesObject.Pension = values.pension[0];
+                incomeAndSourcesObject.Pension = this.handleValue(values.pension);
                 incomeAndSourcesObject.PensionAmount = values.pensionamount;
-                incomeAndSourcesObject.ChildSupport = values.childsupport[0];
+                incomeAndSourcesObject.ChildSupport = this.handleValue(values.childsupport);
                 incomeAndSourcesObject.ChildSupportAmount = values.childsupportamount;
-                incomeAndSourcesObject.Alimony = values.alimony[0];
+                incomeAndSourcesObject.Alimony = this.handleValue(values.alimony);
                 incomeAndSourcesObject.AlimonyAmount = values.alimonyamount;
-                incomeAndSourcesObject.OtherIncomeSources = values.otherincomesources[0];
+                incomeAndSourcesObject.OtherIncomeSources = this.handleValue(values.otherincomesources);
                 incomeAndSourcesObject.OtherIncomeSourcesAmount = values.otherincomesourcesamount;
                 incomeAndSourcesObject.OtherIncomeSourcesIdentify = values.otherincomesourcesidentify;
                 incomeAndSourcesObject.TotalMonthlyIncome = values.totalmonthlyincome;
                 enrollmentRequestObject.income_and_sources = incomeAndSourcesObject;
                 var healthInsuranceObject = {};
                 healthInsuranceObject.InformationDate = values['informationdateHealth'].format['YYYY-MM-DD'];
+                healthInsuranceObject.CoveredByHealthInsurance = this.handleValue(values.coveredbyhealthinsurance);
+                healthInsuranceObject.Medicaid = this.handleValue(values.medicaid);
+                healthInsuranceObject.Medicare = this.handleValue(values.medicare);
+                healthInsuranceObject.SCHIP = this.handleValue(values.schip);
+                healthInsuranceObject.VAMedicalServices = this.handleValue(values.vamedicalservices);
+                healthInsuranceObject.EmployerProvided = this.handleValue(values.employerprovided);
+                healthInsuranceObject.COBRA = this.handleValue(values.cobra);
+                healthInsuranceObject.PrivatePay = this.handleValue(values.privatepay);
+                healthInsuranceObject.StateHealthInsuranceForAdults = this.handleValue(values.statehealthinsuranceforadults);
+                healthInsuranceObject.IndianHealthServices = this.handleValue(values.indianhealthservices);
+                healthInsuranceObject.OtherInsurance = this.handleValue(values.otherinsurance);
+                healthInsuranceObject.SpecifySource = values.specifysourceHealthInsurance;
+                healthInsuranceObject.Reason = this.handleValue(values.reason);
+                enrollmentRequestObject.health_insurance = healthInsuranceObject;
                 console.log(enrollmentRequestObject);
 
                 fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/enrollment/', {
@@ -706,6 +760,7 @@ class EnrollmentForm extends Component {
                                                         rules: [
                                                             {
                                                                 message: "Please provide income earned",
+                                                                type: "integer",
                                                                 required: false
                                                             }
                                                         ]
@@ -1409,7 +1464,7 @@ class EnrollmentForm extends Component {
                                                 <Col span={8}>
                                                     <Form.Item
                                                         label="SpecifySource"
-                                                    >{getFieldDecorator("specifysource", {
+                                                    >{getFieldDecorator("specifysourceHealthInsurance", {
                                                         rules: [
                                                             {
                                                                 message: "Please provide input!",
@@ -1427,11 +1482,15 @@ class EnrollmentForm extends Component {
                                                         rules: [
                                                             {
                                                                 message: "Please provide input!",
+                                                                type: "array",
                                                                 required: false
                                                             }
                                                         ]
                                                     })(
-                                                        <Input/>
+                                                        <Cascader
+                                                            placeholder="Select.."
+                                                            options={InsuranceReasonCategory}
+                                                        ></Cascader>
                                                     )}
                                                     </Form.Item>
                                                 </Col>
