@@ -29,17 +29,26 @@ class LogView extends React.Component{
             title: 'Personal ID',
             dataIndex: 'personalId',
           },
+          
+          {
+            title:'Client Name',
+            dataIndex: 'clientName',
+          },
+           
           {
             title: 'Service Provider',
             dataIndex: 'serviceProvider',
           },
+          
          ],
          dataSource : [
            {
              id: '',
             datetime : '',
+            clientName: '',
             serviceProvider : '',
             personalId: '',
+            
           }
         ]
 
@@ -49,6 +58,7 @@ class LogView extends React.Component{
   }
 
   componentDidMount () {
+    console.log(this.props.handleHomelessPersonId)
     fetch('http://127.0.0.1:8000/homeless/' + this.props.handleHomelessPersonId +'/logs/',{
       method: 'GET',
       headers: {

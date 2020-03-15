@@ -126,8 +126,8 @@ class SocialWorker(models.Model):
 class Log(models.Model):   
    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None, related_name='Log_PersonalId')
-   # clientName = models.CharField(max_length=500, default="", blank=True)
    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+   clientName = models.CharField(max_length=500, blank=True, default="")
 
 
 class UserNameAndIdMapping(models.Model):
@@ -522,12 +522,6 @@ class CoordinatedEntryEvent(models.Model):
     ReferralResult = models.IntegerField(choices=ReferralResultCategory.choices)
     DateOfResult = models.DateField()
 
-
-class Log(models.Model):
-    # datetime field can be retrieved relative to timezone and converted later.
-    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
-    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None)
-    serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
 class SexualOrientationCategory(models.TextChoices):
