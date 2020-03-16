@@ -368,7 +368,8 @@ class EnrollmentForm extends Component {
     }
 
     handleValue = e => {
-        if (e !== null) {
+        console.log(e);
+        if (e != null) {
             return e[0];
         } else
             return null;
@@ -393,7 +394,7 @@ class EnrollmentForm extends Component {
                 nonCashBenefitsObject.TANFTransportation = values.tanftransportation != null ? values.tanftransportation[0] : null;
                 nonCashBenefitsObject.OtherTANF = values.othertanf != null ? values.othertanf[0] : null;
                 nonCashBenefitsObject.OtherSource = values.othersources != null ? values.othersources[0] : null;
-                nonCashBenefitsObject.SpecifySource = values.specifysource
+                nonCashBenefitsObject.SpecifySource = values.specifysource;
                 enrollmentRequestObject.non_cash_benefits = nonCashBenefitsObject;
                 var incomeAndSourcesObject = {};
                 incomeAndSourcesObject.InformationDate = values['informationdateIncome'] != null ? values['informationdateIncome'].format('YYYY-MM-DD') : null;
@@ -432,7 +433,7 @@ class EnrollmentForm extends Component {
                 incomeAndSourcesObject.TotalMonthlyIncome = values.totalmonthlyincome;
                 enrollmentRequestObject.income_and_sources = incomeAndSourcesObject;
                 var healthInsuranceObject = {};
-                healthInsuranceObject.InformationDate = values['informationdateHealth'].format['YYYY-MM-DD'];
+                healthInsuranceObject.InformationDate = values['informationdateHealth']!= null ? values['informationdateHealth'].format('YYYY-MM-DD') : null;
                 healthInsuranceObject.CoveredByHealthInsurance = this.handleValue(values.coveredbyhealthinsurance);
                 healthInsuranceObject.Medicaid = this.handleValue(values.medicaid);
                 healthInsuranceObject.Medicare = this.handleValue(values.medicare);
@@ -448,13 +449,13 @@ class EnrollmentForm extends Component {
                 healthInsuranceObject.Reason = this.handleValue(values.reason);
                 enrollmentRequestObject.health_insurance = healthInsuranceObject;
                 var domesticViolenceObject = {};
-                domesticViolenceObject.InformationDate = values['informationdateDV'].format['YYYY-MM-DD'];
+                domesticViolenceObject.InformationDate = values['informationdateDV'].format('YYYY-MM-DD');
                 domesticViolenceObject.DomesticViolenceVictim = this.handleValue(values.domesticviolencevictim);
                 domesticViolenceObject.WhenOccurred = this.handleValue(values.whenoccurred);
                 domesticViolenceObject.CurrentlyFleeing = this.handleValue(values.currentlyfleeing);
                 enrollmentRequestObject.domestic_violence = domesticViolenceObject;
                 var disablingCondition = {};
-                disablingCondition.InformationDate = values['informationdateDC'].format['YYYY-MM-DD'];
+                disablingCondition.InformationDate = values['informationdateDC'] !=null ? values['informationdateDC'].format('YYYY-MM-DD') : null;
                 disablingCondition.physical_disability = this.handleValue(values.physical_disability);
                 disablingCondition.physical_disability_impairing = this.handleValue(values.physical_disability_impairing);
                 disablingCondition.developmental_disability = this.handleValue(values.developmental_disability);
@@ -468,13 +469,13 @@ class EnrollmentForm extends Component {
                 disablingCondition.substance_abuse_impairing = this.handleValue(values.substance_abuse_impairing);
                 enrollmentRequestObject.disabling_condition = disablingCondition;
                 var dateofEngagementObject = {};
-                dateofEngagementObject.DateOfEngagement = values['dateofengagement'].format['YYYY-MM-DD'];
+                dateofEngagementObject.DateOfEngagement = values['dateofengagement'] !=null ? values['dateofengagement'].format('YYYY-MM-DD') : null;
                 enrollmentRequestObject.date_of_engagement = dateofEngagementObject;
                 var bedNightDateObject = {};
-                bedNightDateObject.BedNightDate = values['bednightdate'].format['YYYY-MM-DD'];
+                bedNightDateObject.BedNightDate = values['bednightdate'] != null ? values['bednightdate'].format('YYYY-MM-DD') : null;
                 enrollmentRequestObject.bed_night_date = bedNightDateObject;
                 var currentLivingSituationObject = {};
-                currentLivingSituationObject.InformationDate = values['informationdateCL'].format['YYYY-MM-DD'];
+                currentLivingSituationObject.InformationDate = values['informationdateCL'] !=null ? values['informationdateCL'].format('YYYY-MM-DD') : null;
                 currentLivingSituationObject.CurrentLivingSituation = this.handleValue(values.currentlivingsituation);
                 currentLivingSituationObject.VerifiedByProject = this.handleValue(values.verifiedbyproject);
                 currentLivingSituationObject.HasToLeaveCurrentSituation = this.handleValue(values.hastoleavecurrentsituation);
@@ -485,7 +486,7 @@ class EnrollmentForm extends Component {
                 currentLivingSituationObject.LocationDetails = values.locationdetails;
                 enrollmentRequestObject.current_living_situation = currentLivingSituationObject;
                 var coordinatedEntryAssessmentObject = {};
-                coordinatedEntryAssessmentObject.DateOfAssessment = values['dateofassessment'].format['YYYY-MM-DD'];
+                coordinatedEntryAssessmentObject.DateOfAssessment = values['dateofassessment'] !=null ? values['dateofassessment'].format('YYYY-MM-DD') : null;
                 coordinatedEntryAssessmentObject.AssessmentLocation = values.assessmentlocation;
                 coordinatedEntryAssessmentObject.AssessmentType = this.handleValue(values.assessmenttype);
                 coordinatedEntryAssessmentObject.AssessmentLevel = this.handleValue(values.assessmentlevel);
@@ -496,13 +497,13 @@ class EnrollmentForm extends Component {
                 coordinatedEntryAssessmentObject.PrioritizationStatus = values.prioritizationstatus;
                 enrollmentRequestObject.coordinated_entry_assessment = coordinatedEntryAssessmentObject;
                 var coordinatedEntryEventObject = {};
-                coordinatedEntryEventObject.DateOfEvent = values['dateofevent'].format['YYYY-MM-DD'];
+                coordinatedEntryEventObject.DateOfEvent = values['dateofevent']!=null ? values['dateofevent'].format('YYYY-MM-DD') : null;
                 coordinatedEntryEventObject.Event = this.handleValue(values.event);
                 coordinatedEntryEventObject.ClientHousedOrReHoused = this.handleValue(values.clienthousedorrehoused);
                 coordinatedEntryEventObject.EnrolledInAfterCareProject = this.handleValue(values.enrolledinaftercareproject);
                 coordinatedEntryEventObject.LocationOfHousing = this.handleValue(values.locationofhousing);
                 coordinatedEntryEventObject.ReferralResult = this.handleValue(values.referralresult);
-                coordinatedEntryEventObject.DateOfResult = values['dateofresult'].format['YYYY-MM-DD'];
+                coordinatedEntryEventObject.DateOfResult = values['dateofresult']!=null ? values['dateofresult'].format('YYYY-MM-DD') : null;
                 enrollmentRequestObject.coordinated_entry_event = coordinatedEntryEventObject;
                 var sexualOrientationObject = {};
                 sexualOrientationObject.SexualOrientation = this.handleValue(values.sexualorientation);
@@ -1640,7 +1641,7 @@ class EnrollmentForm extends Component {
                                                 <Col span={8}>
                                                     <Form.Item
                                                         label="WhenOccurred"
-                                                    >{getFieldDecorator("WhenOccurred", {
+                                                    >{getFieldDecorator("whenoccurred", {
                                                         rules: [
                                                             {
                                                                 message: "Please Yes/No!",
@@ -1650,7 +1651,7 @@ class EnrollmentForm extends Component {
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="Medicaid"
+                                                            placeholder="When Occurred"
                                                             options={DomesticViolenceOccurrence}
                                                         ></Cascader>)}
                                                     </Form.Item>
@@ -1660,7 +1661,7 @@ class EnrollmentForm extends Component {
                                                 <Col span={8}>
                                                     <Form.Item
                                                         label="CurrentlyFleeing"
-                                                    >{getFieldDecorator("CurrentlyFleeing", {
+                                                    >{getFieldDecorator("currentlyfleeing", {
                                                         rules: [
                                                             {
                                                                 message: "Please provide income earned",
@@ -1669,7 +1670,7 @@ class EnrollmentForm extends Component {
                                                             }
                                                         ]
                                                     })(<Cascader
-                                                            placeholder="Medicaid"
+                                                            placeholder="Currently Fleeing"
                                                             options={ResponseCategory}
                                                         ></Cascader>
                                                     )}
@@ -2420,7 +2421,7 @@ class EnrollmentForm extends Component {
                                             </Row>
                                         </Panel>
                                     </Collapse>
-                                        <Form.Item className="register-ant-form-item">
+                                    <Form.Item className="register-ant-form-item">
                                         <Checkbox>
                                             <span>I have read the agreement</span>
                                         </Checkbox>
