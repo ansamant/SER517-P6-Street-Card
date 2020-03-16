@@ -20,33 +20,73 @@ class ViewAppointmentsTable extends React.Component {
                 title: 'Appointment-ID',
                 dataIndex: 'appointmentId',
                 key: 'appointmentId',
+                width: 180,
+                fixed: 'left',
               },
               {
-                title: 'Venue',
-                dataIndex: 'venue',
-                key: 'venue',
+                title: 'Office',
+                dataIndex: 'office',
+                key: 'office',
+                width: 100,
+                fixed: 'left',
+              },
+              {
+                title: 'Address',
+                dataIndex: 'streetAddress1',
+                key: 'streetAddress1',
+                width: 100,
+              },
+              {
+                title: 'Address2',
+                dataIndex: 'streetAddress2',
+                key: 'streetAddress2',
+                width: 100,
+              },
+              {
+                title: 'City',
+                dataIndex: 'city',
+                key: 'city',
+                width: 80,
+              },
+              {
+                title: 'Zip Code',
+                dataIndex: 'zipCode',
+                key: 'zipCode',
+                width: 80,
+              },
+              {
+                title: 'State',
+                dataIndex: 'state',
+                key: 'state',
+                width: 80,
               },
               {
                 title: 'Service Provider',
                 dataIndex: 'serviceProvider',
                 key: 'serviceProvider',
+                width: 100,
+                fixed: 'left',
               },
               {
                 title: 'Date',
                 dataIndex: 'Date',
                 key: 'Date',
+                width: 100,
               },
               {
                 title: 'Time',
                 dataIndex: 'Time',
                 key: 'Time',
+                width: 100,
               },
               {
                 title: 'Action',
                 key: 'action',
+                fixed: 'right',
+                width: 80,
                 render: (text, record) => (
                   <span>
-                    <Button onClick={() => this.editAppointment(record)} type="primary" htmlType="submit" className="registration-submit-button">
+                    <Button onClick={() => this.editAppointment(record)} type="primary" htmlType="submit" className="edit-appointment-button">
                     Edit
                   </Button>
                   </span>
@@ -56,7 +96,12 @@ class ViewAppointmentsTable extends React.Component {
         appointmentData : [
            {
                 appointmentId: '',
-                venue: '',
+                office: '',
+                streetAddress1: '',
+                streetAddress2: '',
+                city: '',
+                zipCode: '',
+                state: '',
                 Time: '',
                 Date: '',
                 serviceProvider: '',
@@ -182,7 +227,7 @@ render(){
                 </Sider>
                   <Content className="content">
                   <div >
-                  <Table className="site-layout-content-viewappointment" dataSource={this.state.appointmentData} columns={this.state.columns}/>
+                  <Table className="site-layout-content-viewappointment" dataSource={this.state.appointmentData} columns={this.state.columns} scroll={{ x: 1500, y: 300 }}/>
                   </div>
                   </Content>
                 </Layout>
