@@ -483,7 +483,7 @@ class CoordinatedEntryAssessment(models.Model):
     PrioritizationStatus = models.IntegerField(choices=PrioritizationStatusCategory.choices)
 
 
-class EventCategoryType(models.TextChoices):
+class EventCategoryType(models.IntegerChoices):
     PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
     DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
     COORDINATED_ENTRY_CRISIS_ASSESSMENT = 3, _("Scheduled Coordinated Entry Crisis Assessment")
@@ -526,7 +526,7 @@ class Log(models.Model):
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
-class SexualOrientationCategory(models.TextChoices):
+class SexualOrientationCategory(models.IntegerChoices):
     HETEROSEXUAL = 1, _("Heterosexual")
     GAY = 2, _("Gay")
     LESBIAN = 3, _("Lesbian")
@@ -541,7 +541,7 @@ class SexualOrientationCategory(models.TextChoices):
 class SexualOrientation(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='SexualOrientation_EnrollmentID', default=None)
-    SexualOrientation = models.TextField(choices=SexualOrientationCategory.choices)
+    SexualOrientation = models.IntegerField(choices=SexualOrientationCategory.choices)
     Description = models.TextField()
 
 
