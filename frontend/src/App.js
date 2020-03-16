@@ -198,7 +198,7 @@ isEmpty(object) {
             path={"/log"} 
             component={LogView}
             loggedInStatus={this.state.loggedInStatus}
-            handleHomelessPersonId={this.handleHomelessPersonId}
+            handleHomelessPersonId={this.state.homelessPersonId}
             handleLogout={this.handleLogout}
             updatePageComponent={this.updatePageComponent}
             />
@@ -228,7 +228,7 @@ isEmpty(object) {
               path={"/createAppointment"} 
               component={SetAppointments}
               loggedInStatus={this.state.loggedInStatus}
-              homelessPersonId={this.state.homelessPersonId}
+              homelessPersonId={this.handleHomelessPersonId}
               handleLogout={this.handleLogout}
               updatePageComponent={this.updatePageComponent}
             />

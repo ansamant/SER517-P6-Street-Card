@@ -121,12 +121,13 @@ class SocialWorker(models.Model):
 # Log should be recorded whenever greeter swipes card
 # Log should also be recorded whenever caseworker swipes card.
 # Greeter should retrieve model based on the worker's info.
+# datetime field can be retrieved relative to timezone and converted later.
 
 class Log(models.Model):
-    # datetime field can be retrieved relative to timezone and converted later.
     datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None, related_name='Log_PersonalId')
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+    clientName = models.CharField(max_length=500, blank=True, default="")
 
 
 class UserNameAndIdMapping(models.Model):
@@ -517,13 +518,6 @@ class CoordinatedEntryEvent(models.Model):
     LocationOfHousing = models.TextField(choices=ProjectCategory.choices)
     ReferralResult = models.IntegerField(choices=ReferralResultCategory.choices)
     DateOfResult = models.DateField()
-
-
-class Log(models.Model):
-    # datetime field can be retrieved relative to timezone and converted later.
-    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
-    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None)
-    serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
 class SexualOrientationCategory(models.IntegerChoices):

@@ -16,6 +16,8 @@ import { withRouter } from 'react-router-dom';
 class LogView extends React.Component{
   constructor(props){
       super(props);
+      console.log('Props')
+      console.log(this.props)
       this.state ={
         isLoaded: false,
         columns : [
@@ -27,17 +29,26 @@ class LogView extends React.Component{
             title: 'Personal ID',
             dataIndex: 'personalId',
           },
+          
+          {
+            title:'Client Name',
+            dataIndex: 'clientName',
+          },
+           
           {
             title: 'Service Provider',
             dataIndex: 'serviceProvider',
           },
+          
          ],
          dataSource : [
            {
              id: '',
             datetime : '',
+            clientName: '',
             serviceProvider : '',
             personalId: '',
+            
           }
         ]
 
@@ -47,8 +58,8 @@ class LogView extends React.Component{
   }
 
   componentDidMount () {
-    //fetch('http://127.0.0.1:8000/homeless/' + this.props.personalId +'/logs/',{
-    fetch('http://127.0.0.1:8000/homeless/' + 'GhPkvZdFg8Hps9VoFxTgj2eVlftJRQkn' + '/logs/', {
+    console.log(this.props.handleHomelessPersonId)
+    fetch('http://127.0.0.1:8000/homeless/' + this.props.handleHomelessPersonId +'/logs/',{
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
