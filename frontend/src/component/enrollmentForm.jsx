@@ -48,6 +48,50 @@ const ProjectCategory = [
         value: "HUD:HOPWA – Hotel/Motel Vouchers",
         label: "HUD:HOPWA – Hotel/Motel Vouchers"
     },
+    {
+        value: "VA: HCHV CRS - EH",
+        label: "VA: HCHV CRS - EH"
+    },
+    {
+        value: "VA: HCHV - Low Demand Safe Haven",
+        label: "VA: HCHV - Low Demand Safe Haven"
+    },
+    {
+        value: "VA:Grant Per Diem – Bridge Housing",
+        label: "VA:Grant Per Diem – Bridge Housing"
+    },
+    {
+        value: "VA:Grant Per Diem – Low Demand",
+        label: "VA:Grant Per Diem – Low Demand"
+    },
+    {
+        value: "VA:Grant Per Diem – Hospital to Housing",
+        label: "VA:Grant Per Diem – Hospital to Housing"
+    },
+    {
+        value: "VA:Grant Per Diem – Clinical Treatment",
+        label: "VA:Grant Per Diem – Clinical Treatment"
+    },
+    {
+        value: "VA:Grant Per Diem – Service Intensive Transitional Housing",
+        label: "VA:Grant Per Diem – Service Intensive Transitional Housing"
+    },
+    {
+        value: "VA:Grant Per Diem – Transition in Place",
+        label: "VA:Grant Per Diem – Transition in Place"
+    },
+    {
+        value: "VA:Grant Per Diem – Case Management / Housing Retention",
+        label: "VA:Grant Per Diem – Case Management / Housing Retention"
+    },
+    {
+        value: "VA: SSVF - Homelessness Prevention",
+        label: "VA: SSVF - Homelessness Prevention"
+    },
+    {
+        value: "VA: SSVF - Rapid Re-Housing",
+        label: "VA: SSVF - Rapid Re-Housing"
+    }
 ];
 const EventCategory = [
     {
@@ -159,6 +203,29 @@ const LivingSituationResponse = [
         value: 4,
         label: "Others"
     }];
+const WhyNotEmployedCategory = [
+    {
+        value: 1,
+        label: "WhyNotEmployedCategory"
+    },
+    {
+        value: 2,
+        label: "Unable to work"
+    },
+    {
+        value: 3,
+        label: "Not looking for work"
+    }];
+const TypeOfEmploymentCategory = [
+    {
+        value: 1,
+        label: "Full-time"
+    },
+    {
+        value: 2,
+        label: "Part-time"
+    }
+    ];
 const DomesticViolenceOccurrence = [
     {
         value: 1,
@@ -218,6 +285,163 @@ const SubstanceAbuseCategory = [
         value: 99,
         label: "Data Not Collected"
     }];
+const TypeOfServiceCategory = [
+    {
+        value: 1,
+        label: "Outreach services"
+    },
+    {
+        value: 2,
+        label: "Case management services"
+    },
+    {
+        value: 3,
+        label: "Assistance obtaining VA benefits"
+    },
+    {
+        value: 4,
+        label: "Assistance obtaining/coordinating other public benefits"
+    },
+    {
+        value: 5,
+        label: "Direct provision of other public benefits"
+    },
+    {
+        value: 6,
+        label: "Other (non TFA)supportive service approved by VA"
+    },
+    {
+        value: 7,
+        label: "Extended Shallow Subsidy"
+    },
+    {
+        value: 8,
+        label: "Returning Homey"
+    },
+    {
+        value: 9,
+        label: "Rapid Resolution"
+    }
+];
+const IfAssistanceObtainingVABenefitsCategory = [
+    {
+        value: 1,
+        label: "VA vocational and rehabilitation counseling"
+    },
+    {
+        value: 2,
+        label: "Employment and training services"
+    },
+    {
+        value: 3,
+        label: "Educational assistance"
+    },
+    {
+        value: 4,
+        label: "Health care services"
+    }
+    ];
+const IfAssistanceObtainingOrCoordinatingOtherPublicBenefitsCategory = [
+    {
+        value: 1,
+        label: "Health care services"
+    },
+    {
+        value: 2,
+        label: "Daily living services"
+    },
+    {
+        value: 3,
+        label: "Personal financial planning services"
+    },
+    {
+        value: 4,
+        label: "Transportation services"
+    },
+    {
+        value: 5,
+        label: "Income support services"
+    },
+    {
+        value: 6,
+        label: "Fiduciary and representative payee services"
+    },
+    {
+        value: 7,
+        label: "Legal services - child support"
+    },
+    {
+        value: 8,
+        label: "Legal services - eviction prevention"
+    },
+    {
+        value: 9,
+        label: "Legal services - outstanding fines and penalties"
+    },
+    {
+        value: 10,
+        label: "Legal services - restore/acquire drivers license"
+    },
+    {
+        value: 11,
+        label: "Legal services - other"
+    },
+    {
+        value: 12,
+        label: "Child care"
+    },
+    {
+        value: 13,
+        label: "Housing counseling"
+    }
+];
+const IfDirectProvisionOfOtherPublicBenefitsCategory = [
+    {
+        value: 1,
+        label: "Personal financial planning services"
+    },
+    {
+        value: 2,
+        label: "Transportation services"
+    },
+    {
+        value: 3,
+        label: "Income support services"
+    },
+    {
+        value: 4,
+        label: "Fiduciary and representative payee services"
+    },
+    {
+        value: 5,
+        label: "Legal services - child support"
+    },
+    {
+        value: 6,
+        label: "Legal services - eviction prevention"
+    },
+    {
+        value: 7,
+        label: "Legal services - outstanding fines and penalties"
+    },
+    {
+        value: 8,
+        label: "Legal services - restore/acquire drivers license"
+    },
+    {
+        value: 9,
+        label: "Legal services - other"
+    },
+    {
+        value: 10,
+        label: "Child care"
+    },
+    {
+        value: 11,
+        label: "Housing counseling"
+    }
+];
+
 const MilitaryBranchCategory = [
     {
         value: 1,
@@ -294,7 +518,7 @@ const DischargeStatusCategory = [
 const InsuranceReasonCategory = [
     {
         value: 0,
-        label:"Applied;decision pending"
+        label: "Applied;decision pending"
     },
     {
         value: 1,
@@ -450,7 +674,7 @@ class EnrollmentForm extends Component {
                 incomeAndSourcesObject.WorkersCompAmount = values.workerscompamount;
                 incomeAndSourcesObject.TANF = values.tanf != null ? values.tanf[0] : null;
                 incomeAndSourcesObject.TANFAmount = values.tanfamount;
-                incomeAndSourcesObject.GA = values.ga!=null? values.ga[0] : null;
+                incomeAndSourcesObject.GA = values.ga != null ? values.ga[0] : null;
                 incomeAndSourcesObject.GAAmount = values.gaamount;
                 incomeAndSourcesObject.SocSecRetirement = this.handleValue(values.socsecretirement);
                 incomeAndSourcesObject.SocSecRetirementAmount = values.socsecretirementamount;
@@ -465,7 +689,6 @@ class EnrollmentForm extends Component {
                 incomeAndSourcesObject.OtherIncomeSourcesIdentify = values.otherincomesourcesidentify;
                 incomeAndSourcesObject.TotalMonthlyIncome = values.totalmonthlyincome;
                 enrollmentRequestObject.income_and_sources = incomeAndSourcesObject;
-
                 var healthInsuranceObject = {};
                 healthInsuranceObject.InformationDate = values['informationdateHealth'].format['YYYY-MM-DD'];
                 healthInsuranceObject.CoveredByHealthInsurance = this.handleValue(values.coveredbyhealthinsurance);
@@ -482,6 +705,37 @@ class EnrollmentForm extends Component {
                 healthInsuranceObject.SpecifySource = values.specifysourceHealthInsurance;
                 healthInsuranceObject.Reason = this.handleValue(values.reason);
                 enrollmentRequestObject.health_insurance = healthInsuranceObject;
+                var veteransInfoObject = {};
+                veteransInfoObject.YearEnteredMilitaryService = values.yearenteredmilitaryservice;
+                veteransInfoObject.YearSeparatedFromMilitaryService = values.yearseparatedfrommilitaryservice;
+                veteransInfoObject.TheatreOfOperations_WorldWar2 = this.handleValue(values.theatreofoperations_worldwar2);
+                veteransInfoObject.TheatreOfOperations_KoreanWar = this.handleValue(values.theatreofoperations_koreanwar);
+                veteransInfoObject.TheatreOfOperations_VietnamWar = this.handleValue(values.theatreofoperations_vietnamwar);
+                veteransInfoObject.TheatreOfOperations_PersianGulfWar = this.handleValue(values.theatreofoperations_persiangulfwar);
+                veteransInfoObject.TheatreOfOperations_Afghanistan = this.handleValue(values.theatreofoperations_afghanistan);
+                veteransInfoObject.TheatreOfOperations_Iraq_IraqiFreedom = this.handleValue(values.theatreofoperations_iraq_iraqifreedom);
+                veteransInfoObject.TheatreOfOperations_Iraq_NewDawn = this.handleValue(values.theatreofoperations_iraq_newdawn);
+                veteransInfoObject.TheatreOfOperations_OtherPeacekeepingOperations = this.handleValue(values.theatreofoperations_otherpeacekeepingoperations);
+                veteransInfoObject.BranchOfMilitary = this.handleValue(values.branchofmilitary);
+                veteransInfoObject.DischargeStatus = this.handleValue(values.dischargestatus);
+                enrollmentRequestObject.veteran_Information = veteransInfoObject;
+                var servicesProvidedSSVFObject = {};
+                servicesProvidedSSVFObject.DateOfService = values['dateofservice'].format['YYYY-MM-DD'];
+                servicesProvidedSSVFObject.TypeOfService = this.handleValue(values.typeofservice);
+                servicesProvidedSSVFObject.IfAssistanceObtainingVABenefits = this.handleValue(values.ifassistanceobtainingvabenefits);
+                servicesProvidedSSVFObject.IfAssistanceObtainingOrCoordinatingOtherPublicBenefits = this.handleValue(values.ifassistanceobtainingorcoordinatingotherpublicbenefits);
+                servicesProvidedSSVFObject.IfDirectProvisionOfOtherPublicBenefits = this.handleValue(values.ifdirectprovisionofotherpublicbenefits);
+                servicesProvidedSSVFObject.IfOtherSupportiveServiceApprovedByVA = values.ifothersupportiveserviceapprovedbyva
+                enrollmentRequestObject.services_Provided_SSVF = servicesProvidedSSVFObject;
+                var connectionWithSOARObject = {};
+                connectionWithSOARObject.ConnectionWithSOAR = this.handleValue(values.connectionwithsoar);
+                enrollmentRequestObject.connection_With_SOAR = connectionWithSOARObject;
+                var employmentStatusObject = {};
+                employmentStatusObject.InformationDate = values['informationdate'].format['YYYY-MM-DD'];
+                employmentStatusObject.Employed = this.handleValue(values.employed)
+                employmentStatusObject.TypeOfEmployment = this.handleValue(values.typeofemployment)
+                employmentStatusObject.WhyNotEmployed = this.handleValue(values.whynotemployed)
+                enrollmentRequestObject.employment_Status = employmentStatusObject;
                 console.log(enrollmentRequestObject);
 
                 fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/enrollment/', {
@@ -2364,7 +2618,7 @@ class EnrollmentForm extends Component {
                                                 </Col>
                                             </Row>
                                         </Panel>
-                                        <Panel header="Veteran's Information" key="12">
+                                        <Panel header="Veteran's Information" key="13">
                                             <Row gutter={8}>
                                                 <Col span={8}>
                                                     <Form.Item
@@ -2483,9 +2737,9 @@ class EnrollmentForm extends Component {
                                                             ]
                                                         })(
                                                             <Cascader
-                                                            placeholder="Theatre Of Operations: Afghanistan"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
+                                                                placeholder="Theatre Of Operations: Afghanistan"
+                                                                options={ResponseCategory}
+                                                            ></Cascader>)}
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={8}>
@@ -2501,15 +2755,15 @@ class EnrollmentForm extends Component {
                                                             ]
                                                         })(
                                                             <Cascader
-                                                            placeholder="Theatre Of Operations: Iraq - IraqiFreedom"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
+                                                                placeholder="Theatre Of Operations: Iraq - IraqiFreedom"
+                                                                options={ResponseCategory}
+                                                            ></Cascader>)}
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={8}>
                                                     <Form.Item
                                                         label="TheatreOfOperations: Iraq - NewDawn">
-                                                        {getFieldDecorator("TheatreOfOperations_Iraq_NewDawn", {
+                                                        {getFieldDecorator("theatreofoperations_iraq_newdawn", {
                                                             rules: [
                                                                 {
                                                                     message: "Please select !",
@@ -2519,9 +2773,9 @@ class EnrollmentForm extends Component {
                                                             ]
                                                         })(
                                                             <Cascader
-                                                            placeholder="TheatreOfOperations: Iraq - NewDawn"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
+                                                                placeholder="TheatreOfOperations: Iraq - NewDawn"
+                                                                options={ResponseCategory}
+                                                            ></Cascader>)}
                                                     </Form.Item>
                                                 </Col>
                                             </Row>
@@ -2539,9 +2793,9 @@ class EnrollmentForm extends Component {
                                                             ]
                                                         })(
                                                             <Cascader
-                                                            placeholder="Theatre Of Operations: Other Peace keeping Operations"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
+                                                                placeholder="Theatre Of Operations: Other Peace keeping Operations"
+                                                                options={ResponseCategory}
+                                                            ></Cascader>)}
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={8}>
@@ -2557,9 +2811,9 @@ class EnrollmentForm extends Component {
                                                             ]
                                                         })(
                                                             <Cascader
-                                                            placeholder="Branch Of Military"
-                                                            options={MilitaryBranchCategory}
-                                                        ></Cascader>)}
+                                                                placeholder="Branch Of Military"
+                                                                options={MilitaryBranchCategory}
+                                                            ></Cascader>)}
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={8}>
@@ -2575,9 +2829,212 @@ class EnrollmentForm extends Component {
                                                             ]
                                                         })(
                                                             <Cascader
-                                                            placeholder="Discharge Status"
-                                                            options={DischargeStatusCategory}
+                                                                placeholder="Discharge Status"
+                                                                options={DischargeStatusCategory}
+                                                            ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                        </Panel>
+                                        <Panel header="ConnectionWithSOAR" key="14">
+                                            <Row gutter={8}>
+                                                <Col span={16}>
+                                                    <Form.Item
+                                                        label="Connection With SOAR">
+                                                        {getFieldDecorator("connectionwithsoar", {
+                                                            rules: [
+                                                                {
+                                                                    message: "Please Select!",
+                                                                    type: "array",
+                                                                    required: false
+                                                                }
+                                                            ]
+                                                        })(
+                                                            <Cascader
+                                                            placeholder="Connection With SOAR"
+                                                            options={ResponseCategory}
                                                         ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                        </Panel>
+                                        <Panel header="EmploymentStatus" key="15">
+                                            <Row gutter={8}>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="Information Date">
+                                                        {getFieldDecorator("informationdate", {
+                                                            rules: [
+                                                                {
+                                                                    message: "Please Select!",
+                                                                    required: false
+                                                                }
+                                                            ]
+                                                        })(
+                                                            <DatePicker style={{width: "100%"}}/>)}
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="Employed">
+                                                        {getFieldDecorator("employed", {
+                                                            rules: [
+                                                                {
+                                                                    message: "Please Select!",
+                                                                    type: "array",
+                                                                    required: false
+                                                                }
+                                                            ]
+                                                        })(
+                                                            <Cascader
+                                                            placeholder="Employed"
+                                                            options={YesNoResponse}
+                                                        ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="Type Of Employment">
+                                                        {getFieldDecorator("typeofemployment", {
+                                                            rules: [
+                                                                {
+                                                                    message: "Please Select!",
+                                                                    type: "array",
+                                                                    required: false
+                                                                }
+                                                            ]
+                                                        })(
+                                                            <Cascader
+                                                            placeholder="Type Of Employment"
+                                                            options={TypeOfEmploymentCategory}
+                                                        ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                            <Row gutter={8}>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Why Not Employed">
+                                                        {getFieldDecorator("whynotemployed", {
+                                                            rules: [
+                                                                {
+                                                                    message: "Please Select!",
+                                                                    type : "array",
+                                                                    required: false
+                                                                }
+                                                            ]
+                                                        })(
+                                                            <Cascader
+                                                            placeholder="Why Not Employed"
+                                                            options={WhyNotEmployedCategory}
+                                                        ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                        </Panel>
+                                        <Panel header="ServicesProvidedSSVF" key="16">
+                                            <Row gutter={8}>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="Date Of Service">
+                                                        {getFieldDecorator("dateofservice", {
+                                                            rules: [
+                                                                {
+                                                                    message: "Please enter Date!",
+                                                                    required: false
+                                                                }
+                                                            ]
+                                                        })(
+                                                            <DatePicker style={{width: "100%"}}/>)}
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="Type Of Service"
+                                                    >{getFieldDecorator("typeofservice", {
+                                                        rules: [
+                                                            {
+                                                                message: "Please Select!",
+                                                                type: "array",
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <Cascader
+                                                            placeholder="Type Of Service"
+                                                            options={TypeOfServiceCategory}
+                                                        ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="If Assistance Obtaining VA Benefits"
+                                                    >{getFieldDecorator("ifassistanceobtainingvabenefits", {
+                                                        rules: [
+                                                            {
+                                                                message: "Please Select!",
+                                                                type: "array",
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <Cascader
+                                                            placeholder="If Assistance Obtaining VA Benefits"
+                                                            options={IfAssistanceObtainingVABenefitsCategory}
+                                                        ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                            <Row gutter={8}>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="If Assistance Obtaining Or Coordinating Other Public Benefits"
+                                                    >{getFieldDecorator("ifassistanceobtainingorcoordinatingotherpublicbenefits", {
+                                                        rules: [
+                                                            {
+                                                                message: "Please Select!",
+                                                                type: "array",
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(<Cascader
+                                                            placeholder="If Assistance Obtaining Or Coordinating Other Public Benefits"
+                                                            options={IfAssistanceObtainingOrCoordinatingOtherPublicBenefitsCategory}
+                                                        ></Cascader>
+                                                    )}
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="If Direct Provision Of Other Public Benefits"
+                                                    >{getFieldDecorator("ifdirectprovisionofotherpublicbenefits", {
+                                                        rules: [
+                                                            {
+                                                                message: "Please Select!",
+                                                                type: "array",
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <Cascader
+                                                            placeholder="If Direct Provision Of Other Public Benefits"
+                                                            options={IfDirectProvisionOfOtherPublicBenefitsCategory}
+                                                        ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="If Other Supportive Service Approved By VA"
+                                                    >{getFieldDecorator("ifothersupportiveserviceapprovedbyva", {
+                                                        rules: [
+                                                            {
+                                                                message: "Please Select!",
+                                                                type: "array",
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <Input/>)}
                                                     </Form.Item>
                                                 </Col>
                                             </Row>

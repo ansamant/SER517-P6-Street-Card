@@ -157,7 +157,22 @@ class ProjectCategory(models.TextChoices):
     HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 'HUD:HOPWA – Short-Term Supportive Facility', _(
         'HUD:HOPWA – Short-Term Supportive Facility')
     HUD_HOPWA_TransitionalHousing = 'HUD:HOPWA – Transitional Housing', _('HUD:HOPWA – Transitional Housing')
-
+    VA_HCHVCRS_EH = 'VA: HCHV CRS - EH', _('VA: HCHV CRS - EH')
+    VA_HCHV_LOW_DEMAND_SAFE_HAVEN = 'VA: HCHV - Low Demand Safe Haven', ('VA: HCHV - Low Demand Safe Haven')
+    VA_GRANT_PER_DIEM_BRIDGE_HOUSING = 'VA:Grant Per Diem – Bridge Housing', ('VA:Grant Per Diem – Bridge Housing')
+    VA_GRANT_PER_DIEM_LOW_DEMAND = 'VA:Grant Per Diem – Low Demand', _('VA:Grant Per Diem – Low Demand')
+    VA_GRANT_PER_DIEM_HOSPITAL_TO_HOUSING = 'VA:Grant Per Diem – Hospital to Housing', _(
+        'VA:Grant Per Diem – Hospital to Housing')
+    VA_GRANT_PER_DIEM_CLINICAL_TREATMENT = 'VA:Grant Per Diem – Clinical Treatment', _(
+        'VA:Grant Per Diem – Clinical Treatment')
+    VA_GRANT_PER_DIEM_SERVICE_INTENSIVE_TRANSITIONAL_HOUSING = 'VA:Grant Per Diem – Service Intensive Transitional Housing', _(
+        'VA:Grant Per Diem – Service Intensive Transitional Housing')
+    VA_GRANT_PER_DIEM_TRANSITION_IN_PLACE = 'VA:Grant Per Diem – Transition in Place', _(
+        'VA:Grant Per Diem – Transition in Place')
+    VA_GRANT_PER_DIEM_CASE_MANAGEMENT_OR_HOUSING_RETENTION = 'VA:Grant Per Diem – Case Management / Housing Retention', _(
+        'VA:Grant Per Diem – Case Management / Housing Retention')
+    VA_SSVF_HOMELESSNESS_PREVENTION = 'VA: SSVF - Homelessness Prevention', _('VA: SSVF - Homelessness Prevention')
+    VA_SSVF_RAPID_RE_HOUSING = 'VA: SSVF - Rapid Re-Housing', _('VA: SSVF - Rapid Re-Housing')
 
 class SubstanceAbuseCategory(models.IntegerChoices):
     NO = 0, _('No')
@@ -824,7 +839,7 @@ class EmploymentStatus(models.Model):
         PART_TIME = 2, _('Part-time')
 
     class WhyNotEmployedCategory(models.IntegerChoices):
-        LOOKING_FOR_WORK = 1, _(' Looking for work')
+        LOOKING_FOR_WORK = 1, _(' WhyNotEmployedCategory')
         UNABLE_TO_WORK = 2, _('Unable to work')
         NOT_LOOKING_FOR_WORK = 3, _('Not looking for work')
 
