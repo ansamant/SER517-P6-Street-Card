@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import "antd/dist/antd.css";
-import {Button, Cascader, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, Select} from "antd";
+import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, Select} from "antd";
 import Header from "../Header";
 
 const {Sider, Content, Footer} = Layout;
@@ -221,7 +221,7 @@ const SubstanceAbuseCategory = [
 const InsuranceReasonCategory = [
     {
         value: 0,
-        label:"Applied;decision pending"
+        label: "Applied;decision pending"
     },
     {
         value: 1,
@@ -251,6 +251,44 @@ const InsuranceReasonCategory = [
         value: 99,
         label: "Data Not Collected"
     }];
+const SexualOrientationCategory = [
+    {
+        value: 1,
+        label: "Heterosexual"
+    },
+    {
+        value: 2,
+        label: "Gay"
+    },
+    {
+        value: 3,
+        label: "Lesbian"
+    },
+    {
+        value: 4,
+        label: "Bisexual"
+    },
+    {
+        value: 5,
+        label: "Questioning/Unsure"
+    },
+    {
+        value: 6,
+        label: "Others"
+    },
+    {
+        value: 8,
+        label: "Client Doesn\'t Know"
+    },
+    {
+        value: 9,
+        label: "Client Refused"
+    },
+    {
+        value: 99,
+        label: "Data Not Collected"
+    }
+];
 
 const formItemLayout = {
     labelCol: {
@@ -335,6 +373,7 @@ class EnrollmentForm extends Component {
         } else
             return null;
     }
+
     handleOnSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -377,7 +416,7 @@ class EnrollmentForm extends Component {
                 incomeAndSourcesObject.WorkersCompAmount = values.workerscompamount;
                 incomeAndSourcesObject.TANF = values.tanf != null ? values.tanf[0] : null;
                 incomeAndSourcesObject.TANFAmount = values.tanfamount;
-                incomeAndSourcesObject.GA = values.ga!=null? values.ga[0] : null;
+                incomeAndSourcesObject.GA = values.ga != null ? values.ga[0] : null;
                 incomeAndSourcesObject.GAAmount = values.gaamount;
                 incomeAndSourcesObject.SocSecRetirement = this.handleValue(values.socsecretirement);
                 incomeAndSourcesObject.SocSecRetirementAmount = values.socsecretirementamount;
@@ -408,6 +447,67 @@ class EnrollmentForm extends Component {
                 healthInsuranceObject.SpecifySource = values.specifysourceHealthInsurance;
                 healthInsuranceObject.Reason = this.handleValue(values.reason);
                 enrollmentRequestObject.health_insurance = healthInsuranceObject;
+                var domesticViolenceObject = {};
+                domesticViolenceObject.InformationDate = values['informationdateDV'].format['YYYY-MM-DD'];
+                domesticViolenceObject.DomesticViolenceVictim = this.handleValue(values.domesticviolencevictim);
+                domesticViolenceObject.WhenOccurred = this.handleValue(values.whenoccurred);
+                domesticViolenceObject.CurrentlyFleeing = this.handleValue(values.currentlyfleeing);
+                enrollmentRequestObject.domestic_violence = domesticViolenceObject;
+                var disablingCondition = {};
+                disablingCondition.InformationDate = values['informationdateDC'].format['YYYY-MM-DD'];
+                disablingCondition.physical_disability = this.handleValue(values.physical_disability);
+                disablingCondition.physical_disability_impairing = this.handleValue(values.physical_disability_impairing);
+                disablingCondition.developmental_disability = this.handleValue(values.developmental_disability);
+                disablingCondition.developmental_disability_impairing = this.handleValue(values.developmental_disability_impairing);
+                disablingCondition.chronic_health = this.handleValue(values.chronic_health_impairing);
+                disablingCondition.hiv_aids = this.handleValue(values.hiv_aids);
+                disablingCondition.hiv_aids_impairing = this.handleValue(values.hiv_aids_impairing);
+                disablingCondition.mental_health = this.handleValue(values.mental_health);
+                disablingCondition.mental_health_impairing = this.handleValue(values.mental_health_impairing);
+                disablingCondition.substance_abuse = this.handleValue(values.substance_abuse);
+                disablingCondition.substance_abuse_impairing = this.handleValue(values.substance_abuse_impairing);
+                enrollmentRequestObject.disabling_condition = disablingCondition;
+                var dateofEngagementObject = {};
+                dateofEngagementObject.DateOfEngagement = values['dateofengagement'].format['YYYY-MM-DD'];
+                enrollmentRequestObject.date_of_engagement = dateofEngagementObject;
+                var bedNightDateObject = {};
+                bedNightDateObject.BedNightDate = values['bednightdate'].format['YYYY-MM-DD'];
+                enrollmentRequestObject.bed_night_date = bedNightDateObject;
+                var currentLivingSituationObject = {};
+                currentLivingSituationObject.InformationDate = values['informationdateCL'].format['YYYY-MM-DD'];
+                currentLivingSituationObject.CurrentLivingSituation = this.handleValue(values.currentlivingsituation);
+                currentLivingSituationObject.VerifiedByProject = this.handleValue(values.verifiedbyproject);
+                currentLivingSituationObject.HasToLeaveCurrentSituation = this.handleValue(values.hastoleavecurrentsituation);
+                currentLivingSituationObject.HasASubsequentResidence = this.handleValue(values.hasasubsequentresidence);
+                currentLivingSituationObject.HasResourcesToObtainPermanentHousing = this.handleValue(values.hasresourcestoobtainpermanenthousing);
+                currentLivingSituationObject.OwnershipInPermanentHousing = this.handleValue(values.ownershipinpermanenthousing);
+                currentLivingSituationObject.HasClientMoved = this.handleValue(values.hasclientmoved);
+                currentLivingSituationObject.LocationDetails = values.locationdetails;
+                enrollmentRequestObject.current_living_situation = currentLivingSituationObject;
+                var coordinatedEntryAssessmentObject = {};
+                coordinatedEntryAssessmentObject.DateOfAssessment = values['dateofassessment'].format['YYYY-MM-DD'];
+                coordinatedEntryAssessmentObject.AssessmentLocation = values.assessmentlocation;
+                coordinatedEntryAssessmentObject.AssessmentType = this.handleValue(values.assessmenttype);
+                coordinatedEntryAssessmentObject.AssessmentLevel = this.handleValue(values.assessmentlevel);
+                coordinatedEntryAssessmentObject.AssessmentQuestion = values.assessmentquestion;
+                coordinatedEntryAssessmentObject.AssessmentAnswer = values.assessmentanswer;
+                coordinatedEntryAssessmentObject.AssessmentResultType = values.assessmentresulttype;
+                coordinatedEntryAssessmentObject.AssessmentResult = values.assessmentresult;
+                coordinatedEntryAssessmentObject.PrioritizationStatus = values.prioritizationstatus;
+                enrollmentRequestObject.coordinated_entry_assessment = coordinatedEntryAssessmentObject;
+                var coordinatedEntryEventObject = {};
+                coordinatedEntryEventObject.DateOfEvent = values['dateofevent'].format['YYYY-MM-DD'];
+                coordinatedEntryEventObject.Event = this.handleValue(values.event);
+                coordinatedEntryEventObject.ClientHousedOrReHoused = this.handleValue(values.clienthousedorrehoused);
+                coordinatedEntryEventObject.EnrolledInAfterCareProject = this.handleValue(values.enrolledinaftercareproject);
+                coordinatedEntryEventObject.LocationOfHousing = this.handleValue(values.locationofhousing);
+                coordinatedEntryEventObject.ReferralResult = this.handleValue(values.referralresult);
+                coordinatedEntryEventObject.DateOfResult = values['dateofresult'].format['YYYY-MM-DD'];
+                enrollmentRequestObject.coordinated_entry_event = coordinatedEntryEventObject;
+                var sexualOrientationObject = {};
+                sexualOrientationObject.SexualOrientation = this.handleValue(values.sexualorientation);
+                sexualOrientationObject.Description = values.description;
+                enrollmentRequestObject.sexual_orientation = sexualOrientationObject;
                 console.log(enrollmentRequestObject);
 
                 fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/enrollment/', {
@@ -433,7 +533,6 @@ class EnrollmentForm extends Component {
             console.log("No");
         }
     }
-
 
     render() {
         const {items} = this.state;
@@ -1243,12 +1342,6 @@ class EnrollmentForm extends Component {
                                                     </Form.Item>
                                                 </Col>
                                             </Row>
-                                            <Form.Item className="register-ant-form-item">
-                                                <Button type="primary" htmlType="submit"
-                                                        className="registration-submit-button">
-                                                    Submit
-                                                </Button>
-                                            </Form.Item>
                                         </Panel>
                                         <Panel header="Health Insurance" key="4">
                                             <Row gutter={8}>
@@ -1515,7 +1608,7 @@ class EnrollmentForm extends Component {
                                                 <Col span={8}>
                                                     <Form.Item
                                                         label="Information Date">
-                                                        {getFieldDecorator("informationdateHealth", {
+                                                        {getFieldDecorator("informationdateDV", {
                                                             rules: [
                                                                 {
                                                                     message: "Please select the information date!",
@@ -1589,7 +1682,7 @@ class EnrollmentForm extends Component {
                                                 <Col span={8}>
                                                     <Form.Item
                                                         label="Information Date">
-                                                        {getFieldDecorator("informationdateHealth", {
+                                                        {getFieldDecorator("informationdateDC", {
                                                             rules: [
                                                                 {
                                                                     message: "Please select the information date!",
@@ -1846,7 +1939,7 @@ class EnrollmentForm extends Component {
                                                 <Col span={8}>
                                                     <Form.Item
                                                         label="Information Date">
-                                                        {getFieldDecorator("informationdateCurrentLiving", {
+                                                        {getFieldDecorator("informationdateCL", {
                                                             rules: [
                                                                 {
                                                                     message: "Please select the information date!",
@@ -2290,13 +2383,59 @@ class EnrollmentForm extends Component {
                                                 </Col>
                                             </Row>
                                         </Panel>
+                                        <Panel header="Sexual Orientation" key="12">
+                                            <Row gutter={8}>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="SexualOrientation">
+                                                        {getFieldDecorator("sexualorientation", {
+                                                            rules: [
+                                                                {
+                                                                    message: "Please select the information date!",
+                                                                    type: "array",
+                                                                    required: false
+                                                                }
+                                                            ]
+                                                        })(
+                                                            <Cascader
+                                                                placeholder="Select.."
+                                                                options={SexualOrientationCategory}
+                                                            ></Cascader>)}
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <Form.Item
+                                                        label="Description"
+                                                    >{getFieldDecorator("description", {
+                                                        rules: [
+                                                            {
+                                                                message: "Please select income from any other sources!",
+                                                                required: false,
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <Input/>)}
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                        </Panel>
                                     </Collapse>
+                                        <Form.Item className="register-ant-form-item">
+                                        <Checkbox>
+                                            <span>I have read the agreement</span>
+                                        </Checkbox>
+                                        <Button type="primary" htmlType="submit"
+                                                className="registration-submit-button">
+                                            Submit
+                                        </Button>
+                                    </Form.Item>
                                 </Form>
                             </div>
                         </div>
                     </Content>
                 </Layout>
-                {/*<StreetCardFooter/>*/}
+                {/*<StreetCardFooter/>*/
+                }
             </Layout>
         );
     }
