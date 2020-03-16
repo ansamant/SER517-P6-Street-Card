@@ -165,6 +165,9 @@ class ViewAppointmentsTable extends React.Component {
     }else if(e.key === '5'){
       this.props.updatePageComponent('loginfo')
       this.props.history.push('/socialWorkerRegister');
+    }else if (e.key === '6') {
+        this.setState({pageComponent: 'projectenroll'})
+        this.props.history.push('/socialWorkerRegister');
     }
   };
 
@@ -222,6 +225,9 @@ render(){
                     </Menu.Item>
                     <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="5">
                       <span>View Logs</span>
+                    </Menu.Item>
+                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
+                        <span>Project Enrollment</span>
                     </Menu.Item>
                   </Menu>
                 </Sider>

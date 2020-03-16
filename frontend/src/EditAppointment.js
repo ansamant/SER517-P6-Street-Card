@@ -120,6 +120,9 @@ class EditAppointment extends React.Component {
     }else if(e.key === '5'){
       this.props.updatePageComponent('loginfo')
       this.props.history.push('/socialWorkerRegister');
+    }else if (e.key === '6') {
+        this.setState({pageComponent: 'projectenroll'})
+        this.props.history.push('/socialWorkerRegister');
     }
   };
 
@@ -167,6 +170,9 @@ class EditAppointment extends React.Component {
                 </Menu.Item>
                 <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="5">
                   <span>Edit Appointment</span>
+                </Menu.Item>
+                <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
+                    <span>Project Enrollment</span>
                 </Menu.Item>
               </Menu>
             </Sider>
