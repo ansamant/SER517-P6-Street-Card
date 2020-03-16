@@ -239,6 +239,10 @@ body {
 .register-ant-form-item-2 {
   margin-left: 140px;
 }
+
+.register-ant-form-item-2-1 {
+  margin-left: 160px;
+}
 .register-ant-form-item .ant-time-picker {
   width: 100%;
 }

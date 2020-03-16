@@ -567,6 +567,49 @@ componentDidUpdate() {
               </Form.Item>
             </Col>
           </Row>
+          <Row className="register-ant-form-item-2-1">
+            <Col span={6}>
+              <Form.Item>
+                <Select>
+                  <Option value="1">+1</Option>
+                  <Option value="91">+91</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={18}>
+            <Form.Item>
+                {getFieldDecorator("Phone Number", {
+                  initialValue: this.state.homelessData.PhoneNumber ? this.state.homelessData.PhoneNumber : '',
+                  rules: [
+                    {
+                      required: false,
+                      message: "Please input your SSN!",
+                      whitespace: true
+                    }
+                  ]
+                })(<Input placeholder="Phone Number" />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item">
+            <Col span={24}>
+            <Form.Item>
+                {getFieldDecorator("email", {
+                  initialValue: this.state.homelessData.Email ? this.state.homelessData.Email : '',
+                  rules: [
+                    {
+                      type: "email",
+                      message: "The input is not valid E-mail!"
+                    },
+                    {
+                      required: true,
+                      message: "Please input your E-mail!"
+                    }
+                  ]
+                })(<Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="E-mail"/>)}
+              </Form.Item>
+            </Col>
+          </Row>
           <Row className="register-ant-form-item">
             <Col span={24}>
             <Form.Item>

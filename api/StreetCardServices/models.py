@@ -95,6 +95,9 @@ class Homeless(models.Model):
     Ethnicity = models.IntegerField(choices=Ethnicity.choices)
     Gender = models.IntegerField(choices=Gender.choices)
     VeteranStatus = models.IntegerField(choices=VeteranStatus.choices)
+    PhoneNumberPrefix = models.IntegerField(max_length=3,blank=True,null=True)
+    PhoneNumber = models.CharField(max_length=128,blank=True,null=True)
+    Email = models.EmailField(max_length=70,blank=True,null=True)
 
 
 class ServiceProvider(models.TextChoices):
