@@ -3,9 +3,13 @@ import "antd/dist/antd.css";
 import "./index.css";
 import { PageHeader, Button} from "antd";
 import { Link } from 'react-router-dom'; 
-import logo from './streetcard.png';
+import logo from './streetcard-logo.png';
+import headerName from './streetcard.png';
+import { Layout, Menu, Avatar, Dropdown } from "antd";
 
-export default class Header extends React.Component {
+const { Header } = Layout;
+
+export default class HeaderComponent extends React.Component {
 
 	constructor(props) {
 	   super(props);
@@ -24,56 +28,23 @@ export default class Header extends React.Component {
 	render(){
 		if(this.props.loginPageStatus === "LOGIN_HEADER"){
 			return(
-			<div
-			    style={{
-			      backgroundColor: "#8C1D40",
-			      padding: 24
-			    }}
-			  >
-			    <PageHeader
-			      ghost={false}
-			      className="page-header"
-			      extra={[
-			      ]}
-			      avatar={{ src: logo }}
-			    />
-			  </div>
+			<Header className="site-layout-header">
+	          <img className="logo" src={logo} />
+	        </Header>
 		);	
 		}else if(this.props.loggedInStatus === "NOT_LOGGED_IN"){
 			return(
-			<div
-			    style={{
-			      backgroundColor: "#8C1D40",
-			      padding: 24
-			    }}
-			  >
-			    <PageHeader
-			      ghost={false}
-			      className="page-header"
-			      extra={[
-			        <Button onClick={this.logIn} style={{ fontSize:22 }} key="2">Login</Button>
-			      ]}
-			      avatar={{ src: logo }}
-			    />
-			  </div>
+			<Header className="site-layout-header">
+	          <img className="logo" src={logo} />
+	          <Button onClick={this.logIn} style={{ fontSize:22, float: 'right', marginTop: '40px', width: '200px', height: '50px', backgroundColor: '#fae596' }} key="2">Home</Button>
+	        </Header>
 		);	
 		}else {
 			return(
-			<div
-			    style={{
-			      backgroundColor: "#8C1D40",
-			      padding: 24
-			    }}
-			  >
-			    <PageHeader
-			      ghost={false}
-			      className="page-header"
-			      extra={[
-			        <Button onClick={this.logOut} style={{ fontSize:22 }} key="2">Logout</Button>
-			      ]}
-			      avatar={{ src: logo }}
-			    />
-			  </div>
+			<Header className="site-layout-header">
+	          <img className="logo" src={logo} />
+	          <Button onClick={this.logOut} style={{ fontSize:22, float: 'right', marginTop: '40px', width: '200px', height: '50px', backgroundColor: '#fae596' }} key="2">Logout</Button>
+	        </Header>
 		);	
 		}
 	}
