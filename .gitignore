@@ -116,4 +116,8 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
+<<<<<<< HEAD
+.DS_Store
+=======
 api/StreetCardServices/migrations/
+>>>>>>> 152ec9ef5e1f30aa995d851e504e13bdf29a4ba1

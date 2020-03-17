@@ -9,6 +9,10 @@ import WrappedLogTable from './LogView';
 import WrappedGreeterForm from './GreeterView';
 import SocialWorker from './SocialWorker';
 import LogView from './LogView';
+import SetAppointments from './SetAppointments'
+import EditAppointment from './EditAppointment'
+import ViewAppointmentsTable from './ViewAppointmentTable'
+import enrollmentForm from './component/enrollmentForm'
 
 const PrivateRoute = ({ component: Component, loggedInStatus: loggedInStatus, ...rest }) => (
   <Route render={(props) => (
@@ -33,7 +37,9 @@ export default class App extends React.Component {
     this.state = {
       loggedInStatus: localStorage.getItem('token') ? "LOGGED_IN" : "NOT_LOGGED_IN",
       username: '',
-      homelessPersonId: 0
+      homelessPersonId: 0,
+      homelessData:{},
+      pageComponent: 'registerClient'
     };
 
     this.handleLogin = this.handleLogin.bind(this);
@@ -42,6 +48,9 @@ export default class App extends React.Component {
     this.handleHomelessPersonData = this.handleHomelessPersonData.bind(this);
     this.isEmpty = this.isEmpty.bind(this);
     this.method = this.method.bind(this);
+    this.updateAppointmentId = this.updateAppointmentId.bind(this);
+    this.handleHomelessPersonJson = this.handleHomelessPersonJson.bind(this);
+    this.updatePageComponent=this.updatePageComponent.bind(this);
   }
 
 
@@ -112,6 +121,24 @@ isEmpty(object) {
       
   }
 
+  handleHomelessPersonJson(json){
+    console.log(json)
+     this.setState({ 
+              homelessData: json
+            });
+  }
+
+  updateAppointmentId(appointmentId){
+    this.setState({ 
+              appointmentId: appointmentId
+            });
+  }
+
+  updatePageComponent(pageComponent){
+    this.setState({ 
+              pageComponent: pageComponent
+            });
+  }
   render() {
     return (
       <div>
@@ -148,6 +175,9 @@ isEmpty(object) {
               handleHomelessPersonData={this.handleHomelessPersonData}
               handleLogin={this.handleLogin}
               clearanceLevel={this.state.clearanceLevel}
+              handleHomelessPersonId={this.handleHomelessPersonId}
+              handleHomelessPersonJson={this.handleHomelessPersonJson}
+              pageComponent={this.state.pageComponent}
             />
             <PrivateRoute
               exact
@@ -160,14 +190,17 @@ isEmpty(object) {
               handleHomelessPersonId={this.handleHomelessPersonId}
               homelessPersonId={this.state.homelessPersonId}
               handleLogin={this.handleLogin}
+              homelessData={this.state.homelessData}
+              updatePageComponent={this.updatePageComponent}
             />
             <PrivateRoute 
              exact 
             path={"/log"} 
             component={LogView}
             loggedInStatus={this.state.loggedInStatus}
-            handleHomelessPersonId={this.handleHomelessPersonId}
+            handleHomelessPersonId={this.state.homelessPersonId}
             handleLogout={this.handleLogout}
+            updatePageComponent={this.updatePageComponent}
             />
             <PrivateRoute 
               exact 
@@ -187,9 +220,46 @@ isEmpty(object) {
               clearanceLevel ={this.state.clearanceLevel}
               username ={this.state.username}
               loggedInStatus={this.state.loggedInStatus}
-              clearanceLevel={this.state.clearanceLevel}
               serviceProvider={this.state.serviceProvider}
               method={this.method}
+            />
+            <PrivateRoute 
+              exact 
+              path={"/createAppointment"} 
+              component={SetAppointments}
+              loggedInStatus={this.state.loggedInStatus}
+              homelessPersonId={this.handleHomelessPersonId}
+              handleLogout={this.handleLogout}
+              updatePageComponent={this.updatePageComponent}
+            />
+            <PrivateRoute 
+              exact 
+              path={"/editAppointment"} 
+              component={EditAppointment}
+              loggedInStatus={this.state.loggedInStatus}
+              homelessPersonId={this.state.homelessPersonId}
+              handleLogout={this.handleLogout}
+              appointmentId={this.state.appointmentId}
+              updatePageComponent={this.updatePageComponent}
+            />
+            <PrivateRoute 
+              exact 
+              path={"/viewAppointment"} 
+              component={ViewAppointmentsTable}
+              loggedInStatus={this.state.loggedInStatus}
+              homelessPersonId={this.state.homelessPersonId}
+              handleLogout={this.handleLogout}
+              updateAppointmentId={this.updateAppointmentId}
+              updatePageComponent={this.updatePageComponent}
+            />
+             <PrivateRoute
+              exact
+              path={"/enrollment"}
+              component={enrollmentForm}
+              loggedInStatus={this.state.loggedInStatus}
+              homelessPersonId={this.state.homelessPersonId}
+              handleLogout={this.handleLogout}
+              updatePageComponent={this.updatePageComponent}
             />
           </Switch>
         </BrowserRouter>

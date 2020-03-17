@@ -76,8 +76,6 @@ class Homeless(models.Model):
         CLIENT_REFUSED = 9, _('Client Refused')
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
-
-
     PersonalId = models.CharField(max_length=32, primary_key=True, default=None)
     FirstName = models.CharField(max_length=128, blank=True, null=True)
     MiddleName = models.CharField(max_length=128, blank=True, null=True)
@@ -118,24 +116,32 @@ class SocialWorker(models.Model):
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
+
 # Log table, used to display information on Case Worker page
 # Log should be recorded whenever greeter swipes card
 # Log should also be recorded whenever caseworker swipes card.
 # Greeter should retrieve model based on the worker's info.
+# datetime field can be retrieved relative to timezone and converted later.
 
 class Log(models.Model):
-    #datetime field can be retrieved relative to timezone and converted later.
     datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None, related_name='Log_PersonalId')
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
+    clientName = models.CharField(max_length=500, blank=True, default="")
 
 
 class UserNameAndIdMapping(models.Model):
-    
-   user_name = models.CharField(max_length=32, primary_key=True, unique=True)
-   user_id = models.IntegerField()
+    user_name = models.CharField(max_length=32, primary_key=True, unique=True)
+    user_id = models.IntegerField()
 
+
+class Appointments(models.Model):
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
+    venue = models.CharField(max_length=500, blank=True, null=False)
+    Time = models.TimeField(auto_now=False, auto_now_add=False)
+    Date = models.DateField(auto_now=False, auto_now_add=False)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
 class ProjectCategory(models.TextChoices):
@@ -151,7 +157,22 @@ class ProjectCategory(models.TextChoices):
     HUD_HOPWA_SHORT_TERM_SUPPORTIVE_FACILITY = 'HUD:HOPWA – Short-Term Supportive Facility', _(
         'HUD:HOPWA – Short-Term Supportive Facility')
     HUD_HOPWA_TransitionalHousing = 'HUD:HOPWA – Transitional Housing', _('HUD:HOPWA – Transitional Housing')
-
+    VA_HCHVCRS_EH = 'VA: HCHV CRS - EH', _('VA: HCHV CRS - EH')
+    VA_HCHV_LOW_DEMAND_SAFE_HAVEN = 'VA: HCHV - Low Demand Safe Haven', ('VA: HCHV - Low Demand Safe Haven')
+    VA_GRANT_PER_DIEM_BRIDGE_HOUSING = 'VA:Grant Per Diem – Bridge Housing', ('VA:Grant Per Diem – Bridge Housing')
+    VA_GRANT_PER_DIEM_LOW_DEMAND = 'VA:Grant Per Diem – Low Demand', _('VA:Grant Per Diem – Low Demand')
+    VA_GRANT_PER_DIEM_HOSPITAL_TO_HOUSING = 'VA:Grant Per Diem – Hospital to Housing', _(
+        'VA:Grant Per Diem – Hospital to Housing')
+    VA_GRANT_PER_DIEM_CLINICAL_TREATMENT = 'VA:Grant Per Diem – Clinical Treatment', _(
+        'VA:Grant Per Diem – Clinical Treatment')
+    VA_GRANT_PER_DIEM_SERVICE_INTENSIVE_TRANSITIONAL_HOUSING = 'VA:Grant Per Diem – Service Intensive Transitional Housing', _(
+        'VA:Grant Per Diem – Service Intensive Transitional Housing')
+    VA_GRANT_PER_DIEM_TRANSITION_IN_PLACE = 'VA:Grant Per Diem – Transition in Place', _(
+        'VA:Grant Per Diem – Transition in Place')
+    VA_GRANT_PER_DIEM_CASE_MANAGEMENT_OR_HOUSING_RETENTION = 'VA:Grant Per Diem – Case Management / Housing Retention', _(
+        'VA:Grant Per Diem – Case Management / Housing Retention')
+    VA_SSVF_HOMELESSNESS_PREVENTION = 'VA: SSVF - Homelessness Prevention', _('VA: SSVF - Homelessness Prevention')
+    VA_SSVF_RAPID_RE_HOUSING = 'VA: SSVF - Rapid Re-Housing', _('VA: SSVF - Rapid Re-Housing')
 
 class SubstanceAbuseCategory(models.IntegerChoices):
     NO = 0, _('No')
@@ -478,7 +499,7 @@ class CoordinatedEntryAssessment(models.Model):
     PrioritizationStatus = models.IntegerField(choices=PrioritizationStatusCategory.choices)
 
 
-class EventCategoryType(models.TextChoices):
+class EventCategoryType(models.IntegerChoices):
     PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
     DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
     COORDINATED_ENTRY_CRISIS_ASSESSMENT = 3, _("Scheduled Coordinated Entry Crisis Assessment")
@@ -514,23 +535,7 @@ class CoordinatedEntryEvent(models.Model):
     DateOfResult = models.DateField()
 
 
-class Log(models.Model):
-    # datetime field can be retrieved relative to timezone and converted later.
-    datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
-    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None)
-    serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
-
-class Appointments(models.Model):
-    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
-    venue = models.CharField(max_length=500, blank=True, null=False)
-    Time = models.TimeField(auto_now=False, auto_now_add=False, default=timezone.now)
-    Date = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
-    serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
-
-class SexualOrientationCategory(models.TextChoices):
+class SexualOrientationCategory(models.IntegerChoices):
     HETEROSEXUAL = 1, _("Heterosexual")
     GAY = 2, _("Gay")
     LESBIAN = 3, _("Lesbian")
@@ -545,5 +550,302 @@ class SexualOrientationCategory(models.TextChoices):
 class SexualOrientation(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='SexualOrientation_EnrollmentID', default=None)
-    SexualOrientation = models.TextField(choices=SexualOrientationCategory.choices)
+    SexualOrientation = models.IntegerField(choices=SexualOrientationCategory.choices)
     Description = models.TextField()
+
+
+# VETERAN PROJECT MODELS
+
+class VeteranInformation(models.Model):
+    class MilitaryBranchCategory(models.IntegerChoices):
+        ARMY = 1, _('Army')
+        AIRFORCE = 2, _('Air Force')
+        NAVY = 3, _('Navy')
+        MARINES = 4, _('Marines')
+        COASTGUARD = 6, _('Coast Guard')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    class DischargeStatusCategory(models.IntegerChoices):
+        HONORABLE = 1, _('Honorable')
+        GENERAL_UNDER_HONORABLE_CONDITIONS = 2, _('General under honorable conditions')
+        UNDER_OTHER_THAN_HONORABLE_CONDITIONS = 6, _('Under other than honorable conditions (OTH)')
+        BAD_CONDUCT = 4, _('Bad conduct')
+        DISHONORABLE = 5, _('Dishonorable')
+        UNCHARACTERIZED = 7, _('Uncharacterized')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='VeteranInformation_EnrollmentID', default=None)
+    YearEnteredMilitaryService = models.IntegerField()
+    YearSeparatedFromMilitaryService = models.IntegerField()
+    TheatreOfOperations_WorldWar2 = models.IntegerField(choices=ResponseCategory.choices)
+    TheatreOfOperations_KoreanWar = models.IntegerField(choices=ResponseCategory.choices)
+    TheatreOfOperations_VietnamWar = models.IntegerField(choices=ResponseCategory.choices)
+    TheatreOfOperations_PersianGulfWar = models.IntegerField(choices=ResponseCategory.choices)
+    TheatreOfOperations_Afghanistan = models.IntegerField(choices=ResponseCategory.choices)
+    TheatreOfOperations_Iraq_IraqiFreedom = models.IntegerField(choices=ResponseCategory.choices)
+    TheatreOfOperations_Iraq_NewDawn = models.IntegerField(choices=ResponseCategory.choices)
+    TheatreOfOperations_OtherPeacekeepingOperations = models.IntegerField(
+        choices=ResponseCategory.choices)
+    BranchOfMilitary = models.IntegerField(choices=MilitaryBranchCategory.choices)
+    DischargeStatus = models.IntegerField(choices=DischargeStatusCategory.choices)
+
+
+class ServicesProvidedSSVF(models.Model):
+    class TypeOfServiceCategory(models.IntegerChoices):
+        OUTREACH_SERVICES = 1, _('Outreach services')
+        CASE_MANAGEMENT_SERVICES = 2, _('Case management services')
+        ASSISTANCE_OBTAINING_VA_BENEFITS = 3, _('Assistance obtaining VA benefits')
+        ASSISTANCE_OBTAINING_OR_COORDINATING_OTHER_PUBLIC_BENEFITS = 4, _(
+            'Assistance obtaining/coordinating other public benefits')
+        DIRECT_PROVISION_OF_OTHER_PUBLIC_BENEFITS = 5, _('Direct provision of other public benefits')
+        OTHER_SUPPORTIVE_SERVICE_APPROVED_BY_VA = 6, _('Other (non TFA)supportive service approved by VA')
+        EXTENDED_SHALLOW_SUBSIDY = 7, _('Extended Shallow Subsidy')
+        RETURNING_HOME = 8, _('Returning Home')
+        RAPID_RESOLUTION = 9, _('Rapid Resolution')
+
+    class IfAssistanceObtainingVABenefitsCategory(models.IntegerChoices):
+        VA_VOCATIONAL_AND_REHABILITATION_COUNSELING = 1, _('VA vocational and rehabilitation counseling')
+        EMPLOYMENT_AND_TRAINING_SERVICES = 2, _('Employment and training services')
+        EDUCATIONAL_ASSISTANCE = 3, _('Educational assistance')
+        HEALTH_CARE_SERVICES = 4, _('Health care services')
+
+    class IfAssistanceObtainingOrCoordinatingOtherPublicBenefitsCategory(models.IntegerChoices):
+        HEALTH_CARE_SERVICES = 1, _('Health care services')
+        DAILY_LIVING_SERVICES = 2, _('Daily living services')
+        PERSONAL_FINANCIAL_PLANNING_SERVICES = 3, _('Personal financial planning services')
+        TRANSPORTATION_SERVICES = 4, _('Transportation services')
+        INCOME_SUPPORT_SERVICES = 5, _('Income support services')
+        FIDUCIARY_AND_REPRESENTATIVE_PAYEE_SERVICES = 6, _('Fiduciary and representative payee services')
+        LEGAL_SERVICES_CHILD_SUPPORT = 7, _('Legal services - child support')
+        LEGAL_SERVICES_EVICTION_PREVENTION = 8, _('Legal services - eviction prevention')
+        LEGAL_SERVICES_OUTSTANDING_FINES_AND_PENALTIES = 9, _('Legal services - outstanding fines and penalties')
+        LEGAL_SERVICES_RESTORE_OR_ACQUIRE_DRIVERS_LICENSE = 10, _('Legal services - restore/acquire drivers license')
+        LEGAL_SERVICES_OTHER = 11, _('Legal services - other')
+        CHILD_CARE = 12, _('Child care')
+        HOUSING_COUNSELING = 13, _('Housing counseling')
+
+    class IfDirectProvisionOfOtherPublicBenefitsCategory(models.IntegerChoices):
+        PERSONAL_FINANCIAL_PLANNING_SERVICES = 1, _('Personal financial planning services')
+        TRANSPORTATION_SERVICES = 2, _('Transportation services')
+        INCOME_SUPPORT_SERVICES = 3, _('Income support services')
+        FIDUCIARY_AND_REPRESENTATIVE_PAYEE_SERVICES = 4, _('Fiduciary and representative payee services')
+        LEGAL_SERVICES_CHILD_SUPPORT = 5, _('Legal services - child support')
+        LEGAL_SERVICES_EVICTION_PREVENTION = 6, _('Legal services - eviction prevention')
+        LEGAL_SERVICES_OUTSTANDING_FINES_AND_PENALTIES = 7, _('Legal services - outstanding fines and penalties')
+        LEGAL_SERVICES_RESTORE_OR_ACQUIRE_DRIVERS_LICENSE = 8, _('Legal services - restore/acquire drivers license')
+        LEGAL_SERVICES_OTHER = 9, _('Legal services - other')
+        CHILD_CARE = 10, _('Child care')
+        HOUSING_COUNSELING = 11, _('Housing counseling')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='ServicesProvidedSSVF_EnrollmentID', default=None)
+    DateOfService = models.DateField()
+    TypeOfService = models.IntegerField(choices=TypeOfServiceCategory.choices)
+    IfAssistanceObtainingVABenefits = models.IntegerField(choices=IfAssistanceObtainingVABenefitsCategory.choices)
+    IfAssistanceObtainingOrCoordinatingOtherPublicBenefits = models.IntegerField(
+        choices=IfAssistanceObtainingOrCoordinatingOtherPublicBenefitsCategory.choices)
+    IfDirectProvisionOfOtherPublicBenefits = models.IntegerField(
+        choices=IfDirectProvisionOfOtherPublicBenefitsCategory.choices)
+    IfOtherSupportiveServiceApprovedByVA = models.TextField()
+
+
+class FinancialAssistanceSSVF(models.Model):
+    class FinancialAssistanceTypeCategory(models.IntegerChoices):
+        RENTAL_ASSISTANCE = 1, _('Rental assistance')
+        SECURITY_DEPOSITS = 2, _('Security deposit')
+        UTILITY_DEPOSITS = 3, _('Utility deposit')
+        UTILITY_FEE_PAYMENT_ASSISTANCE = 4, _('Utility fee payment assistance')
+        MOVING_COSTS = 5, _('Moving costs')
+        TRANSPORTATION_SERVICES_TOKEN_OR_VOUCHERS = 8, _('Transportation services: token/vouchers')
+        TRANSPORTATION_SERVICES_VEHICLE_REPAIR_OR_MAINTENANCE = 9, _(
+            'Transportation services: vehicle repair/maintenance')
+        CHILD_CARE = 10, _('Child care')
+        GENERAL_HOUSING_STABILITY_ASSISTANCE_EMERGENCY_SUPPLIES = 11, _(
+            'General housing stability assistance - emergency supplies')
+        GENERAL_HOUSING_STABILITY_ASSISTANCE_OTHER = 12, _('General housing stability assistance - other')
+        EMERGENCY_HOUSING_ASSISTANCE = 14, _('Emergency housing assistance')
+        EXTENDED_SHALLOW_SUBSIDY_RENTAL_ASSISTANCE = 15, _('Extended Shallow Subsidy - Rental Assistance')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='FinancialAssistanceSSVF_EnrollmentID', default=None)
+    DateOfFinancialAssistance = models.DateField()
+    FinancialAssistanceAmount = models.DateField()
+    FinancialAssistanceType = models.IntegerField(choices=FinancialAssistanceTypeCategory.choices)
+
+
+class PercentOfAMI(models.Model):
+    class HouseholdIncomeAsAPercentageOfAMICategory(models.IntegerChoices):
+        LESS_THAN_THIRTY_PERCENTAGE = 1, _('Less than 30%')
+        THIRTY_PERCENTAGE_TO_FIFTY_PERCENTAGE = 2, _('30% to 50%')
+        GREATER_THAN_FIFTY_PERCENTAGE = 3, _('Greater than 50%')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='PercentOfAMI_EnrollmentID', default=None)
+    HouseholdIncomeAsAPercentageOfAMI = models.IntegerField(choices=HouseholdIncomeAsAPercentageOfAMICategory.choices)
+
+
+class LastPermanentAddress(models.Model):
+    class AddressDataQualityCategory(models.IntegerChoices):
+        FULL_ADDRESS_REPORTED = 1, _('Full address reported')
+        INCOMPLETE_OR_ESTIMATED_ADDRESS_REPORTED = 2, _('Incomplete or estimated address reported')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='LastPermanentAddress_EnrollmentID', default=None)
+    StreetAddress = models.TextField()
+    City = models.TextField()
+    State = models.TextField()
+    ZipCode = models.TextField()
+    AddressDataQuality = models.IntegerField(choices=AddressDataQualityCategory.choices)
+
+
+# class VAMCStationNumber(models.Model):
+
+class SSVFHPTargetingCriteria(models.Model):
+    class CurrentHousingLossExpectedWithinCategory(models.IntegerChoices):
+        ZERO_TO_SIX_DAYS = 0, _('0-6 days')
+        SEVEN_TO_THIRTEEN_DAYS = 1, _('7-13 days')
+        FOURTEEN_TO_TWENTYONE_DAYS = 2, _('14-21 days')
+        MORE_THAN_TWENTYONE_DAYS = 3, _('More than 21 days (0 points)')
+
+    class AnnualHouseholdGrossIncomeAmountCategory(models.IntegerChoices):
+        ZERO_TO_FOURTEEN_PERC_OF_AREA_MEDIAN_INCOME = 0, _('0-14% of Area Median Income (AMI) for household size')
+        FIFTEEN_TO_THIRTY_PERC_OF_AMI = 1, _('15-30% of AMI for household size')
+        MORE_THAN_THIRTY_PERC_OF_AMI = 2, _('More than 30% of AMI for household size (0 points)')
+
+    class RentalEvictionsWithinThePastSevenYearsCategory(models.IntegerChoices):
+        FOUR_OR_MORE_PRIOR_RENTAL_EVICTIONS = 0, _('4 or more prior rental evictions')
+        TWO_TO_THREE_PRIOR_RENTAL_EVICTIONS = 1, _('2-3 prior rental evictions')
+        ONE_PRIOR_RENTAL_EVICTION = 2, _('1 prior rental eviction')
+        NO_PRIOR_RENTAL_EVICTION = 3, _('No prior rental eviction (0 points)')
+
+    class HistoryOfLiteralHomelessnessCategory(models.IntegerChoices):
+        FOUR_OR_MORE_TIMES = 0, _('4 or more times or total of at least 12 months in past three years')
+        TWO_OR_THREE_TIMES = 1, _('2-3 times in past three years')
+        ONE_TIME_IN_PAST_THREE_YEARS = 2, _('1 time in past three years')
+        NONE = 3, _('None (0 points)')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='SSVFHPTargetingCriteria_EnrollmentID', default=None)
+    ReferredByCoordinatedEntry = models.IntegerField(choices=YesNoResponse.choices)
+    CurrentHousingLossExpectedWithin = models.IntegerField(choices=CurrentHousingLossExpectedWithinCategory.choices)
+    CurrentHouseholdIncomeIsZeroDollars = models.IntegerField(choices=YesNoResponse.choices)
+    AnnualHouseholdGrossIncomeAmount = models.IntegerField(choices=AnnualHouseholdGrossIncomeAmountCategory.choices)
+    SuddenAndSignificantDecreaseIncashIncome = models.IntegerField(choices=YesNoResponse.choices)
+    MajorChangeInHouseholdCompositionInPastTwelveMonths = models.IntegerField(choices=YesNoResponse.choices)
+    RentalEvictionsWithinThePastSevenYears = models.IntegerField(
+        choices=RentalEvictionsWithinThePastSevenYearsCategory.choices)
+    CurrentlyAtRiskOfLosingATenantBasedHousingSubsidy = models.IntegerField(choices=YesNoResponse.choices)
+    HistoryOfLiteralHomelessness = models.IntegerField(choices=HistoryOfLiteralHomelessnessCategory.choices)
+    HeadOfHouseholdWithDisablingCondition = models.IntegerField(choices=YesNoResponse.choices)
+    CriminalRecordForArsonDrugDealing = models.IntegerField(choices=YesNoResponse.choices)
+    RegisteredSexOffender = models.IntegerField(choices=YesNoResponse.choices)
+    AtLeastOneDependentChildUnderAgeSix = models.IntegerField(choices=YesNoResponse.choices)
+    SingleParentWithMinorChild = models.IntegerField(choices=YesNoResponse.choices)
+    HouseholdSizeOfFiveOrMore = models.IntegerField(choices=YesNoResponse.choices)
+    AnyVeteranInHouseholdServedInIraqOrAfghanistan = models.IntegerField(choices=YesNoResponse.choices)
+    FemaleVeteran = models.IntegerField(choices=YesNoResponse.choices)
+    HPApplicantTotalPoints = models.IntegerField()
+    GranteeTargetingThresholdScore = models.IntegerField()
+
+
+class HUDVASHVoucherTracking(models.Model):
+    class VoucherChangeCategory(models.IntegerChoices):
+        REFERRAL_PACKAGE_FORWARDED_TO_PHA = 1, _('Referral package forwarded to PHA')
+        VOUCHER_DENIED_BY_PHA = 2, _('Voucher denied by PHA')
+        VOUCHER_ISSUED_BY_PHA = 3, _('Voucher issued by PHA')
+        VOUCHER_REVOKED_OR_EXPIRED = 4, _('Voucher revoked or expired')
+        VOUCHER_IN_USE_VETERAN_MOVED_INTO_HOUSING = 5, _('Voucher in use- veteran moved into housing')
+        VOUCHER_WAS_PORTED_LOCALLY = 6, _('Voucher was ported locally')
+        VOUCHER_WAS_ADMINISTRATIVELY_ABSORBED_BY_NEW_PHA = 7, _('Voucher was administratively absorbed by new PHA')
+        VOUCHER_WAS_CONVERTED_TO_HOUSING_CHOICE_VOUCHER = 8, _('Voucher was converted to Housing Choice Voucher')
+        VETERAN_EXITED_VOUCHER_WAS_RETURNED = 9, _('Veteran exited - voucher was returned')
+        VETERAN_EXITED_FAMILY_MAINTAINED_THE_VOUCHER = 10, _('0 Veteran exited - family maintained the voucher')
+        VETERAN_EXITED_PRIOR_TO_EVERRECEIVING_A_VOUCHER = 11, _('Veteran exited - prior to ever receiving a voucher')
+        OTHER = 12, _('Other')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='HUDVASHVoucherTracking_EnrollmentID', default=None)
+    InformationDate = models.DateField()
+    VoucherChange = models.IntegerField(choices=VoucherChangeCategory.choices)
+    IfOther = models.TextField()
+
+
+class HUDVASHExitInformation(models.Model):
+    class CaseManagementExitReasonCategory(models.IntegerChoices):
+        ACCOMPLISHED_GOALS = 1, _('Accomplished goals and /or obtained services and no longer needs CM')
+        TRANSFERRED_TO_ANOTHER_HUDVASH_PROGRAM_SITE = 2, _('Transferred to another HUD - VASH program site')
+        FOUND_OR_CHOSE_OTHER_HOUSING = 3, _('Found/chose other housing')
+        DID_NOT_COMPLY_WITH_HUDVASH_CM = 4, _('Did not comply with HUD - VASH CM')
+        EVICTION_OR_OTHER_HOUSING_RELATED_ISSUES = 5, _('Eviction and/or other housing related issues')
+        UNHAPPY_WITH_HUD_VASH_HOUSING = 6, _('Unhappy with HUD-VASH housing')
+        NO_LONGER_FINANCIALLY_ELIGIBLE_FOR_HUD_VASH_VOUCHER = 7, _(
+            'No longer financially eligible for HUD-VASH voucher')
+        NO_LONGER_INTERESTED_IN_PARTICIPATING_IN_THIS_PROGRAM = 8, _(
+            'No longer interested in participating in this program')
+        VETERAN_CANNOT_BE_LOCATED = 9, _('Veteran cannot be located')
+        VETERAN_TOO_ILL_TO_PARTICIPATE_AT_THIS_TIME = 10, _('Veteran too ill to participate at this time')
+        VETERAN_IS_INCARCERATED = 11, _('Veteran is incarcerated')
+        VETERAN_IS_DECEASED = 12, _('Veteran is deceased')
+        OTHER = 13, _('Other')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='HUDVASHExitInformation_EnrollmentID', default=None)
+    CaseManagementExitReason = models.IntegerField(choices=CaseManagementExitReasonCategory.choices)
+    IfOther = models.TextField()
+
+
+# RHY and PATH models
+
+class ConnectionWithSOAR(models.Model):
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='ConnectionWithSOAR_EnrollmentID', default=None)
+    ConnectionWithSOAR = models.IntegerField(choices=ResponseCategory.choices)
+
+
+class LastGradeCompleted(models.Model):
+    class LastGradeCompletedCategory(models.IntegerChoices):
+        LESS_THAN_GRADE_FIVE = 1, _('Less than Grade 5')
+        GRADES_FIVE_TO_SIX = 2, _('Grades 5-6')
+        GRADES_SEVEN_EIGHT = 3, _('Grades 7-8 ')
+        GRADES_NINE_TO_ELEVEN = 4, _('Grades 9-11')
+        GRADE_TWELVE_OR_HIGH_SCHOOL_DIPLOMA = 5, _('Grade 12/High school diploma')
+        SCHOOL_PROGRAM_DOES_NOT_HAVE_GRADE_LEVELS = 6, _('School program does not have grade levels')
+        GED = 7, _('GED')
+        SOME_COLLEGE = 10, _('Some college')
+        ASSOCIATES_DEGREE = 11, _('Associates degree')
+        BACHELORS_DEGREE = 12, _('Bachelors degree')
+        GRADUATE_DEGREE = 13, _('Graduate degree')
+        VOCATIONAL_CERTIFICATION = 14, _('Vocational Certification')
+        CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
+        CLIENT_REFUSED = 9, _('Client Refused')
+        DATA_NOT_COLLECTED = 99, _('Data Not Collected')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='LastGradeCompleted_EnrollmentID', default=None)
+    LastGradeCompleted = models.IntegerField(choices=LastGradeCompletedCategory.choices)
+
+
+class EmploymentStatus(models.Model):
+    class TypeOfEmploymentCategory(models.IntegerChoices):
+        FULL_TIME = 1, _('Full-time')
+        PART_TIME = 2, _('Part-time')
+
+    class WhyNotEmployedCategory(models.IntegerChoices):
+        LOOKING_FOR_WORK = 1, _(' WhyNotEmployedCategory')
+        UNABLE_TO_WORK = 2, _('Unable to work')
+        NOT_LOOKING_FOR_WORK = 3, _('Not looking for work')
+
+    EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
+                                     related_name='EmploymentStatus_EnrollmentID', default=None)
+    InformationDate = models.DateField()
+    Employed = models.IntegerField(choices=YesNoResponse.choices)
+    TypeOfEmployment = models.IntegerField(choices=TypeOfEmploymentCategory.choices)
+    WhyNotEmployed = models.IntegerField(choices=WhyNotEmployedCategory.choices)
