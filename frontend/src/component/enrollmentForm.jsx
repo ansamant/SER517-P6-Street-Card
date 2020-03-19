@@ -606,6 +606,7 @@ const formItemLayout = {
     }
 };
 const message = "Mandatory field! Please provide a response."
+
 class EnrollmentForm extends Component {
     constructor(props) {
         super(props);
@@ -676,11 +677,11 @@ class EnrollmentForm extends Component {
                 let count = 0;
                 for (const x in obj[key]) {
                     count++;
-                    if(obj[key][x] === null || obj[key][x]=== undefined){
+                    if (obj[key][x] === null || obj[key][x] === undefined) {
                         ccount = ccount + 1;
                     }
                 }
-                if(ccount===count){
+                if (ccount === count) {
                     delete obj[key];
                 }
             }
@@ -909,6 +910,9 @@ class EnrollmentForm extends Component {
                             </Menu.Item>
                             <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
                                 <span>Project Enrollment</span>
+                            </Menu.Item>
+                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="7">
+                                <span>View Enrollment</span>
                             </Menu.Item>
                         </Menu>
                     </Sider>
