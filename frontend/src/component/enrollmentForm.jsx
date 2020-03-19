@@ -605,7 +605,7 @@ const formItemLayout = {
         }
     }
 };
-
+const message = "Mandatory field! Please provide a response."
 class EnrollmentForm extends Component {
     constructor(props) {
         super(props);
@@ -667,7 +667,25 @@ class EnrollmentForm extends Component {
             return e[0];
         } else
             return null;
-    }
+    };
+
+    handleEmptyObject = obj => {
+        for (const key in obj) {
+            if (typeof (obj[key]) === 'object') {
+                let ccount = 0;
+                let count = 0;
+                for (const x in obj[key]) {
+                    count++;
+                    if(obj[key][x] === null || obj[key][x]=== undefined){
+                        ccount = ccount + 1;
+                    }
+                }
+                if(ccount===count){
+                    delete obj[key];
+                }
+            }
+        }
+    };
 
     handleOnSubmit = e => {
         e.preventDefault();
@@ -690,119 +708,119 @@ class EnrollmentForm extends Component {
                 nonCashBenefitsObject.OtherSource = values.othersources != null ? values.othersources[0] : null;
                 nonCashBenefitsObject.SpecifySource = values.specifysource;
                 enrollmentRequestObject.non_cash_benefits = nonCashBenefitsObject;
-                // var incomeAndSourcesObject = {};
-                // incomeAndSourcesObject.InformationDate = values['informationdateIncome'] != null ? values['informationdateIncome'].format('YYYY-MM-DD') : null;
-                // incomeAndSourcesObject.IncomeFromAnySources = values.incomefromanysources != null ? values.incomefromanysources[0] : null;
-                // incomeAndSourcesObject.Earned = values.earned != null ? values.earned[0] : null;
-                // incomeAndSourcesObject.EarnedIncome = values.earnedincome;
-                // incomeAndSourcesObject.Unemployment = values.unemployment != null ? values.unemployment[0] : null;
-                // incomeAndSourcesObject.UnemploymentAmount = values.unemploymentamount;
-                // incomeAndSourcesObject.SSI = values.ssi != null ? values.ssi[0] : null;
-                // incomeAndSourcesObject.SSIAmount = values.ssiamount;
-                // incomeAndSourcesObject.SSDI = values.ssdi != null ? values.ssdi[0] : null;
-                // incomeAndSourcesObject.SSDIAmount = values.ssdiamount;
-                // incomeAndSourcesObject.VADisabilityService = values.vadisabilityservice != null ? values.vadisabilityservice[0] : null;
-                // incomeAndSourcesObject.VADisabilityServiceAmount = values.vadisabilityserviceamount;
-                // incomeAndSourcesObject.VADisabilityNonService = values.vadisabilitynonservice != null ? values.vadisabilitynonservice[0] : null;
-                // incomeAndSourcesObject.VADisabilityNonServiceNonAmount = values.vadisabilitynonserviceamount;
-                // incomeAndSourcesObject.PrivateDisability = values.privatedisability != null ? values.privatedisability[0] : null;
-                // incomeAndSourcesObject.PrivateDisabilityAmount = values.privatedisabilityamount;
-                // incomeAndSourcesObject.WorkersComp = values.workerscomp != null ? values.workerscomp[0] : null;
-                // incomeAndSourcesObject.WorkersCompAmount = values.workerscompamount;
-                // incomeAndSourcesObject.TANF = values.tanf != null ? values.tanf[0] : null;
-                // incomeAndSourcesObject.TANFAmount = values.tanfamount;
-                // incomeAndSourcesObject.GA = values.ga != null ? values.ga[0] : null;
-                // incomeAndSourcesObject.GAAmount = values.gaamount;
-                // incomeAndSourcesObject.SocSecRetirement = this.handleValue(values.socsecretirement);
-                // incomeAndSourcesObject.SocSecRetirementAmount = values.socsecretirementamount;
-                // incomeAndSourcesObject.Pension = this.handleValue(values.pension);
-                // incomeAndSourcesObject.PensionAmount = values.pensionamount;
-                // incomeAndSourcesObject.ChildSupport = this.handleValue(values.childsupport);
-                // incomeAndSourcesObject.ChildSupportAmount = values.childsupportamount;
-                // incomeAndSourcesObject.Alimony = this.handleValue(values.alimony);
-                // incomeAndSourcesObject.AlimonyAmount = values.alimonyamount;
-                // incomeAndSourcesObject.OtherIncomeSources = this.handleValue(values.otherincomesources);
-                // incomeAndSourcesObject.OtherIncomeSourcesAmount = values.otherincomesourcesamount;
-                // incomeAndSourcesObject.OtherIncomeSourcesIdentify = values.otherincomesourcesidentify;
-                // incomeAndSourcesObject.TotalMonthlyIncome = values.totalmonthlyincome;
-                // enrollmentRequestObject.income_and_sources = incomeAndSourcesObject;
-                // var healthInsuranceObject = {};
-                // healthInsuranceObject.InformationDate = values['informationdateHealth'] != null ? values['informationdateHealth'].format('YYYY-MM-DD') : null;
-                // healthInsuranceObject.CoveredByHealthInsurance = this.handleValue(values.coveredbyhealthinsurance);
-                // healthInsuranceObject.Medicaid = this.handleValue(values.medicaid);
-                // healthInsuranceObject.Medicare = this.handleValue(values.medicare);
-                // healthInsuranceObject.SCHIP = this.handleValue(values.schip);
-                // healthInsuranceObject.VAMedicalServices = this.handleValue(values.vamedicalservices);
-                // healthInsuranceObject.EmployerProvided = this.handleValue(values.employerprovided);
-                // healthInsuranceObject.COBRA = this.handleValue(values.cobra);
-                // healthInsuranceObject.PrivatePay = this.handleValue(values.privatepay);
-                // healthInsuranceObject.StateHealthInsuranceForAdults = this.handleValue(values.statehealthinsuranceforadults);
-                // healthInsuranceObject.IndianHealthServices = this.handleValue(values.indianhealthservices);
-                // healthInsuranceObject.OtherInsurance = this.handleValue(values.otherinsurance);
-                // healthInsuranceObject.SpecifySource = values.specifysourceHealthInsurance;
-                // healthInsuranceObject.Reason = this.handleValue(values.reason);
-                // enrollmentRequestObject.health_insurance = healthInsuranceObject;
-                // var domesticViolenceObject = {};
-                // domesticViolenceObject.InformationDate = values['informationdateDV'] != null ? values['informationdateDV'].format('YYYY-MM-DD') : null;
-                // domesticViolenceObject.DomesticViolenceVictim = this.handleValue(values.domesticviolencevictim);
-                // domesticViolenceObject.WhenOccurred = this.handleValue(values.whenoccurred);
-                // domesticViolenceObject.CurrentlyFleeing = this.handleValue(values.currentlyfleeing);
-                // enrollmentRequestObject.domestic_violence = domesticViolenceObject;
-                // var disablingCondition = {};
-                // disablingCondition.InformationDate = values['informationdateDC'] != null ? values['informationdateDC'].format('YYYY-MM-DD') : null;
-                // disablingCondition.physical_disability = this.handleValue(values.physical_disability);
-                // disablingCondition.physical_disability_impairing = this.handleValue(values.physical_disability_impairing);
-                // disablingCondition.developmental_disability = this.handleValue(values.developmental_disability);
-                // disablingCondition.developmental_disability_impairing = this.handleValue(values.developmental_disability_impairing);
-                // disablingCondition.chronic_health = this.handleValue(values.chronic_health_impairing);
-                // disablingCondition.hiv_aids = this.handleValue(values.hiv_aids);
-                // disablingCondition.hiv_aids_impairing = this.handleValue(values.hiv_aids_impairing);
-                // disablingCondition.mental_health = this.handleValue(values.mental_health);
-                // disablingCondition.mental_health_impairing = this.handleValue(values.mental_health_impairing);
-                // disablingCondition.substance_abuse = this.handleValue(values.substance_abuse);
-                // disablingCondition.substance_abuse_impairing = this.handleValue(values.substance_abuse_impairing);
-                // enrollmentRequestObject.disabling_condition = disablingCondition;
-                // var dateofEngagementObject = {};
-                // dateofEngagementObject.DateOfEngagement = values['dateofengagement'] != null ? values['dateofengagement'].format('YYYY-MM-DD') : null;
-                // enrollmentRequestObject.date_of_engagement = dateofEngagementObject;
-                // var bedNightDateObject = {};
-                // bedNightDateObject.BedNightDate = values['bednightdate'] != null ? values['bednightdate'].format('YYYY-MM-DD') : null;
-                // enrollmentRequestObject.bed_night_date = bedNightDateObject;
-                // var currentLivingSituationObject = {};
-                // currentLivingSituationObject.InformationDate = values['informationdateCL'] != null ? values['informationdateCL'].format('YYYY-MM-DD') : null;
-                // currentLivingSituationObject.CurrentLivingSituation = this.handleValue(values.currentlivingsituation);
-                // currentLivingSituationObject.VerifiedByProject = this.handleValue(values.verifiedbyproject);
-                // currentLivingSituationObject.HasToLeaveCurrentSituation = this.handleValue(values.hastoleavecurrentsituation);
-                // currentLivingSituationObject.HasASubsequentResidence = this.handleValue(values.hasasubsequentresidence);
-                // currentLivingSituationObject.HasResourcesToObtainPermanentHousing = this.handleValue(values.hasresourcestoobtainpermanenthousing);
-                // currentLivingSituationObject.OwnershipInPermanentHousing = this.handleValue(values.ownershipinpermanenthousing);
-                // currentLivingSituationObject.HasClientMoved = this.handleValue(values.hasclientmoved);
-                // currentLivingSituationObject.LocationDetails = values.locationdetails;
-                // enrollmentRequestObject.current_living_situation = currentLivingSituationObject;
-                // var coordinatedEntryAssessmentObject = {};
-                // coordinatedEntryAssessmentObject.DateOfAssessment = values['dateofassessment'] != null ? values['dateofassessment'].format('YYYY-MM-DD') : null;
-                // coordinatedEntryAssessmentObject.AssessmentLocation = values.assessmentlocation;
-                // coordinatedEntryAssessmentObject.AssessmentType = this.handleValue(values.assessmenttype);
-                // coordinatedEntryAssessmentObject.AssessmentLevel = this.handleValue(values.assessmentlevel);
-                // coordinatedEntryAssessmentObject.AssessmentQuestion = values.assessmentquestion;
-                // coordinatedEntryAssessmentObject.AssessmentAnswer = values.assessmentanswer;
-                // coordinatedEntryAssessmentObject.AssessmentResultType = values.assessmentresulttype;
-                // coordinatedEntryAssessmentObject.AssessmentResult = values.assessmentresult;
-                // coordinatedEntryAssessmentObject.PrioritizationStatus = values.prioritizationstatus;
-                // enrollmentRequestObject.coordinated_entry_assessment = coordinatedEntryAssessmentObject;
-                // var coordinatedEntryEventObject = {};
-                // coordinatedEntryEventObject.DateOfEvent = values['dateofevent'] != null ? values['dateofevent'].format('YYYY-MM-DD') : null;
-                // coordinatedEntryEventObject.Event = this.handleValue(values.event);
-                // coordinatedEntryEventObject.ClientHousedOrReHoused = this.handleValue(values.clienthousedorrehoused);
-                // coordinatedEntryEventObject.EnrolledInAfterCareProject = this.handleValue(values.enrolledinaftercareproject);
-                // coordinatedEntryEventObject.LocationOfHousing = this.handleValue(values.locationofhousing);
-                // coordinatedEntryEventObject.ReferralResult = this.handleValue(values.referralresult);
-                // coordinatedEntryEventObject.DateOfResult = values['dateofresult'] != null ? values['dateofresult'].format('YYYY-MM-DD') : null;
-                // enrollmentRequestObject.coordinated_entry_event = coordinatedEntryEventObject;
-                // var sexualOrientationObject = {};
-                // sexualOrientationObject.SexualOrientation = this.handleValue(values.sexualorientation);
-                // sexualOrientationObject.Description = values.description;
-                // enrollmentRequestObject.sexual_orientation = sexualOrientationObject;
+                var incomeAndSourcesObject = {};
+                incomeAndSourcesObject.InformationDate = values['informationdateIncome'] != null ? values['informationdateIncome'].format('YYYY-MM-DD') : null;
+                incomeAndSourcesObject.IncomeFromAnySources = values.incomefromanysources != null ? values.incomefromanysources[0] : null;
+                incomeAndSourcesObject.Earned = values.earned != null ? values.earned[0] : null;
+                incomeAndSourcesObject.EarnedIncome = values.earnedincome;
+                incomeAndSourcesObject.Unemployment = values.unemployment != null ? values.unemployment[0] : null;
+                incomeAndSourcesObject.UnemploymentAmount = values.unemploymentamount;
+                incomeAndSourcesObject.SSI = values.ssi != null ? values.ssi[0] : null;
+                incomeAndSourcesObject.SSIAmount = values.ssiamount;
+                incomeAndSourcesObject.SSDI = values.ssdi != null ? values.ssdi[0] : null;
+                incomeAndSourcesObject.SSDIAmount = values.ssdiamount;
+                incomeAndSourcesObject.VADisabilityService = values.vadisabilityservice != null ? values.vadisabilityservice[0] : null;
+                incomeAndSourcesObject.VADisabilityServiceAmount = values.vadisabilityserviceamount;
+                incomeAndSourcesObject.VADisabilityNonService = values.vadisabilitynonservice != null ? values.vadisabilitynonservice[0] : null;
+                incomeAndSourcesObject.VADisabilityNonServiceNonAmount = values.vadisabilitynonserviceamount;
+                incomeAndSourcesObject.PrivateDisability = values.privatedisability != null ? values.privatedisability[0] : null;
+                incomeAndSourcesObject.PrivateDisabilityAmount = values.privatedisabilityamount;
+                incomeAndSourcesObject.WorkersComp = values.workerscomp != null ? values.workerscomp[0] : null;
+                incomeAndSourcesObject.WorkersCompAmount = values.workerscompamount;
+                incomeAndSourcesObject.TANF = values.tanf != null ? values.tanf[0] : null;
+                incomeAndSourcesObject.TANFAmount = values.tanfamount;
+                incomeAndSourcesObject.GA = values.ga != null ? values.ga[0] : null;
+                incomeAndSourcesObject.GAAmount = values.gaamount;
+                incomeAndSourcesObject.SocSecRetirement = this.handleValue(values.socsecretirement);
+                incomeAndSourcesObject.SocSecRetirementAmount = values.socsecretirementamount;
+                incomeAndSourcesObject.Pension = this.handleValue(values.pension);
+                incomeAndSourcesObject.PensionAmount = values.pensionamount;
+                incomeAndSourcesObject.ChildSupport = this.handleValue(values.childsupport);
+                incomeAndSourcesObject.ChildSupportAmount = values.childsupportamount;
+                incomeAndSourcesObject.Alimony = this.handleValue(values.alimony);
+                incomeAndSourcesObject.AlimonyAmount = values.alimonyamount;
+                incomeAndSourcesObject.OtherIncomeSources = this.handleValue(values.otherincomesources);
+                incomeAndSourcesObject.OtherIncomeSourcesAmount = values.otherincomesourcesamount;
+                incomeAndSourcesObject.OtherIncomeSourcesIdentify = values.otherincomesourcesidentify;
+                incomeAndSourcesObject.TotalMonthlyIncome = values.totalmonthlyincome;
+                enrollmentRequestObject.income_and_sources = incomeAndSourcesObject;
+                var healthInsuranceObject = {};
+                healthInsuranceObject.InformationDate = values['informationdateHealth'] != null ? values['informationdateHealth'].format('YYYY-MM-DD') : null;
+                healthInsuranceObject.CoveredByHealthInsurance = this.handleValue(values.coveredbyhealthinsurance);
+                healthInsuranceObject.Medicaid = this.handleValue(values.medicaid);
+                healthInsuranceObject.Medicare = this.handleValue(values.medicare);
+                healthInsuranceObject.SCHIP = this.handleValue(values.schip);
+                healthInsuranceObject.VAMedicalServices = this.handleValue(values.vamedicalservices);
+                healthInsuranceObject.EmployerProvided = this.handleValue(values.employerprovided);
+                healthInsuranceObject.COBRA = this.handleValue(values.cobra);
+                healthInsuranceObject.PrivatePay = this.handleValue(values.privatepay);
+                healthInsuranceObject.StateHealthInsuranceForAdults = this.handleValue(values.statehealthinsuranceforadults);
+                healthInsuranceObject.IndianHealthServices = this.handleValue(values.indianhealthservices);
+                healthInsuranceObject.OtherInsurance = this.handleValue(values.otherinsurance);
+                healthInsuranceObject.SpecifySource = values.specifysourceHealthInsurance;
+                healthInsuranceObject.Reason = this.handleValue(values.reason);
+                enrollmentRequestObject.health_insurance = healthInsuranceObject;
+                var domesticViolenceObject = {};
+                domesticViolenceObject.InformationDate = values['informationdateDV'] != null ? values['informationdateDV'].format('YYYY-MM-DD') : null;
+                domesticViolenceObject.DomesticViolenceVictim = this.handleValue(values.domesticviolencevictim);
+                domesticViolenceObject.WhenOccurred = this.handleValue(values.whenoccurred);
+                domesticViolenceObject.CurrentlyFleeing = this.handleValue(values.currentlyfleeing);
+                enrollmentRequestObject.domestic_violence = domesticViolenceObject;
+                var disablingCondition = {};
+                disablingCondition.InformationDate = values['informationdateDC'] != null ? values['informationdateDC'].format('YYYY-MM-DD') : null;
+                disablingCondition.physical_disability = this.handleValue(values.physical_disability);
+                disablingCondition.physical_disability_impairing = this.handleValue(values.physical_disability_impairing);
+                disablingCondition.developmental_disability = this.handleValue(values.developmental_disability);
+                disablingCondition.developmental_disability_impairing = this.handleValue(values.developmental_disability_impairing);
+                disablingCondition.chronic_health = this.handleValue(values.chronic_health_impairing);
+                disablingCondition.hiv_aids = this.handleValue(values.hiv_aids);
+                disablingCondition.hiv_aids_impairing = this.handleValue(values.hiv_aids_impairing);
+                disablingCondition.mental_health = this.handleValue(values.mental_health);
+                disablingCondition.mental_health_impairing = this.handleValue(values.mental_health_impairing);
+                disablingCondition.substance_abuse = this.handleValue(values.substance_abuse);
+                disablingCondition.substance_abuse_impairing = this.handleValue(values.substance_abuse_impairing);
+                enrollmentRequestObject.disabling_condition = disablingCondition;
+                var dateofEngagementObject = {};
+                dateofEngagementObject.DateOfEngagement = values['dateofengagement'] != null ? values['dateofengagement'].format('YYYY-MM-DD') : null;
+                enrollmentRequestObject.date_of_engagement = dateofEngagementObject;
+                var bedNightDateObject = {};
+                bedNightDateObject.BedNightDate = values['bednightdate'] != null ? values['bednightdate'].format('YYYY-MM-DD') : null;
+                enrollmentRequestObject.bed_night_date = bedNightDateObject;
+                var currentLivingSituationObject = {};
+                currentLivingSituationObject.InformationDate = values['informationdateCL'] != null ? values['informationdateCL'].format('YYYY-MM-DD') : null;
+                currentLivingSituationObject.CurrentLivingSituation = this.handleValue(values.currentlivingsituation);
+                currentLivingSituationObject.VerifiedByProject = this.handleValue(values.verifiedbyproject);
+                currentLivingSituationObject.HasToLeaveCurrentSituation = this.handleValue(values.hastoleavecurrentsituation);
+                currentLivingSituationObject.HasASubsequentResidence = this.handleValue(values.hasasubsequentresidence);
+                currentLivingSituationObject.HasResourcesToObtainPermanentHousing = this.handleValue(values.hasresourcestoobtainpermanenthousing);
+                currentLivingSituationObject.OwnershipInPermanentHousing = this.handleValue(values.ownershipinpermanenthousing);
+                currentLivingSituationObject.HasClientMoved = this.handleValue(values.hasclientmoved);
+                currentLivingSituationObject.LocationDetails = values.locationdetails;
+                enrollmentRequestObject.current_living_situation = currentLivingSituationObject;
+                var coordinatedEntryAssessmentObject = {};
+                coordinatedEntryAssessmentObject.DateOfAssessment = values['dateofassessment'] != null ? values['dateofassessment'].format('YYYY-MM-DD') : null;
+                coordinatedEntryAssessmentObject.AssessmentLocation = values.assessmentlocation;
+                coordinatedEntryAssessmentObject.AssessmentType = this.handleValue(values.assessmenttype);
+                coordinatedEntryAssessmentObject.AssessmentLevel = this.handleValue(values.assessmentlevel);
+                coordinatedEntryAssessmentObject.AssessmentQuestion = values.assessmentquestion;
+                coordinatedEntryAssessmentObject.AssessmentAnswer = values.assessmentanswer;
+                coordinatedEntryAssessmentObject.AssessmentResultType = values.assessmentresulttype;
+                coordinatedEntryAssessmentObject.AssessmentResult = values.assessmentresult;
+                coordinatedEntryAssessmentObject.PrioritizationStatus = values.prioritizationstatus;
+                enrollmentRequestObject.coordinated_entry_assessment = coordinatedEntryAssessmentObject;
+                var coordinatedEntryEventObject = {};
+                coordinatedEntryEventObject.DateOfEvent = values['dateofevent'] != null ? values['dateofevent'].format('YYYY-MM-DD') : null;
+                coordinatedEntryEventObject.Event = this.handleValue(values.event);
+                coordinatedEntryEventObject.ClientHousedOrReHoused = this.handleValue(values.clienthousedorrehoused);
+                coordinatedEntryEventObject.EnrolledInAfterCareProject = this.handleValue(values.enrolledinaftercareproject);
+                coordinatedEntryEventObject.LocationOfHousing = this.handleValue(values.locationofhousing);
+                coordinatedEntryEventObject.ReferralResult = this.handleValue(values.referralresult);
+                coordinatedEntryEventObject.DateOfResult = values['dateofresult'] != null ? values['dateofresult'].format('YYYY-MM-DD') : null;
+                enrollmentRequestObject.coordinated_entry_event = coordinatedEntryEventObject;
+                var sexualOrientationObject = {};
+                sexualOrientationObject.SexualOrientation = this.handleValue(values.sexualorientation);
+                sexualOrientationObject.Description = values.description;
+                enrollmentRequestObject.sexual_orientation = sexualOrientationObject;
                 var veteransInfoObject = {};
                 veteransInfoObject.YearEnteredMilitaryService = values.yearenteredmilitaryservice;
                 veteransInfoObject.YearSeparatedFromMilitaryService = values.yearseparatedfrommilitaryservice;
@@ -834,6 +852,7 @@ class EnrollmentForm extends Component {
                 employmentStatusObject.TypeOfEmployment = this.handleValue(values.typeofemployment)
                 employmentStatusObject.WhyNotEmployed = this.handleValue(values.whynotemployed)
                 enrollmentRequestObject.employment_Status = employmentStatusObject;
+                this.handleEmptyObject(enrollmentRequestObject);
                 console.log(enrollmentRequestObject);
 
                 fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/enrollment/', {
@@ -915,8 +934,8 @@ class EnrollmentForm extends Component {
                                                             rules: [
                                                                 {
                                                                     type: "array",
-                                                                    required: false,
-                                                                    message: "Please select your role!"
+                                                                    required: true,
+                                                                    message: {message},
                                                                 }
                                                             ]
                                                         })(<Cascader options={YesNoResponse}
@@ -929,8 +948,8 @@ class EnrollmentForm extends Component {
                                                             rules: [
                                                                 {
                                                                     type: "array",
-                                                                    required: false,
-                                                                    message: "Please select your role!"
+                                                                    required: true,
+                                                                    message: {message},
                                                                 }
                                                             ]
                                                         })(<Cascader options={ProjectCategory}
@@ -947,8 +966,8 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("entrydate", {
                                                             rules: [
                                                                 {
-                                                                    required: false,
-                                                                    message: "Please select the date!"
+                                                                    required: true,
+                                                                    message: {message}
                                                                 }
                                                             ]
                                                         })(<DatePicker style={{width: "100%"}}/>)}
@@ -960,8 +979,8 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("exitdate", {
                                                         rules: [
                                                             {
-                                                                required: false,
-                                                                message: "Please select the date!"
+                                                                required: true,
+                                                                message: {message}
                                                             }
                                                         ]
                                                     })(
@@ -977,8 +996,8 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("informationdateNonCash", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
-                                                                    required: false
+                                                                    message: {message},
+                                                                    required: true
                                                                 }
                                                             ]
                                                         })(
@@ -991,8 +1010,8 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("benefitsfromanysources", {
                                                         rules: [
                                                             {
-                                                                message: "Please select benefits from any other sources!",
-                                                                required: false,
+                                                                message: {message},
+                                                                required: true,
                                                                 type: "array"
                                                             }
                                                         ]
@@ -1009,9 +1028,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("snap", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false,
+                                                                required: true,
                                                             }
                                                         ]
                                                     })(
@@ -1029,9 +1048,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("wic", {
                                                         rules: [
                                                             {
-                                                                message: "Please select",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false,
+                                                                required: true,
                                                             }
                                                         ]
                                                     })(
@@ -1047,9 +1066,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("tanfchildcare", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false,
+                                                                required: true,
                                                             }
                                                         ]
                                                     })(
@@ -1065,9 +1084,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("tanftransportation", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false,
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
@@ -1085,9 +1104,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("othertanf", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false,
+                                                                required: true,
                                                             }
                                                         ]
                                                     })(
@@ -1103,9 +1122,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("othersources", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false,
+                                                                required: true,
                                                             }
                                                         ]
                                                     })(
@@ -1132,7 +1151,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("informationdateIncome", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -1146,7 +1165,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("incomefromanysources", {
                                                         rules: [
                                                             {
-                                                                message: "Please select income from any other sources!",
+                                                                message: {message},
                                                                 required: false,
                                                                 type: "array"
                                                             }
@@ -1164,7 +1183,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("earned", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1184,7 +1203,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("EarnedIncome", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide income earned",
+                                                                message: {message},
                                                                 type: "integer",
                                                                 required: false
                                                             }
@@ -1199,7 +1218,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("unemployment", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1217,7 +1236,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("unemploymentamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the amount!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1233,7 +1252,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ssi", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1251,7 +1270,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ssiamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1265,7 +1284,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ssdi", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1285,7 +1304,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ssdiamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1299,7 +1318,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("vadisabilityservice", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1317,7 +1336,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("vadisabilityserviceamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1333,7 +1352,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("vadisabilitynonservice", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1351,7 +1370,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("vadisabilitynonservicenonamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1365,7 +1384,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("privatedisability", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1385,7 +1404,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("privatedisabilityamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1399,7 +1418,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("workerscomp", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1417,7 +1436,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("workerscompamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1433,7 +1452,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("tanf", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1451,7 +1470,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("tanfamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1465,7 +1484,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ga", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1485,7 +1504,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("gaamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1499,7 +1518,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("socsecretirement", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1517,7 +1536,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("socsecretirementamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1533,7 +1552,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("pension", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1551,7 +1570,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("pensionamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
 
                                                                 required: false,
                                                             }
@@ -1566,7 +1585,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("childsupport", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1586,7 +1605,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("Child Support Amount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1600,7 +1619,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("alimony", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1618,7 +1637,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("alimonyamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1634,7 +1653,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("otherincomesources", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1652,7 +1671,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("otherincomesourcesamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1677,7 +1696,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("informationdateHealth", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -1691,7 +1710,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("coveredbyhealthinsurance", {
                                                         rules: [
                                                             {
-                                                                message: "Please select income from any other sources!",
+                                                                message: {message},
                                                                 required: false,
                                                                 type: "array"
                                                             }
@@ -1709,7 +1728,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("medicaid", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1729,7 +1748,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("Medicare", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide income earned",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1746,7 +1765,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("SCHIP", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1764,7 +1783,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("vamedicalservices", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the amount!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1783,7 +1802,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("employerprovided", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1801,7 +1820,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("cobra", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1818,7 +1837,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("privatepay", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1838,7 +1857,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("statehealthinsuranceforadults", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1852,7 +1871,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("indianhealthservices", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1870,7 +1889,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("otherinsurance", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1886,7 +1905,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("specifysourceHealthInsurance", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1900,7 +1919,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("reason", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1919,7 +1938,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("workerscompamount", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -1937,7 +1956,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("informationdateDV", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -1951,7 +1970,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("domesticviolencevictim", {
                                                         rules: [
                                                             {
-                                                                message: "Please select income from any other sources!",
+                                                                message: {message},
                                                                 required: false,
                                                                 type: "array"
                                                             }
@@ -1969,7 +1988,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("whenoccurred", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -1989,7 +2008,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("currentlyfleeing", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide income earned",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2011,7 +2030,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("informationdateDC", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -2025,7 +2044,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("physical_disability", {
                                                         rules: [
                                                             {
-                                                                message: "Please select income from any other sources!",
+                                                                message: {message},
                                                                 required: false,
                                                                 type: "array"
                                                             }
@@ -2043,7 +2062,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("physical_disability_impairing", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2063,7 +2082,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("developmental_disability", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide income earned",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2080,7 +2099,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("developmental_disability_impairing", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2098,7 +2117,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("chronic_health", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the amount!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2117,7 +2136,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("chronic_health_impairing", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2135,7 +2154,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("hiv_aids", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2152,7 +2171,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("hiv_aids_impairing", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2172,7 +2191,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("mental_health", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false,
                                                                 type: "array"
                                                             }
@@ -2190,7 +2209,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("mental_health_impairing", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2208,7 +2227,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("substance_abuse", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2228,7 +2247,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("substance_abuse_impairing", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2250,7 +2269,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("dateofengagement", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -2268,7 +2287,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("informationdateCL", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -2282,7 +2301,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("currentlivingsituation", {
                                                         rules: [
                                                             {
-                                                                message: "Please select income from any other sources!",
+                                                                message: {message},
                                                                 required: false,
                                                                 type: "array"
                                                             }
@@ -2300,7 +2319,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("verifiedbyproject", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2320,7 +2339,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("hastoleavecurrentsituation", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide income earned",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2337,7 +2356,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("hasresourcestoobtainpermanenthousing", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2355,7 +2374,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ownershipinpermanenthousing", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the amount!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2374,7 +2393,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("employerprovided", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2392,7 +2411,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("hasclientmoved", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2409,7 +2428,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("locationdetails", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2427,7 +2446,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("bednightdate", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -2445,7 +2464,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("dateofassessment", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -2459,7 +2478,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("assessmentlocation", {
                                                         rules: [
                                                             {
-                                                                message: "Please select income from any other sources!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2473,7 +2492,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("assessmenttype", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2493,7 +2512,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("assessmentlevelcategory", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide income earned",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2510,7 +2529,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("assessmentquestion", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2527,7 +2546,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("assessmentanswer", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the amount!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2543,7 +2562,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("assessmentresulttype", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2557,7 +2576,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("assessmentresult", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the venue!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2571,7 +2590,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("prioritizationstatus", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide input!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2593,7 +2612,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("dateofevent", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -2607,7 +2626,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("event", {
                                                         rules: [
                                                             {
-                                                                message: "Please select income from any other sources!",
+                                                                message: {message},
                                                                 required: false,
                                                                 type: "array"
                                                             }
@@ -2625,7 +2644,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("clienthousedorrehoused", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2645,7 +2664,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("enrolledinaftercareproject", {
                                                         rules: [
                                                             {
-                                                                message: "Please provide income earned",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2662,7 +2681,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("locationofhousing", {
                                                         rules: [
                                                             {
-                                                                message: "Please Yes/No!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -2680,7 +2699,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("referralresult", {
                                                         rules: [
                                                             {
-                                                                message: "Please input the amount!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2699,7 +2718,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("dateofevent", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -2717,7 +2736,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("sexualorientation", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select the information date!",
+                                                                    message: {message},
                                                                     type: "array",
                                                                     required: false
                                                                 }
@@ -2735,7 +2754,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("description", {
                                                         rules: [
                                                             {
-                                                                message: "Please select income from any other sources!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -2756,8 +2775,8 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("yearenteredmilitaryservice", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please enter the Year Entered Military Service!",
-                                                                    required: false
+                                                                    message: {message},
+                                                                    required: true
                                                                 }
                                                             ]
                                                         })(
@@ -2770,8 +2789,8 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("yearseparatedfrommilitaryservice", {
                                                         rules: [
                                                             {
-                                                                message: "Please enter the Year Separated From Military Service!",
-                                                                required: false
+                                                                message: {message},
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
@@ -2784,9 +2803,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("theatreofoperations_worldwar2", {
                                                         rules: [
                                                             {
-                                                                message: "Please Select!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
@@ -2804,9 +2823,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("theatreofoperations_koreanwar", {
                                                         rules: [
                                                             {
-                                                                message: "Please Select!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(<Cascader
@@ -2822,9 +2841,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("theatreofoperations_vietnamwar", {
                                                         rules: [
                                                             {
-                                                                message: "Please Select!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
@@ -2840,9 +2859,9 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("theatreofoperations_persiangulfwar", {
                                                         rules: [
                                                             {
-                                                                message: "Please Select!",
+                                                                message: {message},
                                                                 type: "array",
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
@@ -2860,9 +2879,9 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("theatreofoperations_afghanistan", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select !",
+                                                                    message: {message},
                                                                     type: "array",
-                                                                    required: false
+                                                                    required: true
                                                                 }
                                                             ]
                                                         })(
@@ -2878,9 +2897,9 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("theatreofoperations_iraq_iraqifreedom", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select !",
+                                                                    message: {message},
                                                                     type: "array",
-                                                                    required: false
+                                                                    required: true
                                                                 }
                                                             ]
                                                         })(
@@ -2896,9 +2915,9 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("theatreofoperations_iraq_newdawn", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select !",
+                                                                    message: {message},
                                                                     type: "array",
-                                                                    required: false
+                                                                    required: true
                                                                 }
                                                             ]
                                                         })(
@@ -2916,9 +2935,9 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("theatreofoperations_otherpeacekeepingoperations", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select !",
+                                                                    message: {message},
                                                                     type: "array",
-                                                                    required: false
+                                                                    required: true
                                                                 }
                                                             ]
                                                         })(
@@ -2934,9 +2953,9 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("branchofmilitary", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select !",
+                                                                    message: {message},
                                                                     type: "array",
-                                                                    required: false
+                                                                    required: true
                                                                 }
                                                             ]
                                                         })(
@@ -2952,9 +2971,9 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("dischargestatus", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please select !",
+                                                                    message: {message},
                                                                     type: "array",
-                                                                    required: false
+                                                                    required: true
                                                                 }
                                                             ]
                                                         })(
@@ -2974,7 +2993,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("connectionwithsoar", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please Select!",
+                                                                    message: {message},
                                                                     type: "array",
                                                                     required: false
                                                                 }
@@ -2996,7 +3015,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("informationdate", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please Select!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -3010,7 +3029,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("employed", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please Select!",
+                                                                    message: {message},
                                                                     type: "array",
                                                                     required: false
                                                                 }
@@ -3028,7 +3047,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("typeofemployment", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please Select!",
+                                                                    message: {message},
                                                                     type: "array",
                                                                     required: false
                                                                 }
@@ -3048,7 +3067,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("whynotemployed", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please Select!",
+                                                                    message: {message},
                                                                     type: "array",
                                                                     required: false
                                                                 }
@@ -3070,7 +3089,7 @@ class EnrollmentForm extends Component {
                                                         {getFieldDecorator("dateofservice", {
                                                             rules: [
                                                                 {
-                                                                    message: "Please enter Date!",
+                                                                    message: {message},
                                                                     required: false
                                                                 }
                                                             ]
@@ -3084,7 +3103,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("typeofservice", {
                                                         rules: [
                                                             {
-                                                                message: "Please Select!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -3102,7 +3121,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ifassistanceobtainingvabenefits", {
                                                         rules: [
                                                             {
-                                                                message: "Please Select!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -3122,7 +3141,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ifassistanceobtainingorcoordinatingotherpublicbenefits", {
                                                         rules: [
                                                             {
-                                                                message: "Please Select!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -3140,7 +3159,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ifdirectprovisionofotherpublicbenefits", {
                                                         rules: [
                                                             {
-                                                                message: "Please Select!",
+                                                                message: {message},
                                                                 type: "array",
                                                                 required: false
                                                             }
@@ -3158,7 +3177,7 @@ class EnrollmentForm extends Component {
                                                     >{getFieldDecorator("ifothersupportiveserviceapprovedbyva", {
                                                         rules: [
                                                             {
-                                                                message: "Please Fill!",
+                                                                message: {message},
                                                                 required: false
                                                             }
                                                         ]
@@ -3171,7 +3190,7 @@ class EnrollmentForm extends Component {
                                     </Collapse>
                                     <Form.Item className="register-ant-form-item">
                                         <Checkbox>
-                                            <span>I have read the agreement</span>
+                                            <span>The information entered are as provided by the client.</span>
                                         </Checkbox>
                                         <Button type="primary" htmlType="submit"
                                                 className="registration-submit-button">
