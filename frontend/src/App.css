@@ -83,7 +83,7 @@ body {
   border: 5px solid #fae596;
   /* margin: 100px; */
   background-color: #fff;
-  
+  width: 100%;
 }
 .login-form-forgot {
   float: right;
