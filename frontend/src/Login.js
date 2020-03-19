@@ -50,7 +50,6 @@ const { Content } = Layout;
                 <Content className="content">
                   <div className="site-layout-content">
                     <Form onSubmit={this.handleLoginSubmit} className="login-form">
-                      <img style = {{ borderRadius: '50%', maxWidth: '100px', marginLeft: '140px' }} src = 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4'/>
                       <Form.Item>
                         {getFieldDecorator('username', {
                           rules: [{ required: true, message: 'Please input your username!' }],

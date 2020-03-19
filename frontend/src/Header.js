@@ -36,14 +36,14 @@ export default class HeaderComponent extends React.Component {
 			return(
 			<Header className="site-layout-header">
 	          <img className="logo" src={logo} />
-	          <Button onClick={this.logIn} style={{ fontSize:22, float: 'right', marginTop: '40px', width: '200px', height: '50px', backgroundColor: '#fae596' }} key="2">Home</Button>
+	          <Button onClick={this.logIn} style={{ fontSize:22, float: 'right', marginTop: '10px', width: '200px', height: '50px', backgroundColor: '#fae596' }} key="2">Home</Button>
 	        </Header>
 		);	
 		}else {
 			return(
 			<Header className="site-layout-header">
 	          <img className="logo" src={logo} />
-	          <Button onClick={this.logOut} style={{ fontSize:22, float: 'right', marginTop: '40px', width: '200px', height: '50px', backgroundColor: '#fae596' }} key="2">Logout</Button>
+	          <Button onClick={this.logOut} style={{ fontSize:22, float: 'right', marginTop: '10px', width: '200px', height: '50px', backgroundColor: '#fae596' }} key="2">Logout</Button>
 	        </Header>
 		);	
 		}
