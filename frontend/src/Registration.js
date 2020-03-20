@@ -340,6 +340,17 @@ class RegistrationForm extends React.Component {
         });
     };
 
+    handleViewAllEnrollment = e => {
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                this.props.handleHomelessPersonData(values.personId);
+                this.props.history.push('/viewAllEnrollment');
+            }
+        });
+
+    };
+
     handleSocialWorkerRegistrationSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
@@ -421,6 +432,8 @@ class RegistrationForm extends React.Component {
             this.setState({pageComponent: 'loginfo'})
         } else if (e.key === '6') {
             this.setState({pageComponent: 'projectenroll'})
+        } else if (e.key === '7') {
+            this.setState({pageComponent: 'viewenrollment'})
         }
     };
 
@@ -530,6 +543,9 @@ class RegistrationForm extends React.Component {
                                     </Menu.Item>
                                     <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
                                         <span>Project Enrollment</span>
+                                    </Menu.Item>
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="7">
+                                        <span>View Enrollment</span>
                                     </Menu.Item>
                                 </Menu>
                             </Sider>
@@ -1093,11 +1109,84 @@ class RegistrationForm extends React.Component {
                                     <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
                                         <span>Project Enrollment</span>
                                     </Menu.Item>
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="7">
+                                        <span>View Enrollment</span>
+                                    </Menu.Item>
                                 </Menu>
                             </Sider>
                             <Content className="content">
                                 <div className="personId-form-input">
                                     <Form {...formItemLayout} onSubmit={this.projectEnroll.bind(this)}>
+                                        <Form.Item className="register-ant-form-item">
+                                            {getFieldDecorator("personId", {
+                                                rules: [
+                                                    {
+                                                        required: true,
+                                                        message: "Please input Identification Number!",
+                                                        whitespace: true
+                                                    }
+                                                ]
+                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                      placeholder="Client Identification Number"/>)}
+                                        </Form.Item>
+                                        <Form.Item {...tailFormItemLayout} className="register-ant-form-item">
+                                            <Button type="primary" htmlType="submit" style={{
+                                                fontSize: 22,
+                                                width: '250px',
+                                                height: '50px',
+                                                marginLeft: '80px'
+                                            }}>
+                                                Enroll to Project
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
+                    </Layout>
+                );
+            } else if (this.state.pageComponent === 'viewenrollment') {
+                return (
+                    <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.state.loggedInStatus}
+                        />
+                        <Layout>
+                            <Sider className="site-layout-sider"
+                            >
+                                <Menu
+                                    style={{borderRight: '0px', backgroundColor: '#173e43'}}
+                                    mode="inline" defaultSelectedKeys={['7']}
+                                    onClick={this.handleClick}
+                                >
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
+                                        <span>Register Client</span>
+                                    </Menu.Item>
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
+                                        <span>Update Client Information</span>
+                                    </Menu.Item>
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
+                                        <span>Schedule Appointment</span>
+                                    </Menu.Item>
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
+                                        <span>View Appointment</span>
+                                    </Menu.Item>
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
+                                        <span>View Logs</span>
+                                    </Menu.Item>
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
+                                        <span>Project Enrollment</span>
+                                    </Menu.Item>
+                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="7">
+                                        <span>View Enrollment</span>
+                                    </Menu.Item>
+                                </Menu>
+                            </Sider>
+                            <Content className="content">
+                                <div className="personId-form-input">
+                                    <Form {...formItemLayout} onSubmit={this.handleViewAllEnrollment.bind(this)}>
                                         <Form.Item className="register-ant-form-item">
                                             {getFieldDecorator("personId", {
                                                 rules: [
