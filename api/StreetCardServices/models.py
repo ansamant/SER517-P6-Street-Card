@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
-from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -94,9 +93,9 @@ class Homeless(models.Model):
     Ethnicity = models.IntegerField(choices=Ethnicity.choices)
     Gender = models.IntegerField(choices=Gender.choices)
     VeteranStatus = models.IntegerField(choices=VeteranStatus.choices)
-    PhoneNumberPrefix = models.IntegerField(max_length=3,blank=True,null=True)
-    PhoneNumber = models.CharField(max_length=128,blank=True,null=True)
-    Email = models.EmailField(max_length=70,blank=True,null=True)
+    PhoneNumberPrefix = models.IntegerField(max_length=3, blank=True, null=True)
+    PhoneNumber = models.CharField(max_length=128, blank=True, null=True)
+    Email = models.EmailField(max_length=70, blank=True, null=True)
 
 
 class ServiceProvider(models.TextChoices):
@@ -154,6 +153,17 @@ class Appointments(models.Model):
 
 class ProjectCategory(models.TextChoices):
     HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
+    HUD_COC_PERMANENT_SUPPORTIVE_HOUSING = 'HUD:COC-Permanent Supportive Housing', _(
+        'HUD:COC-Permanent Supportive Housing')
+    HUD_COC_RAPID_RE_HOUSING = 'HUD:COC-Rapid Re-Housing', _('HUD:COC-Rapid Re-Housing')
+    HUD_COC_SUPPORTIVE_SERVICES_ONLY = 'HUD:CoC - Supportive Services Only', _('HUD:CoC - Supportive Services Only')
+    HUD_COC_SSO_COORDINATED_ENTRY = 'HUD:CoC - SSO Coordinated Entry', _('HUD:CoC - SSO Coordinated Entry')
+    HUD_COC_TRADITIONAL_HOUSING = 'HUD:CoC - Traditional Housing', _('HUD:CoC - Traditional Housing')
+    HUD_COC_SAFE_HAVEN = 'HUD:CoC - Safe Haven', _('HUD:CoC - Safe Haven')
+    HUD_COC_SINGLE_ROOM_OCCUPANCY = 'HUD:CoC - Single Room Occupancy', _('HUD:CoC - Single Room Occupancy')
+    HUD_COC_YOUTH_HOMELESS_DEMONSTRATION_PROGRAM = 'HUD:CoC - Youth Homeless Demonstration Program', _(
+        'HUD:CoC - Youth Homeless Demonstration Program')
+    HUD_COC_JOINT_COMPONENT_TH_RRH = 'HUD:CoC - Joint Component TH/RRH', _('HUD:CoC - Joint Component TH/RRH')
     HUD_HOPWA_HOTEL_MOTEL_VOUCHERS = 'HUD:HOPWA – Hotel/Motel Vouchers', _('HUD:HOPWA – Hotel/Motel Vouchers')
     HUD_HOPWA_HOUSING_INFORMATION = 'HUD:HOPWA – Housing Information', _('HUD:HOPWA – Housing Information')
     HUD_HOPWA_PERMANENT_HOUSING = 'HUD:HOPWA – Permanent Housing (facility based or TBRA)', _(
@@ -181,6 +191,7 @@ class ProjectCategory(models.TextChoices):
         'VA:Grant Per Diem – Case Management / Housing Retention')
     VA_SSVF_HOMELESSNESS_PREVENTION = 'VA: SSVF - Homelessness Prevention', _('VA: SSVF - Homelessness Prevention')
     VA_SSVF_RAPID_RE_HOUSING = 'VA: SSVF - Rapid Re-Housing', _('VA: SSVF - Rapid Re-Housing')
+
 
 class SubstanceAbuseCategory(models.IntegerChoices):
     NO = 0, _('No')

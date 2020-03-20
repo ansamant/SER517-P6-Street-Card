@@ -45,8 +45,36 @@ const ProjectCategory = [
         label: "HUD:CoC-HomelessPrevention"
     },
     {
-        value: "HUD:HOPWA – Hotel/Motel Vouchers",
-        label: "HUD:HOPWA – Hotel/Motel Vouchers"
+        value: "HUD:COC-Permanent Supportive Housing",
+        label: "HUD:COC-Permanent Supportive Housing"
+    },
+    {
+        value: 'HUD:COC-Rapid Re-Housing',
+        label: 'HUD:COC-Rapid Re-Housing'
+    },
+    {
+        value: 'HUD:CoC - Supportive Services Only',
+        label: 'HUD:CoC - Supportive Services Only'
+    },
+    {
+        value: 'HUD:CoC - SSO Coordinated Entry',
+        label: 'HUD:CoC - SSO Coordinated Entry'
+    },
+    {
+        value: 'HUD:CoC - Traditional Housing',
+        label: 'HUD:CoC - Traditional Housing'
+    },
+    {
+        value: 'HUD:CoC - Safe Haven',
+        label: 'HUD:CoC - Safe Haven'
+    },
+    {
+        value: 'HUD:CoC - Single Room Occupancy',
+        label: 'HUD:CoC - Single Room Occupancy'
+    },
+    {
+        value: 'HUD:CoC - Youth Homeless Demonstration Program',
+        label: 'HUD:CoC - Youth Homeless Demonstration Program'
     },
     {
         value: "VA: HCHV CRS - EH",
