@@ -428,22 +428,28 @@ class RegistrationForm extends React.Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
 
-            if (!err) {
-                var registerRequestObject = {};
-                //registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? this.state.homelessData.PersonalId : Math.floor(100000 + Math.random() * 900000);
-                registerRequestObject.FirstName = values.FirstName ? values.FirstName : null;
-                registerRequestObject.MiddleName = values.MiddleName ? values.MiddleName : null;
-                registerRequestObject.LastName = values.LastName ? values.LastName : null;
-                registerRequestObject.NameSuffix = values.NameSuffix ? values.NameSuffix : null;
-                registerRequestObject.NameDataQuality = values.NameDataQuality[0];
-                registerRequestObject.SSN = values.SSN ? values.SSN : null;
-                registerRequestObject.SSNDataQuality = values.SSNDataQuality[0];
-                registerRequestObject.DOB = values['DOB'] ? values['DOB'].format('YYYY-MM-DD') : null;
-                registerRequestObject.DOBDataQuality = values.DOBDataQuality[0];
-                registerRequestObject.Race = values.Race[0];
-                registerRequestObject.Ethnicity = values.Ethnicity[0];
-                registerRequestObject.Gender = values.Gender[0];
-                registerRequestObject.VeteranStatus = values.VeteranStatus[0];
+
+      if (!err) {
+        var registerRequestObject = {};
+        console.log(values.PhoneNumberPrefix);
+        console.log(values.PhoneNumber);
+        //registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? this.state.homelessData.PersonalId : Math.floor(100000 + Math.random() * 900000);
+        registerRequestObject.FirstName =  values.FirstName ? values.FirstName : null;
+        registerRequestObject.MiddleName = values.MiddleName ? values.MiddleName : null;
+        registerRequestObject.LastName = values.LastName ? values.LastName : null;
+        registerRequestObject.NameSuffix = values.NameSuffix ? values.NameSuffix : null;
+        registerRequestObject.NameDataQuality = values.NameDataQuality[0];
+        registerRequestObject.SSN = values.SSN ? values.SSN : null;
+        registerRequestObject.SSNDataQuality = values.SSNDataQuality[0];
+        registerRequestObject.DOB = values['DOB'] ? values['DOB'].format('YYYY-MM-DD') : null;
+        registerRequestObject.DOBDataQuality = values.DOBDataQuality[0];
+        registerRequestObject.Race = values.Race[0];
+        registerRequestObject.Ethnicity = values.Ethnicity[0];
+        registerRequestObject.Gender = values.Gender[0];
+        registerRequestObject.VeteranStatus = values.VeteranStatus[0];
+        registerRequestObject.PhoneNumberPrefix = values.PhoneNumberPrefix;
+        registerRequestObject.PhoneNumber = values.PhoneNumber;
+        registerRequestObject.Email = values.email;
 
                 console.log(registerRequestObject);
 
@@ -664,6 +670,47 @@ class RegistrationForm extends React.Component {
                                                     })(<Cascader options={DOBDataQuality} placeholder="DOB Quality"/>)}
                                                 </Form.Item>
                                             </Col>
+                                        </Row>
+                                         <Row className="register-ant-form-item-2-1">
+                                          <Col span={6}>
+                                            <Form.Item>
+                                              <Select>
+                                                <Option value="1">+1</Option>
+                                                <Option value="91">+91</Option>
+                                              </Select>
+                                            </Form.Item>
+                                          </Col>
+                                          <Col span={18}>
+                                          <Form.Item>
+                                              {getFieldDecorator("Phone Number", {
+                                                rules: [
+                                                  {
+                                                    required: false,
+                                                    message: "Please input your Phone Number!",
+                                                    whitespace: true
+                                                  }
+                                                ]
+                                              })(<Input placeholder="Phone Number" />)}
+                                            </Form.Item>
+                                          </Col>
+                                        </Row>
+                                        <Row className="register-ant-form-item">
+                                          <Col span={24}>
+                                          <Form.Item>
+                                              {getFieldDecorator("email", {
+                                                rules: [
+                                                  {
+                                                    type: "email",
+                                                    message: "The input is not valid E-mail!"
+                                                  },
+                                                  {
+                                                    required: false,
+                                                    message: "Please input your E-mail!"
+                                                  }
+                                                ]
+                                              })(<Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="E-mail"/>)}
+                                            </Form.Item>
+                                          </Col>
                                         </Row>
                                         <Row className="register-ant-form-item">
                                             <Col span={24}>

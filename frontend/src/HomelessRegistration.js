@@ -353,8 +353,12 @@ class homelessRegistration extends React.Component {
         } else if (e.key === '5') {
             this.props.updatePageComponent('loginfo')
             this.props.history.push('/socialWorkerRegister');
+        }else if (e.key === '6') {
+            this.setState({pageComponent: 'projectenroll'})
+            this.props.history.push('/socialWorkerRegister');
         }
     };
+
 
     render() {
         const {getFieldDecorator} = this.props.form;
@@ -384,253 +388,294 @@ class homelessRegistration extends React.Component {
         };
 
         return (
-            <Layout className="layout">
-                <Header
-                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                    loggedInStatus={this.state.loggedInStatus}
-                />
-                <Layout>
-                    <Sider className="site-layout-sider"
-                    >
-                        <Menu
-                            style={{borderRight: '0px', backgroundColor: '#173e43'}}
-                            mode="inline" defaultSelectedKeys={['2']}
-                            onClick={this.handleClick}
-                        >
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                <span>Register Client</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                <span>Update Client Information</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                <span>Schedule Appointment</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                <span>View Appointment</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                <span>View Logs</span>
-                            </Menu.Item>
-                        </Menu>
-                    </Sider>
-                    <Content className="content">
-                        <div className="site-layout-content-registration-client">
-                            <Form {...formItemLayout} onSubmit={this.handleHomelessPersonUpdateRegistrationSubmit}>
-                                <h1 style={{marginLeft: '240px'}}>Register Client</h1>
-                                <Row className="register-ant-form-item-3">
-                                    <Col span={8}>
-                                        <Form.Item>
-                                            {getFieldDecorator("FirstName", {
-                                                initialValue: this.state.homelessData.FirstName ? this.state.homelessData.FirstName : '',
-                                                rules: [
-                                                    {
-                                                        required: false,
-                                                        message: "Please input your First Name!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="First Name"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={8}>
-                                        <Form.Item>
-                                            {getFieldDecorator("MiddleName", {
-                                                initialValue: this.state.homelessData.MiddleName ? this.state.homelessData.MiddleName : '',
-                                                rules: [
-                                                    {
-                                                        required: false,
-                                                        message: "Please input your Middle Name!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Middle Name"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={8}>
-                                        <Form.Item>
-                                            {getFieldDecorator("LastName", {
-                                                initialValue: this.state.homelessData.LastName ? this.state.homelessData.LastName : '',
-                                                rules: [
-                                                    {
-                                                        required: false,
-                                                        message: "Please input your Last Name!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Last Name"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row className="register-ant-form-item-2">
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("NameSuffix", {
-                                                initialValue: this.state.homelessData.NameSuffix ? this.state.homelessData.NameSuffix : '',
-                                                rules: [
-                                                    {
-                                                        required: false,
-                                                        message: "Please input your Name Suffix!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Name Suffix"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("NameDataQuality", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select Quality level of Name Data!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={nameDataQuality} placeholder="Name Quality"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row className="register-ant-form-item-2">
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("SSN", {
-                                                initialValue: this.state.homelessData.SSN ? this.state.homelessData.LastName : '',
-                                                rules: [
-                                                    {
-                                                        required: false,
-                                                        message: "Please input your SSN!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input placeholder="SSN"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("SSNDataQuality", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select Quality level of SSN Data!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={SSNDataQuality} placeholder="SSN Quality"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row className="register-ant-form-item-2">
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator('DOB', {
-                                                initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
-                                                rules: [
-                                                    {
-                                                        type: "object",
-                                                        required: false,
-                                                        message: "Please input your DOB!"
-                                                    }
-                                                ]
-                                            })(<DatePicker/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("DOBDataQuality", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select Quality level of DOB Data!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={DOBDataQuality} placeholder="DOB Quality"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row className="register-ant-form-item">
-                                    <Col span={24}>
-                                        <Form.Item>
-                                            {getFieldDecorator("Race", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select your Race!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={Race} placeholder="Race"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row className="register-ant-form-item">
-                                    <Col span={24}>
-                                        <Form.Item>
-                                            {getFieldDecorator("Ethnicity", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select your Ethnicity!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={Ethnicity} placeholder="Ethnicity"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row className="register-ant-form-item">
-                                    <Col span={24}>
-                                        <Form.Item>
-                                            {getFieldDecorator("Gender", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select your Gender!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={Gender} placeholder="Gender"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row className="register-ant-form-item">
-                                    <Col span={24}>
-                                        <Form.Item>
-                                            {getFieldDecorator("VeteranStatus", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select your Veteran Status!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={VeteranStatus} placeholder="Veteran Status"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row className="register-ant-form-item">
-                                    <Col span={24}>
-                                        <Form.Item {...tailFormItemLayout}>
-                                            <Button type="primary" htmlType="submit"
-                                                    className="registration-submit-button">
-                                                Submit
-                                            </Button>
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                            </Form>
-
-                        </div>
-                    </Content>
-                </Layout>
-                <StreetCardFooter/>
-            </Layout>
-        );
+      <Layout className="layout">
+      <Header 
+        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+        loggedInStatus={this.state.loggedInStatus}
+      />
+      <Layout>
+        <Sider className="site-layout-sider"
+        >
+          <Menu 
+            style={{ borderRight : '0px', backgroundColor: '#173e43' }} 
+            mode="inline" defaultSelectedKeys={['2']}
+            onClick={this.handleClick}
+          >
+            <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="1">
+              <span>Register Client</span>
+            </Menu.Item>
+            <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="2">
+              <span>Update Client Information</span>
+            </Menu.Item>
+            <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="3">
+              <span>Schedule Appointment</span>
+            </Menu.Item>
+            <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="4">
+              <span>View Appointment</span>
+            </Menu.Item>
+            <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="5">
+              <span>View Logs</span>
+            </Menu.Item>
+            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
+                <span>Project Enrollment</span>
+            </Menu.Item>
+          </Menu>
+        </Sider>
+        <Content className="content">
+          <div className="site-layout-content-registration-client">
+           <Form {...formItemLayout} onSubmit={this.handleHomelessPersonUpdateRegistrationSubmit}>
+          <h1 style={{marginLeft : '240px'}} >Register Client</h1>
+          <Row className="register-ant-form-item-3">
+            <Col span={8}>
+              <Form.Item>
+                {getFieldDecorator("FirstName", {
+                  initialValue: this.state.homelessData.FirstName ? this.state.homelessData.FirstName : '',
+                  rules: [
+                    {
+                      required: false,
+                      message: "Please input your First Name!",
+                      whitespace: true
+                    }
+                  ]
+                })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="First Name" />)}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item>
+                {getFieldDecorator("MiddleName", {
+                  initialValue: this.state.homelessData.MiddleName ? this.state.homelessData.MiddleName : '',
+                  rules: [
+                    {
+                      required: false,
+                      message: "Please input your Middle Name!",
+                      whitespace: true
+                    }
+                  ]
+                })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Middle Name" />)}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+            <Form.Item>
+              {getFieldDecorator("LastName", {
+                initialValue: this.state.homelessData.LastName ? this.state.homelessData.LastName : '',
+                rules: [
+                  {
+                    required: false,
+                    message: "Please input your Last Name!",
+                    whitespace: true
+                  }
+                ]
+              })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Last Name"/>)}
+            </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item-2" >
+            <Col span={12}>
+              <Form.Item>
+                {getFieldDecorator("NameSuffix", {
+                  initialValue: this.state.homelessData.NameSuffix ? this.state.homelessData.NameSuffix : '',
+                  rules: [
+                    {
+                      required: false,
+                      message: "Please input your Name Suffix!",
+                      whitespace: true
+                    }
+                  ]
+                })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Name Suffix" />)}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item>
+                {getFieldDecorator("NameDataQuality", {
+                  rules: [
+                    {
+                      type: "array",
+                      required: true,
+                      message: "Please select Quality level of Name Data!"
+                    }
+                  ]
+                })(<Cascader options={nameDataQuality}  placeholder="Name Quality" />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item-2">
+            <Col span={12}>
+              <Form.Item>
+                {getFieldDecorator("SSN", {
+                  initialValue: this.state.homelessData.SSN ? this.state.homelessData.LastName : '',
+                  rules: [
+                    {
+                      required: false,
+                      message: "Please input your SSN!",
+                      whitespace: true
+                    }
+                  ]
+                })(<Input placeholder="SSN" />)}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item>
+                {getFieldDecorator("SSNDataQuality", {
+                  rules: [
+                    {
+                      type: "array",
+                      required: true,
+                      message: "Please select Quality level of SSN Data!"
+                    }
+                  ]
+                })(<Cascader options={SSNDataQuality} placeholder="SSN Quality"/>)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item-2">
+            <Col span={12}>
+            <Form.Item>
+              {getFieldDecorator('DOB', {
+                initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+                rules: [
+                  {
+                    type: "object",
+                    required: false,
+                    message: "Please input your DOB!"
+                  }
+                ]
+              })(<DatePicker/>)}
+            </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item>
+                {getFieldDecorator("DOBDataQuality", {
+                  rules: [
+                    {
+                      type: "array",
+                      required: true,
+                      message: "Please select Quality level of DOB Data!"
+                    }
+                  ]
+                })(<Cascader options={DOBDataQuality} placeholder="DOB Quality" />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item-2-1">
+            <Col span={6}>
+              <Form.Item>
+                <Select>
+                  <Option value="1">+1</Option>
+                  <Option value="91">+91</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={18}>
+            <Form.Item>
+                {getFieldDecorator("Phone Number", {
+                  initialValue: this.state.homelessData.PhoneNumber ? this.state.homelessData.PhoneNumber : '',
+                  rules: [
+                    {
+                      required: false,
+                      message: "Please input your SSN!",
+                      whitespace: true
+                    }
+                  ]
+                })(<Input placeholder="Phone Number" />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item">
+            <Col span={24}>
+            <Form.Item>
+                {getFieldDecorator("email", {
+                  initialValue: this.state.homelessData.Email ? this.state.homelessData.Email : '',
+                  rules: [
+                    {
+                      type: "email",
+                      message: "The input is not valid E-mail!"
+                    },
+                    {
+                      required: true,
+                      message: "Please input your E-mail!"
+                    }
+                  ]
+                })(<Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="E-mail"/>)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item">
+            <Col span={24}>
+            <Form.Item>
+              {getFieldDecorator("Race", {
+                rules: [
+                  {
+                    type: "array",
+                    required: true,
+                    message: "Please select your Race!"
+                  }
+                ]
+              })(<Cascader options={Race} placeholder="Race"/>)}
+            </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item">
+            <Col span={24}>
+              <Form.Item>
+                {getFieldDecorator("Ethnicity", {
+                  rules: [
+                    {
+                      type: "array",
+                      required: true,
+                      message: "Please select your Ethnicity!"
+                    }
+                  ]
+                })(<Cascader options={Ethnicity} placeholder="Ethnicity" />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item">
+            <Col span={24}>
+              <Form.Item>
+                {getFieldDecorator("Gender", {
+                  rules: [
+                    {
+                      type: "array",
+                      required: true,
+                      message: "Please select your Gender!"
+                    }
+                  ]
+                })(<Cascader options={Gender} placeholder="Gender" />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item">
+            <Col span={24}>
+              <Form.Item>
+                {getFieldDecorator("VeteranStatus", {
+                  rules: [
+                    {
+                      type: "array",
+                      required: true,
+                      message: "Please select your Veteran Status!"
+                    }
+                  ]
+                })(<Cascader options={VeteranStatus} placeholder="Veteran Status"/>)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="register-ant-form-item">
+            <Col span={24}>
+              <Form.Item {...tailFormItemLayout}>
+                <Button type="primary" htmlType="submit" className="registration-submit-button">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+      </Form>
+              
+          </div>
+        </Content>
+      </Layout>
+      <StreetCardFooter/>
+    </Layout>
+    );
 
     }
 }

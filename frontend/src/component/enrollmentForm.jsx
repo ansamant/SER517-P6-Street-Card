@@ -623,20 +623,26 @@ class EnrollmentForm extends Component {
         this.props.history.push('/login');
     }
 
+
     handleClick = e => {
         if (e.key === '3') {
-            this.setState({pageComponent: 'newAppointMent'})
+            this.props.updatePageComponent('newAppointMent')
+            this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '4') {
-            this.setState({pageComponent: 'viewAppointment'})
+            this.props.updatePageComponent('viewAppointment')
+            this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '1') {
-            this.setState({pageComponent: 'registerClient'})
+            this.props.updatePageComponent('registerClient')
+            this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '2') {
-            this.setState({pageComponent: 'updateInformation'})
+            this.props.updatePageComponent('updateInformation')
+            this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '5') {
-            this.setState({pageComponent: 'loginfo'})
+            this.props.updatePageComponent('loginfo')
+            this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '6') {
             this.setState({pageComponent: 'projectenroll'})
-            this.props.history.push('/enrollment');
+            this.props.history.push('/socialWorkerRegister');
         }
     };
 

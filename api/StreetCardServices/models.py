@@ -94,6 +94,9 @@ class Homeless(models.Model):
     Ethnicity = models.IntegerField(choices=Ethnicity.choices)
     Gender = models.IntegerField(choices=Gender.choices)
     VeteranStatus = models.IntegerField(choices=VeteranStatus.choices)
+    PhoneNumberPrefix = models.IntegerField(max_length=3,blank=True,null=True)
+    PhoneNumber = models.CharField(max_length=128,blank=True,null=True)
+    Email = models.EmailField(max_length=70,blank=True,null=True)
 
 
 class ServiceProvider(models.TextChoices):
@@ -138,7 +141,12 @@ class UserNameAndIdMapping(models.Model):
 class Appointments(models.Model):
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
     appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
-    venue = models.CharField(max_length=500, blank=True, null=False)
+    office = models.CharField(max_length=500, blank=True, null=False)
+    streetAddress1 = models.CharField(max_length=500, blank=True, null=False)
+    streetAddress2 = models.CharField(max_length=500, blank=True, null=True)
+    city = models.CharField(max_length=500, blank=True, null=False)
+    zipCode = models.CharField(max_length=500, blank=True, null=False)
+    state = models.CharField(max_length=500, blank=True, null=False)
     Time = models.TimeField(auto_now=False, auto_now_add=False)
     Date = models.DateField(auto_now=False, auto_now_add=False)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)

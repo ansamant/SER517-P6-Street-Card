@@ -54,7 +54,12 @@ class SetAppointments extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
           var appointmentRequestObject = {};
-        appointmentRequestObject.venue = values.venue;
+        appointmentRequestObject.office = values.office;
+        appointmentRequestObject.streetAddress1 = values.streetAddress1;
+        appointmentRequestObject.streetAddress2 = values.streetAddress2;
+        appointmentRequestObject.city = values.city;
+        appointmentRequestObject.zipCode = values.zipCode;
+        appointmentRequestObject.state = values.state;
         appointmentRequestObject.Date = values['DatePicker'].format('YYYY-MM-DD');
         appointmentRequestObject.Time = values['TimePicker'].format('hh:mm[:ss[.uuuuuu]]');
         appointmentRequestObject.serviceProvider = values.serviceProvider[0];
@@ -74,12 +79,6 @@ class SetAppointments extends React.Component {
           });
       }
 
-      // Should format date value before submit.
-     // const values = {
-      //  ...fieldsValue,
-       // 'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
-       // 'time-picker': fieldsValue['time-picker'].format('HH:mm:ss'),
-     // };
       console.log('Received values of form: ', values);
     });
   };
@@ -129,6 +128,9 @@ handleSuccessfulLogoutAction() {
     }else if(e.key === '5'){
       this.props.updatePageComponent('loginfo')
       this.props.history.push('/socialWorkerRegister');
+    }else if (e.key === '6') {
+        this.setState({pageComponent: 'projectenroll'})
+        this.props.history.push('/socialWorkerRegister');
     }
   };
 
@@ -177,6 +179,9 @@ handleSuccessfulLogoutAction() {
                 <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="5">
                       <span>View Logs</span>
                 </Menu.Item>
+                <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
+                    <span>Project Enrollment</span>
+                </Menu.Item>
               </Menu>
             </Sider>
             <Content className="content">
@@ -212,14 +217,65 @@ handleSuccessfulLogoutAction() {
                   })(<Cascader options={serviceProvider} placeholder="Service Provider" />)}
                 </Form.Item>
                 <Form.Item className="register-ant-form-item" >
-                  {getFieldDecorator("venue", {
+                  {getFieldDecorator("office", {
                     rules: [
                       {
-                        message: "Please input the venue!",
+                        message: "Please input the office!",
                         whitespace: true
                       }
                     ]
-                  })(<Input placeholder="Venue"/>)}
+                  })(<Input placeholder="Office Name"/>)}
+                </Form.Item>
+                 <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("streetAddress1", {
+                    rules: [
+                      {
+                        message: "Please input the streetAddress1!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="Street Address 1"/>)}
+                </Form.Item>
+                    <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("streetAddress2", {
+                    rules: [
+                      {
+                        message: "Please input the streetAddress2!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="Street Address 2"/>)}
+                </Form.Item>
+
+                <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("city", {
+                    rules: [
+                      {
+                        message: "Please input the city!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="City"/>)}
+                </Form.Item>
+                <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("zipCode", {
+                    rules: [
+                      {
+                        message: "Please input the zipcode!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="Zip Code"/>)}
+                </Form.Item>
+                <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("state", {
+                    rules: [
+                      {
+                        message: "Please input the state!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="State"/>)}
                 </Form.Item>
                   <Form.Item className="register-ant-form-item" >
                   {getFieldDecorator('DatePicker', {
