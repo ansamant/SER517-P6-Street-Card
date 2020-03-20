@@ -81,9 +81,9 @@ body {
   max-width: 500px;
   padding: 50px;
   border: 5px solid #fae596;
-  margin: 100px;
+  /* margin: 100px; */
   background-color: #fff;
-  
+  width: 100%;
 }
 .login-form-forgot {
   float: right;
@@ -194,8 +194,11 @@ body {
 
 .site-layout-content {
   background: #3fb0ac;
-  margin-left: 31%;
-  margin-top: 10%;
+  /* margin-left: 31%; */
+  /* margin-top: 10%; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .site-layout-content-registration {
@@ -254,3 +257,4 @@ body {
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   background-color: #000;
 }
+

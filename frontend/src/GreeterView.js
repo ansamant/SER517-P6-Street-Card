@@ -2,10 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Form, Input, Button} from 'antd';
+// import { Form, Input, Button} from 'antd';
+import {AutoComplete, Button, Cascader, Col, DatePicker, Form, Icon, Input, Layout, Menu, Row, Select} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
+const {Content, Sider} = Layout;
 class GreeterView extends React.Component{
 
 
@@ -51,7 +53,7 @@ class GreeterView extends React.Component{
         .then(json=>{
           // Need name to be used in the header for easy mapping of client name.
           registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
-          //console.log("REG1 " + registerRequestObject.clientName)
+          console.log("REG1 " + registerRequestObject.clientName)
           this.setState({
             isLoaded: true,
             name : registerRequestObject.clientName,
@@ -112,68 +114,90 @@ class GreeterView extends React.Component{
             }
           };
         if(this.state.isLoaded == true){
-          return(
-            <div>
-
-                <Header 
-                  handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                  loggedInStatus={this.state.loggedInStatus}
-                />,
-                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="registration-form">
-                    <h1 style={{ marginLeft: '300px'}}>Enter Id </h1>
-                    <Form.Item label="clientID">
-                        {getFieldDecorator("personalId", {
-                            rules: [
-                            {
-                                required: true,
-                                message: "Please input personalId!",
-                                whitespace: true
-                            }
-                            ]
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit" className="registration-submit-button">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                     <center><h2>Hello {this.state.name}</h2></center> 
-                </Form>
-                <StreetCardFooter/>
+          let form;
+          form =  <Layout className="layout">
+                    <Header handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                    loggedInStatus={this.state.loggedInStatus} 
+                    />
+                    <Layout>
+                      <Content className="content">
+                      <center><h2>Hello {this.state.name}</h2></center>
+                        <div className="site-layout-content">
+                          <Form onSubmit={this.handleSubmit} className="login-form">
+                            <Form.Item>
+                              {getFieldDecorator('personalId', {
+                                rules: [
+                                  { 
+                                    required: true, 
+                                    message: 'Please input Identification Number!', 
+                                    whitespace: true 
+                                  }
+                                ],
+                              })(
+                                <Input
+                                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                  placeholder="Client Identification Number"
+                                />,
+                              )}
+                            </Form.Item>
+                            <Form.Item>
+                              <Button type="primary" htmlType="submit" className="login-form-button">
+                                Submit
+                              </Button>
+                            </Form.Item>
+                          </Form>
+                        </div>
+                      </Content>
+                    </Layout>
+                    <StreetCardFooter/>
+                  </Layout>;
+          return (
+            <div>                    
+               
+              {form}
             </div>
           );
         }else{
-          return(
-            <div>
-
-                <Header 
-                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                    loggedInStatus={this.state.loggedInStatus}
-                />,
-                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="registration-form">
-                    <h1 style={{ marginLeft: '300px'}}>Enter Id</h1>
-                    <Form.Item label="clientID">
-                        {getFieldDecorator("personalId", {
-                            rules: [
-                            {
-                                required: true,
-                                message: "Please input personalId!",
-                                whitespace: true
-                            }
-                            ]
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item {...tailFormItemLayout}>
-                        <Button style={{ left: '300px'}} type="primary" htmlType="submit" className="registration-submit-button">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-                <StreetCardFooter/>
-            </div>
-        );
+          let form;
+          form =  <Layout className="layout">
+                    <Header handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                    loggedInStatus={this.state.loggedInStatus} 
+                    />
+                    <Layout>
+                      <Content className="content">
+                        <div className="site-layout-content">
+                          <Form onSubmit={this.handleSubmit} className="login-form">
+                            <Form.Item>
+                              {getFieldDecorator('personalId', {
+                                rules: [
+                                  { 
+                                    required: true, 
+                                    message: 'Please input Identification Number!', 
+                                    whitespace: true 
+                                  }
+                                ],
+                              })(
+                                <Input
+                                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                  placeholder="Client Identification Number"
+                                />,
+                              )}
+                            </Form.Item>
+                            <Form.Item>
+                              <Button type="primary" htmlType="submit" className="login-form-button">
+                                Submit
+                              </Button>
+                            </Form.Item>
+                          </Form>
+                        </div>
+                      </Content>
+                    </Layout>
+                    <StreetCardFooter/>
+                  </Layout>;
+          return (
+            <div>{form}</div>
+          );
         }
-        
     }
 }
 
