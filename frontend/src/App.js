@@ -13,6 +13,7 @@ import EditAppointment from './EditAppointment'
 import ViewAppointmentsTable from './ViewAppointmentTable'
 import enrollmentForm from './component/enrollmentForm'
 import viewAllEnrollment from './component/viewAllEnrollment'
+import viewEnrollmentDetails from './component/viewEnrollmentDetails'
 
 const PrivateRoute = ({component: Component, loggedInStatus: loggedInStatus, ...rest}) => (
     <Route render={(props) => (
@@ -51,6 +52,7 @@ export default class App extends React.Component {
         this.updateAppointmentId = this.updateAppointmentId.bind(this);
         this.handleHomelessPersonJson = this.handleHomelessPersonJson.bind(this);
         this.updatePageComponent = this.updatePageComponent.bind(this);
+        this.inputEnrollmentId = this.inputEnrollmentId.bind(this);
     }
 
 
@@ -132,6 +134,12 @@ export default class App extends React.Component {
     updateAppointmentId(appointmentId) {
         this.setState({
             appointmentId: appointmentId
+        });
+    }
+
+    inputEnrollmentId(enrollmentId) {
+        this.setState({
+            enrollmentId: enrollmentId
         });
     }
 
@@ -269,6 +277,17 @@ export default class App extends React.Component {
                             component={viewAllEnrollment}
                             loggedInStatus={this.state.loggedInStatus}
                             homelessPersonId={this.state.homelessPersonId}
+                            inputEnrollmentId={this.inputEnrollmentId}
+                            handleLogout={this.handleLogout}
+                            updatePageComponent={this.updatePageComponent}
+                        />
+                        <PrivateRoute
+                            exact
+                            path={"/viewEnrollmentDetails"}
+                            component={viewEnrollmentDetails}
+                            loggedInStatus={this.state.loggedInStatus}
+                            homelessPersonId={this.state.homelessPersonId}
+                            enrollmentId={this.state.enrollmentId}
                             handleLogout={this.handleLogout}
                             updatePageComponent={this.updatePageComponent}
                         />
