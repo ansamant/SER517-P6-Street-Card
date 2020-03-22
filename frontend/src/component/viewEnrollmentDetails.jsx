@@ -1,11 +1,12 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import '../index.css';
-import {Form, Layout, Menu} from 'antd';
+import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, Select} from "antd";
 import Header from '../Header'
 import StreetCardFooter from '../StreetCardFooter'
 
 const {Content, Sider} = Layout;
+const {Panel} = Collapse;
 
 class ViewEnrollmentDetails extends React.Component {
     constructor(props) {
@@ -29,6 +30,7 @@ class ViewEnrollmentDetails extends React.Component {
             .then(res => res.json())
             .then(json => {
                 console.log(json)
+                // json = this.modifyJSON(json)
                 this.setState({
                         enrollment: json,
                     }
@@ -37,6 +39,17 @@ class ViewEnrollmentDetails extends React.Component {
             })
     }
 
+    modifyJSON = temp => {
+        [temp].map(obj => {
+            const objKeys = Object.keys(obj);
+            return objKeys.map(itemKey => {
+              return {
+                itemKey,
+                itemValue: obj[itemKey]
+              };
+            });
+          });
+    }
 
     handleSuccessfulLogoutAction() {
         this.props.handleLogout();
@@ -68,9 +81,45 @@ class ViewEnrollmentDetails extends React.Component {
         }
     };
 
+    // renderDynamicElWrapper() {
+    //     return this.state.opportunityDetails.map(items => {
+    //       return (
+    //         <Row type="flex" justify="space-around">
+    //           {this.renderDynamicEl(items)}
+    //         </Row>
+    //       );
+    //     });
+    //    };
+
+    // renderDynamicEl(els) {
+    //     return els.map(el => {
+    //       return (
+    //         <Col span={10}>
+    //           <Form.Item label={el.itemKey}>
+    //             <Input placeholder={el.itemValue} />
+    //           </Form.Item>
+    //         </Col>
+    //       );
+    //     });
+    //   };
+
+    // mapping = enrollment1 => {
+    //     enrollment1.map(obj => {
+    //         const objKeys = Object.keys(obj);
+    //         return objKeys.map(itemKey => {
+    //           return {
+    //             itemKey,
+    //             itemValue: obj[itemKey]
+    //           };
+    //         });
+    //       });
+    //   };
 
     render() {
         const {enrollment} = this.state;
+        console.log(enrollment)
+        // this.mapping(enrollment)
+        // const {enrollment1} = enrollment.employment_Status;
         const {getFieldDecorator} = this.props.form;
         const formItemLayout = {
             labelCol: {
@@ -124,9 +173,42 @@ class ViewEnrollmentDetails extends React.Component {
                     </Sider>
                     <Content className="content">
                         <div className="site-layout-content-setappointment">
-                            <Form {...formItemLayout} onSubmit={this.handleSubmit} className="set-appointment-form">
-                                <h1> {enrollment.EnrollmentID} </h1>
-                            </Form>
+                           {  
+                        //    return(
+                                Object.keys(enrollment).map((sections, mapRequiredKey) => {
+                                let sectionPeople = enrollment[sections]; 
+                                console.log(sections);
+                                console.log(mapRequiredKey);
+                                console.log(sectionPeople);
+                                // <p>{sections}</p>
+                                
+                                // return (
+                                // <div>
+                                //     <p><strong>{sections}: {sectionPeople}</strong></p> 
+                                // </div>
+                                // )
+                                // return (  
+                                //     (typeof enrollment[sections] === 'object')? 
+                                //     <div> 
+                                //     {
+                                //     Object.keys(sectionPeople).map(person => {                      
+                                //         return (                                
+                                //         Object.entries(sectionPeople[person]).map(entry => {                      
+                                //             let key = entry[0];
+                                //             let value = entry[1];
+                                //             // <div>
+                                //             // {/* <p><strong>{key}: {value}</strong></p>  */}
+                                //             // </div>
+                                //         })
+                                //     )
+                                //     })
+                                // }
+                                //     </div>
+                                //     :   
+                                //     <p><strong>{sections}: {sectionPeople}</strong></p> 
+                                // )
+                            })
+                            }   
                         </div>
                     </Content>
                 </Layout>
@@ -140,3 +222,24 @@ const WrappedViewEnrollmentDetails = Form.create({name: 'time_related_controls'}
 
 
 export default WrappedViewEnrollmentDetails;
+
+
+ {/* <Form {...formItemLayout} className="set-appointment-form"> */}
+                                {/* <h1> {enrollment.EnrollmentID} </h1> */}
+                                {/* <Collapse accordion> */}
+                                {/* <Panel header="Enrollment Details" key="1">
+                                    <Row type="flex" justify="space-around">
+                                        <Col span={10}>
+                                            {[enrollment.employment_Status].map(detail=>{
+                                                return detail.forEach(([key,value])=>(
+                                                    <Form.Item label={key}>
+                                                        <Input placeholder={value} />
+                                                    </Form.Item>
+                                                )
+                                            )
+                                        })}
+                                        </Col>
+                                    </Row>
+                                        </Panel>  */}
+
+{/* </div>  */}
