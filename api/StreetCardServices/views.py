@@ -6,7 +6,12 @@ from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
     NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer,UserNameAndIdMappingSerializer,LogSerializer,AppointmentSerializer
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping,Log,Appointments
+
+from django.core.mail import send_mail
+from django.conf import settings
 from .utils import primary_key_generator
+
+from .tasks import sleeper
 
 class UserViewSet(viewsets.ModelViewSet):
     
@@ -184,6 +189,7 @@ class AppointmentViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
+        sleeper.delay(10)
         enroll = request.data
         enroll['personalId'] = homeless_pk
         enroll['appointmentId'] = primary_key_generator()

@@ -150,6 +150,7 @@ class Appointments(models.Model):
     Time = models.TimeField(auto_now=False, auto_now_add=False)
     Date = models.DateField(auto_now=False, auto_now_add=False)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+    alert = models.BooleanField(default=False, null=True)
 
 
 class ProjectCategory(models.TextChoices):
