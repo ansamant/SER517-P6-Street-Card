@@ -38,7 +38,7 @@ class SocialWorker extends React.Component{
           if(this.state.clearanceLevel == "caseworker"){
           	 this.props.history.push('/socialWorkerRegister');
           }else if(this.state.clearanceLevel == "client"){
-              this.props.history.push('/clientInfo');
+              this.props.history.push('/clientLanding');
           }
           else{
           	 this.props.history.push('/greeter');

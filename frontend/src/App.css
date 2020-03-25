@@ -38,6 +38,14 @@ body {
   left: 200px;
 }
 
+.client-Info {
+  max-width: 1000px;
+  padding: 80px;
+  margin: 100px;
+  position: relative;
+  left: 200px;
+}
+
 .App-link {
   color: #61dafb;
 }
