@@ -228,7 +228,8 @@ isEmpty(object) {
               path={"/createAppointment"} 
               component={SetAppointments}
               loggedInStatus={this.state.loggedInStatus}
-              homelessPersonId={this.handleHomelessPersonId}
+              //homelessPersonId={this.handleHomelessPersonId}
+              homelessPersonId={this.state.homelessPersonId}
               handleLogout={this.handleLogout}
               updatePageComponent={this.updatePageComponent}
             />

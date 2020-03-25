@@ -207,6 +207,10 @@ const clearanceLevel = [
     {
         value: "service_provider_emp",
         label: "Service Provider Employee"
+    },
+    {
+        value: "client",
+        label: "Client"
     }
 ];
 
