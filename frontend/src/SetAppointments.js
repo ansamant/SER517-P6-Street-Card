@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Form, DatePicker, TimePicker, Button, Icon, Cascader, Input, Descriptions, Layout, Menu, Card, Row, Col } from 'antd';
+import { Form, DatePicker, TimePicker, Button, Icon, Cascader, Input, Descriptions, Layout, Menu, Card, Row, Col, Checkbox } from 'antd';
 import WrappedViewAppointments from "./ViewAppointments";
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
@@ -44,6 +44,7 @@ class SetAppointments extends React.Component {
       console.log(this.props.homelessPersonId);
       this.state = {
           items: {},
+          alert: false,
           isLoaded: false,
       }
       this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
@@ -64,6 +65,8 @@ class SetAppointments extends React.Component {
         appointmentRequestObject.Time = values['TimePicker'].format('hh:mm[:ss[.uuuuuu]]');
         appointmentRequestObject.serviceProvider = values.serviceProvider[0];
         appointmentRequestObject.personalId = this.props.homelessPersonId;
+        appointmentRequestObject.alert = this.state.alert
+        console.log("ALERT", appointmentRequestObject.alert)
         console.log(appointmentRequestObject);
         fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/appointment/', {
           method: 'POST',
@@ -97,6 +100,7 @@ class SetAppointments extends React.Component {
              console.log(json)
              this.setState({
                  isLoaded: true,
+                 alert: false,
                  items:json
                  }
              )
@@ -300,6 +304,9 @@ handleSuccessfulLogoutAction() {
                       }
                     ]
                   })(<TimePicker placeholder="Time Date" />)}
+                </Form.Item>
+                <Form.Item className="register-ant-form-item">
+                    <Checkbox onChange={this.state.alert=true}>Set Alert</Checkbox>
                 </Form.Item>
                 <Form.Item className="register-ant-form-item">
                   <Button type="primary" htmlType="submit" className="registration-submit-button">

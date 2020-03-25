@@ -56,6 +56,7 @@ class EditAppointment extends React.Component {
         appointmentRequestObject.Time = values['TimePicker'].format('hh:mm:ss');
         appointmentRequestObject.serviceProvider = values.serviceProvider[0];
         appointmentRequestObject.personalId = this.props.homelessPersonId;
+        appointmentRequestObject.alert = values.alert;
 
         console.log(appointmentRequestObject);
         fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
@@ -280,6 +281,9 @@ class EditAppointment extends React.Component {
                       }
                     ]
                   })(<TimePicker placeholder="Time Date" />)}
+                </Form.Item>
+                <Form.Item className="register-ant-form-item" checked={appointment.alert} onChange={appointment.alert= !appointment.alert}>
+                  Alert
                 </Form.Item>
                 <Form.Item className="register-ant-form-item">
                   <Button type="primary" htmlType="submit" className="registration-submit-button">

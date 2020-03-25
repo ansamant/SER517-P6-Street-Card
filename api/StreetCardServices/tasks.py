@@ -1,6 +1,8 @@
 # https://docs.celeryproject.org/en/stable/django/first-steps-with-django.html
-# vP184DLE6D6zSL97q1YydUfFXUVqnFK3 
+
 # celery -A api worker -l info
+
+
 from celery import shared_task
 from time import sleep
 
