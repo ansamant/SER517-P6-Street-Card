@@ -19,7 +19,6 @@ export default class HeaderComponent extends React.Component {
         this.props.handleSuccessfulLoginAction();
     }
 
-
     logOut() {
         this.props.handleSuccessfulLogoutAction();
     }

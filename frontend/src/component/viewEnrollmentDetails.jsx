@@ -1,11 +1,12 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import '../index.css';
-import {Form, Layout, Menu} from 'antd';
+import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, Select} from "antd";
 import Header from '../Header'
 import StreetCardFooter from '../StreetCardFooter'
 
 const {Content, Sider} = Layout;
+const {Panel} = Collapse;
 
 class ViewEnrollmentDetails extends React.Component {
     constructor(props) {
@@ -29,6 +30,7 @@ class ViewEnrollmentDetails extends React.Component {
             .then(res => res.json())
             .then(json => {
                 console.log(json)
+                // json = this.modifyJSON(json)
                 this.setState({
                         enrollment: json,
                     }
@@ -37,6 +39,17 @@ class ViewEnrollmentDetails extends React.Component {
             })
     }
 
+    modifyJSON = temp => {
+        [temp].map(obj => {
+            const objKeys = Object.keys(obj);
+            return objKeys.map(itemKey => {
+              return {
+                itemKey,
+                itemValue: obj[itemKey]
+              };
+            });
+          });
+    }
 
     handleSuccessfulLogoutAction() {
         this.props.handleLogout();
@@ -68,9 +81,45 @@ class ViewEnrollmentDetails extends React.Component {
         }
     };
 
+    // renderDynamicElWrapper() {
+    //     return this.state.opportunityDetails.map(items => {
+    //       return (
+    //         <Row type="flex" justify="space-around">
+    //           {this.renderDynamicEl(items)}
+    //         </Row>
+    //       );
+    //     });
+    //    };
+
+    // renderDynamicEl(els) {
+    //     return els.map(el => {
+    //       return (
+    //         <Col span={10}>
+    //           <Form.Item label={el.itemKey}>
+    //             <Input placeholder={el.itemValue} />
+    //           </Form.Item>
+    //         </Col>
+    //       );
+    //     });
+    //   };
+
+    // mapping = enrollment1 => {
+    //     enrollment1.map(obj => {
+    //         const objKeys = Object.keys(obj);
+    //         return objKeys.map(itemKey => {
+    //           return {
+    //             itemKey,
+    //             itemValue: obj[itemKey]
+    //           };
+    //         });
+    //       });
+    //   };
 
     render() {
         const {enrollment} = this.state;
+        console.log(enrollment)
+        // this.mapping(enrollment)
+        // const {enrollment1} = enrollment.employment_Status;
         const {getFieldDecorator} = this.props.form;
         const formItemLayout = {
             labelCol: {
@@ -122,17 +171,31 @@ class ViewEnrollmentDetails extends React.Component {
                             </Menu.Item>
                         </Menu>
                     </Sider>
-                    <Content className="content">
-                        <div className="site-layout-content-setappointment">
-                            <Form {...formItemLayout} onSubmit={this.handleSubmit} className="set-appointment-form">
-                                <p> {enrollment.map(item => (
-                                        <li key={item.personalId}>Personal-Id : {item.personalId} | Appointment-Id :
-                                            {item.appointmentId} | Venue : {item.venue} | ServiceProvider
-                                            : {item.serviceProvider} |
-                                            DateTime : {item.DateTime}</li>))}</p>
-                            </Form>
-                        </div>
-                    </Content>
+                    {
+                        Object.keys(enrollment).map((sections, mapRequiredKey) => {
+                        let sectionPeople = enrollment[sections];
+                        return(
+
+                                <Content className="content">
+                                {
+                                    (typeof enrollment[sections] === 'object')
+                                    ?
+                                        Object.keys(sectionPeople).map((person, personId) => {
+                                        console.log(person)
+                                        return(
+                                            <div>
+                                                {person}: {sectionPeople[person]}
+                                            </div>
+                                            );
+                                    })
+                                    :
+                                    <div>{sections}: {sectionPeople}</div>
+
+                                }
+                               </Content>
+                            );
+                    })
+                    }
                 </Layout>
                 <StreetCardFooter/>
             </Layout>

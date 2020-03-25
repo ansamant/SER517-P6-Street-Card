@@ -41,7 +41,6 @@ class NormalLoginForm extends React.Component {
 
     render() {
         const {getFieldDecorator} = this.props.form;
-
         let form;
         form = <Layout className="layout">
             <Header loginPageStatus={this.state.loginPageStatus}/>
