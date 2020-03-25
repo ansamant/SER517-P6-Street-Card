@@ -6,6 +6,9 @@ import {Form, Button, Table, Divider, Card, Layout, Menu} from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 import WrappedSetAppointments from "./SetAppointments";
+import {FormOutlined, UserOutlined} from "@ant-design/icons";
+import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
+import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
 
 const { Content, Sider } = Layout;
 
@@ -20,15 +23,15 @@ class ViewAppointmentsTable extends React.Component {
                 title: 'Appointment-ID',
                 dataIndex: 'appointmentId',
                 key: 'appointmentId',
-                width: 180,
-                fixed: 'left',
+                width: 200,
+                //fixed: 'left',
               },
               {
                 title: 'Office',
                 dataIndex: 'office',
                 key: 'office',
                 width: 100,
-                fixed: 'left',
+                //fixed: 'left',
               },
               {
                 title: 'Address',
@@ -65,7 +68,7 @@ class ViewAppointmentsTable extends React.Component {
                 dataIndex: 'serviceProvider',
                 key: 'serviceProvider',
                 width: 100,
-                fixed: 'left',
+                //fixed: 'left',
               },
               {
                 title: 'Date',
@@ -204,36 +207,59 @@ render(){
                 />
                 
                 <Layout>
-                  <Sider className="site-layout-sider"
-                >
-                  <Menu 
-                    style={{ borderRight : '0px', backgroundColor: '#173e43' }} 
-                    mode="inline" defaultSelectedKeys={['4']}
-                    onClick={this.handleClick}
-                  >
-                    <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="1">
-                      <span>Register Client</span>
-                    </Menu.Item>
-                    <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="2">
-                      <span>Update Client Information</span>
-                    </Menu.Item>
-                    <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="3">
-                      <span>Schedule Appointment</span>
-                    </Menu.Item>
-                    <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="4">
-                      <span>View Appointment</span>
-                    </Menu.Item>
-                    <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="5">
-                      <span>View Logs</span>
-                    </Menu.Item>
-                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                        <span>Project Enrollment</span>
-                    </Menu.Item>
-                  </Menu>
-                </Sider>
-                  <Content className="content">
+                  <Sider className="site-layout-sider" breakpoint="lg"
+                                   collapsedWidth="0"
+                                   onBreakpoint={broken => {
+                                       console.log(broken);
+                                   }}
+                                   onCollapse={(collapsed, type) => {
+                                       console.log(collapsed, type);
+                                   }}>
+                                <div className="menu">
+                                    <Menu mode="inline" theme="dark"
+                                          defaultSelectedKeys={['1']}
+                                          onClick={this.handleClick}>
+                                        <Menu.Item className="menuKey" key="1">
+                                    <span className="nav-text">
+                                        <UserOutlined/>
+                                        Client Enrollment</span>
+                                        </Menu.Item>
+                                        <Menu.Item className="menuKey" key="2">
+                                    <span className="nav-text">
+                                        <UserOutlined/>
+                                        Update Client Info</span>
+                                        </Menu.Item>
+                                        <Menu.Item className="menuKey" key="3">
+                                    <span className="nav-text">
+                                        <CalendarOutlined/>
+                                        Schedule Appointment</span>
+                                        </Menu.Item>
+                                        <Menu.Item className="menuKey" key="4">
+                                    <span className="nav-text">
+                                        <CalendarOutlined/>
+                                        View Appointment</span>
+                                        </Menu.Item>
+                                        <Menu.Item className="menuKey" key="5">
+                                    <span className="nav-text">
+                                        <ClockCircleOutlined/>
+                                        View Logs</span>
+                                        </Menu.Item>
+                                        <Menu.Item className="menuKey" key="6">
+                                    <span className="nav-text">
+                                        <FormOutlined/>
+                                        Project Enrollment</span>
+                                        </Menu.Item>
+                                        <Menu.Item className="menuKey" key="7">
+                                    <span className="nav-text">
+                                        <FormOutlined/>
+                                        View Enrollment</span>
+                                        </Menu.Item>
+                                    </Menu>
+                                </div>
+                            </Sider>
+                  <Content className="content-enroll">
                   <div >
-                  <Table className="site-layout-content-viewappointment" dataSource={this.state.appointmentData} columns={this.state.columns} scroll={{ x: 1500, y: 300 }}/>
+                  <Table className="site-layout-content-viewappointment" dataSource={this.state.appointmentData} columns={this.state.columns} scroll={{ x: 1500, y: 500 }}/>
                   </div>
                   </Content>
                 </Layout>
