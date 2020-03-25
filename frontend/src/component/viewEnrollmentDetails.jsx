@@ -171,46 +171,31 @@ class ViewEnrollmentDetails extends React.Component {
                             </Menu.Item>
                         </Menu>
                     </Sider>
-                    <Content className="content">
-                        <div className="site-layout-content-setappointment">
-                           {  
-                        //    return(
-                                Object.keys(enrollment).map((sections, mapRequiredKey) => {
-                                let sectionPeople = enrollment[sections]; 
-                                console.log(sections);
-                                console.log(mapRequiredKey);
-                                console.log(sectionPeople);
-                                // <p>{sections}</p>
-                                
-                                // return (
-                                // <div>
-                                //     <p><strong>{sections}: {sectionPeople}</strong></p> 
-                                // </div>
-                                // )
-                                // return (  
-                                //     (typeof enrollment[sections] === 'object')? 
-                                //     <div> 
-                                //     {
-                                //     Object.keys(sectionPeople).map(person => {                      
-                                //         return (                                
-                                //         Object.entries(sectionPeople[person]).map(entry => {                      
-                                //             let key = entry[0];
-                                //             let value = entry[1];
-                                //             // <div>
-                                //             // {/* <p><strong>{key}: {value}</strong></p>  */}
-                                //             // </div>
-                                //         })
-                                //     )
-                                //     })
-                                // }
-                                //     </div>
-                                //     :   
-                                //     <p><strong>{sections}: {sectionPeople}</strong></p> 
-                                // )
-                            })
-                            }   
-                        </div>
-                    </Content>
+                    {
+                        Object.keys(enrollment).map((sections, mapRequiredKey) => {
+                        let sectionPeople = enrollment[sections];
+                        return(
+
+                                <Content className="content">
+                                {
+                                    (typeof enrollment[sections] === 'object')
+                                    ?
+                                        Object.keys(sectionPeople).map((person, personId) => {
+                                        console.log(person)
+                                        return(
+                                            <div>
+                                                {person}: {sectionPeople[person]}
+                                            </div>
+                                            );
+                                    })
+                                    :
+                                    <div>{sections}: {sectionPeople}</div>
+
+                                }
+                               </Content>
+                            );
+                    })
+                    }
                 </Layout>
                 <StreetCardFooter/>
             </Layout>
@@ -222,24 +207,3 @@ const WrappedViewEnrollmentDetails = Form.create({name: 'time_related_controls'}
 
 
 export default WrappedViewEnrollmentDetails;
-
-
- {/* <Form {...formItemLayout} className="set-appointment-form"> */}
-                                {/* <h1> {enrollment.EnrollmentID} </h1> */}
-                                {/* <Collapse accordion> */}
-                                {/* <Panel header="Enrollment Details" key="1">
-                                    <Row type="flex" justify="space-around">
-                                        <Col span={10}>
-                                            {[enrollment.employment_Status].map(detail=>{
-                                                return detail.forEach(([key,value])=>(
-                                                    <Form.Item label={key}>
-                                                        <Input placeholder={value} />
-                                                    </Form.Item>
-                                                )
-                                            )
-                                        })}
-                                        </Col>
-                                    </Row>
-                                        </Panel>  */}
-
-{/* </div>  */}
