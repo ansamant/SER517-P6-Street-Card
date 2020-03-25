@@ -12,12 +12,31 @@ class ClientPersonalInfo extends React.Component{
  constructor(props) {
       super(props);
       this.state = {
-          items: {},
+          clientInfo: {},
           isLoaded: false,
       }
       this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
     }
+  componentDidMount() {
+     fetch('http://127.0.0.1:8000/homeless/' + '4808584002/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          },
+        })
+         .then(res => res.json())
+         .then(json => {
+            console.log(json)
+             this.setState({
+                clientInfo: json,
+              }
+          )
 
+         })
+        console.log(this.state.homelessData);
+
+  }
 
   handleSuccessfulLogoutAction() {
     this.props.handleLogout();
@@ -25,6 +44,7 @@ class ClientPersonalInfo extends React.Component{
   }
 
     render(){
+          const {clientInfo} = this.state;
           const formItemLayout = {
             labelCol: {
               xs: { span: 10 },
@@ -38,19 +58,19 @@ class ClientPersonalInfo extends React.Component{
      return(
          <Form {...formItemLayout} className="client-Info">
             <Descriptions title="Your Personal Info" bordered>
-                <Descriptions.Item label="First Name">Prashansa</Descriptions.Item>
-                <Descriptions.Item label="Middle Name"> </Descriptions.Item>
-                <Descriptions.Item label="Last Name"> </Descriptions.Item>
-                <Descriptions.Item label="Name Suffix"> </Descriptions.Item>
-                <Descriptions.Item label="SSN" > 1234567</Descriptions.Item>
-                <Descriptions.Item label="DOB"> </Descriptions.Item>
-                <Descriptions.Item label="Race"> </Descriptions.Item>
-                <Descriptions.Item label="Ethnicity"> </Descriptions.Item>
-                <Descriptions.Item label="Gender">Female</Descriptions.Item>
-                <Descriptions.Item label="Veteran Status"> </Descriptions.Item>
-                <Descriptions.Item label="Phone Number Prefix"> +91 </Descriptions.Item>
-                <Descriptions.Item label="Phone Number"> 99090909090</Descriptions.Item>
-                <Descriptions.Item label="Email"> 99090909090</Descriptions.Item>
+                <Descriptions.Item label="First Name">{clientInfo.FirstName}</Descriptions.Item>
+                <Descriptions.Item label="Middle Name">{clientInfo.MiddleName}</Descriptions.Item>
+                <Descriptions.Item label="Last Name">{clientInfo.LastName}</Descriptions.Item>
+                <Descriptions.Item label="Name Suffix">{clientInfo.NameSuffix}</Descriptions.Item>
+                <Descriptions.Item label="Social Security Number" >{clientInfo.SSN}</Descriptions.Item>
+                <Descriptions.Item label="Date of Birth">{clientInfo.DOB}</Descriptions.Item>
+                <Descriptions.Item label="Race">{clientInfo.Race}</Descriptions.Item>
+                <Descriptions.Item label="Ethnicity">{clientInfo.Ethnicity}</Descriptions.Item>
+                <Descriptions.Item label="Gender">{clientInfo.Gender}</Descriptions.Item>
+                <Descriptions.Item label="Veteran Status">{clientInfo.VeteranStatus}</Descriptions.Item>
+                <Descriptions.Item label="Phone Number Prefix">{clientInfo.PhoneNumberPrefix}</Descriptions.Item>
+                <Descriptions.Item label="Phone Number">{clientInfo.PhoneNumber}</Descriptions.Item>
+                <Descriptions.Item label="Email">{clientInfo.Email}</Descriptions.Item>
             </Descriptions>
          </Form>
      );
