@@ -39,9 +39,6 @@ export class LocationMap extends Component {
           visible={this.state.showingInfoWindow}
           onClose={this.onClose}
         >
-          <div>
-            <h4>{this.state.selectedPlace.name}</h4>
-          </div>
         </InfoWindow>
       </CurrentLocation>
     );

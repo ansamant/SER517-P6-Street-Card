@@ -125,7 +125,11 @@ class ViewEnrollmentDetails extends React.Component {
                     <Content className="content">
                         <div className="site-layout-content-setappointment">
                             <Form {...formItemLayout} onSubmit={this.handleSubmit} className="set-appointment-form">
-                                <h1> {enrollment.EnrollmentID} </h1>
+                                <p> {enrollment.map(item => (
+                                        <li key={item.personalId}>Personal-Id : {item.personalId} | Appointment-Id :
+                                            {item.appointmentId} | Venue : {item.venue} | ServiceProvider
+                                            : {item.serviceProvider} |
+                                            DateTime : {item.DateTime}</li>))}</p>
                             </Form>
                         </div>
                     </Content>

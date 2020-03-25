@@ -2,6 +2,10 @@ import React, {Component} from "react";
 import "antd/dist/antd.css";
 import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, Select} from "antd";
 import Header from "../Header";
+import {FormOutlined, UserOutlined} from "@ant-design/icons";
+import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
+import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
+import StreetCardFooter from "../StreetCardFooter";
 
 const {Sider, Content, Footer} = Layout;
 const {Option} = Select;
@@ -671,7 +675,7 @@ class EnrollmentForm extends Component {
             this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '6') {
             this.setState({pageComponent: 'projectenroll'})
-            this.props.history.push('/socialWorkerRegister');
+            this.props.history.push('/enrollment');
         }
     };
 
@@ -918,208 +922,2025 @@ class EnrollmentForm extends Component {
         const {items} = this.state;
         const {getFieldDecorator} = this.props.form;
         return (
-            <Layout className="layout">
+            <Layout>
                 <Header
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.props.loggedInStatus}/>
                 <Layout>
-                    <Sider className="site-layout-sider">
-                        <Menu style={{borderRight: '0px', backgroundColor: '#173e43'}} mode="inline"
-                              defaultSelectedKeys={['6']}
-                              onClick={this.handleClick}>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                <span>Register Client</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                <span>Update Client Information</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                <span>Schedule Appointment</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                <span>View Appointment</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                <span>View Logs</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                                <span>Project Enrollment</span>
-                            </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="7">
-                                <span>View Enrollment</span>
-                            </Menu.Item>
-                        </Menu>
+                    <Sider className="site-layout-sider" breakpoint="lg"
+                           collapsedWidth="0"
+                           onBreakpoint={broken => {
+                               console.log(broken);
+                           }}
+                           onCollapse={(collapsed, type) => {
+                               console.log(collapsed, type);
+                           }}>
+                        <div className="menu">
+                            <Menu mode="inline" theme="dark"
+                                  defaultSelectedKeys={['6']}
+                                  onClick={this.handleClick}>
+                                <Menu.Item className="menuKey" key="1">
+                                    <span className="nav-text">
+                                        <UserOutlined/>
+                                        Client Enrollment</span>
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="2">
+                                    <span className="nav-text">
+                                        <UserOutlined/>
+                                        Update Client Info</span>
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="3">
+                                    <span className="nav-text">
+                                        <CalendarOutlined/>
+                                        Schedule Appointment</span>
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="4">
+                                    <span className="nav-text">
+                                        <CalendarOutlined/>
+                                        View Appointment</span>
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="5">
+                                    <span className="nav-text">
+                                        <ClockCircleOutlined/>
+                                        View Logs</span>
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="6">
+                                    <span className="nav-text">
+                                        <FormOutlined/>
+                                        Project Enrollment</span>
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="7">
+                                    <span className="nav-text">
+                                        <FormOutlined/>
+                                        View Enrollment</span>
+                                </Menu.Item>
+                            </Menu>
+                        </div>
                     </Sider>
-                    <Content className="content">
+                    <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
-                            <div className="homeless-enrollment-project">
-                                <Form {...formItemLayout} name="enrollment"
-                                      onSubmit={this.handleOnSubmit}>
-                                    <Collapse accordion>
-                                        <Panel header="Enrollment Details" key="1">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        name="personalid"
-                                                        label="Personal Id"
-                                                    >
-                                                        <Input defaultValue={items.PersonalId} disabled={true}/>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    < Form.Item label="Disabling Condition">
-                                                        {getFieldDecorator("disablingcondition", {
-                                                            rules: [
-                                                                {
-                                                                    type: "array",
-                                                                    required: true,
-                                                                    message: {message},
-                                                                }
-                                                            ]
-                                                        })(<Cascader options={YesNoResponse}
-                                                                     placeholder="Select.."/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    < Form.Item label="Project Category">
-                                                        {getFieldDecorator("projectcategory", {
-                                                            rules: [
-                                                                {
-                                                                    type: "array",
-                                                                    required: true,
-                                                                    message: {message},
-                                                                }
-                                                            ]
-                                                        })(<Cascader options={ProjectCategory}
-                                                                     placeholder="Select.."
-                                                                     onChange={this.handleChange}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Entry Date"
-                                                    >
-                                                        {getFieldDecorator("entrydate", {
-                                                            rules: [
-                                                                {
-                                                                    required: true,
-                                                                    message: {message}
-                                                                }
-                                                            ]
-                                                        })(<DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Exit Date"
-                                                    >{getFieldDecorator("exitdate", {
+                            <Form {...formItemLayout} name="enrollment"
+                                  onSubmit={this.handleOnSubmit}>
+                                <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                                    <Panel header="Enrollment Details" key="1">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    name="personalid"
+                                                    label="Personal Id"
+                                                >
+                                                    <Input defaultValue={items.PersonalId} disabled={true}/>
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                < Form.Item label="Disabling Condition">
+                                                    {getFieldDecorator("disablingcondition", {
+                                                        rules: [
+                                                            {
+                                                                type: "array",
+                                                                required: true,
+                                                                message: {message},
+                                                            }
+                                                        ]
+                                                    })(<Cascader options={YesNoResponse}
+                                                                 placeholder="Select.."/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                < Form.Item label="Project Category">
+                                                    {getFieldDecorator("projectcategory", {
+                                                        rules: [
+                                                            {
+                                                                type: "array",
+                                                                required: true,
+                                                                message: {message},
+                                                            }
+                                                        ]
+                                                    })(<Cascader options={ProjectCategory}
+                                                                 placeholder="Select.."
+                                                                 onChange={this.handleChange}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Entry Date"
+                                                >
+                                                    {getFieldDecorator("entrydate", {
                                                         rules: [
                                                             {
                                                                 required: true,
                                                                 message: {message}
                                                             }
                                                         ]
+                                                    })(<DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Exit Date"
+                                                >{getFieldDecorator("exitdate", {
+                                                    rules: [
+                                                        {
+                                                            required: true,
+                                                            message: {message}
+                                                        }
+                                                    ]
+                                                })(
+                                                    <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Non-Cash Benefits" key="2">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item label="Information Date">
+                                                    {getFieldDecorator("informationdateNonCash", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: true
+                                                            }
+                                                        ]
                                                     })(
                                                         <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Non-Cash Benefits" key="2">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item label="Information Date">
-                                                        {getFieldDecorator("informationdateNonCash", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: true
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Benefits Sources"
-                                                    >{getFieldDecorator("benefitsfromanysources", {
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Benefits Sources"
+                                                >{getFieldDecorator("benefitsfromanysources", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: true,
+                                                            type: "array"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SNAP"
+                                                >{getFieldDecorator("snap", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true,
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="SNAP Info"
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="WIC"
+                                                >{getFieldDecorator("wic", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true,
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TANFChildCare"
+                                                >{getFieldDecorator("tanfchildcare", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true,
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TANFTransportation"
+                                                >{getFieldDecorator("tanftransportation", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="OtherTANF"
+                                                >{getFieldDecorator("othertanf", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true,
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Other Sources"
+                                                >{getFieldDecorator("othersources", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true,
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select"
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Specify Source"
+                                                >{getFieldDecorator("specifysource")(
+                                                    <TextArea rows={2}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Income and Source" key="3">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Information Date">
+                                                    {getFieldDecorator("informationdateIncome", {
                                                         rules: [
                                                             {
                                                                 message: {message},
-                                                                required: true,
-                                                                type: "array"
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="IncomeFromAnySources"
+                                                >{getFieldDecorator("incomefromanysources", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false,
+                                                            type: "array"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Earned"
+                                                >{getFieldDecorator("earned", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Earned"
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="EarnedIncome"
+                                                >{getFieldDecorator("EarnedIncome", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "integer",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(<Input/>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Unemployment"
+                                                >{getFieldDecorator("unemployment", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Unemployment Amount"
+                                                >{getFieldDecorator("unemploymentamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SSI"
+                                                >{getFieldDecorator("ssi", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SSI Amount"
+                                                >{getFieldDecorator("ssiamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SSDI"
+                                                >{getFieldDecorator("ssdi", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SSDIAmount"
+                                                >{getFieldDecorator("ssdiamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="VA Disability Service"
+                                                >{getFieldDecorator("vadisabilityservice", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="VA Disability Service Amount"
+                                                >{getFieldDecorator("vadisabilityserviceamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="VA Disability Non-Service"
+                                                >{getFieldDecorator("vadisabilitynonservice", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="VADisabilityNonServiceNonAmount"
+                                                >{getFieldDecorator("vadisabilitynonservicenonamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Private Disability"
+                                                >{getFieldDecorator("privatedisability", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Private Disability Amount"
+                                                >{getFieldDecorator("privatedisabilityamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Workers Comp"
+                                                >{getFieldDecorator("workerscomp", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Workers Comp Amount"
+                                                >{getFieldDecorator("workerscompamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TANF"
+                                                >{getFieldDecorator("tanf", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TANF Amount"
+                                                >{getFieldDecorator("tanfamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="GA"
+                                                >{getFieldDecorator("ga", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="GA Amount"
+                                                >{getFieldDecorator("gaamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Soc Sec Retirement"
+                                                >{getFieldDecorator("socsecretirement", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SocSecRetirementAmount"
+                                                >{getFieldDecorator("socsecretirementamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Pension"
+                                                >{getFieldDecorator("pension", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Pension Amount"
+                                                >{getFieldDecorator("pensionamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+
+                                                            required: false,
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="ChildSupport"
+                                                >{getFieldDecorator("childsupport", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="ChildSupportAmount"
+                                                >{getFieldDecorator("Child Support Amount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Alimony"
+                                                >{getFieldDecorator("alimony", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Alimony Amount"
+                                                >{getFieldDecorator("alimonyamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Other Income Sources"
+                                                >{getFieldDecorator("otherincomesources", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Other Income Sources Amount"
+                                                >{getFieldDecorator("otherincomesourcesamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Other Income Sources Identify"
+                                                >{getFieldDecorator("otherincomesourcesidentify")(
+                                                    <TextArea rows={2}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Health Insurance" key="4">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Information Date">
+                                                    {getFieldDecorator("informationdateHealth", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="CoveredByHealthInsurance"
+                                                >{getFieldDecorator("coveredbyhealthinsurance", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false,
+                                                            type: "array"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Medicaid"
+                                                >{getFieldDecorator("medicaid", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Medicaid"
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Medicare"
+                                                >{getFieldDecorator("Medicare", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(<Cascader
+                                                        placeholder="Medicaid"
+                                                        options={YesNoResponse}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SCHIP"
+                                                >{getFieldDecorator("SCHIP", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="VAMedicalServices"
+                                                >{getFieldDecorator("vamedicalservices", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="EmployerProvided"
+                                                >{getFieldDecorator("employerprovided", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="COBRA"
+                                                >{getFieldDecorator("cobra", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="PrivatePay"
+                                                >{getFieldDecorator("privatepay", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="StateHealthInsuranceForAdults"
+                                                >{getFieldDecorator("statehealthinsuranceforadults", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Indian Health Services"
+                                                >{getFieldDecorator("indianhealthservices", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Other Insurance"
+                                                >{getFieldDecorator("otherinsurance", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SpecifySource"
+                                                >{getFieldDecorator("specifysourceHealthInsurance", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Reason"
+                                                >{getFieldDecorator("reason", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={InsuranceReasonCategory}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Workers Comp Amount"
+                                                >{getFieldDecorator("workerscompamount", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Domestic Violence" key="5">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Information Date">
+                                                    {getFieldDecorator("informationdateDV", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="DomesticViolenceVictim"
+                                                >{getFieldDecorator("domesticviolencevictim", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false,
+                                                            type: "array"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="WhenOccurred"
+                                                >{getFieldDecorator("whenoccurred", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="When Occurred"
+                                                        options={DomesticViolenceOccurrence}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="CurrentlyFleeing"
+                                                >{getFieldDecorator("currentlyfleeing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(<Cascader
+                                                        placeholder="Currently Fleeing"
+                                                        options={ResponseCategory}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Disabling Condition" key="6">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Information Date">
+                                                    {getFieldDecorator("informationdateDC", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Physical Disability"
+                                                >{getFieldDecorator("physical_disability", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false,
+                                                            type: "array"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Physical Disability Impairing"
+                                                >{getFieldDecorator("physical_disability_impairing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Medicaid"
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Developmental Disability"
+                                                >{getFieldDecorator("developmental_disability", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(<Cascader
+                                                        placeholder="Medicaid"
+                                                        options={ResponseCategory}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Developmental Disability Impairing"
+                                                >{getFieldDecorator("developmental_disability_impairing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Chronic Health"
+                                                >{getFieldDecorator("chronic_health", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Chronic Health Impairing"
+                                                >{getFieldDecorator("chronic_health_impairing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="HIV Aids"
+                                                >{getFieldDecorator("hiv_aids", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="HIV Aids Impairing"
+                                                >{getFieldDecorator("hiv_aids_impairing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Mental Health"
+                                                >{getFieldDecorator("mental_health", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false,
+                                                            type: "array"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Mental Health Impairing"
+                                                >{getFieldDecorator("mental_health_impairing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Substance Abuse"
+                                                >{getFieldDecorator("substance_abuse", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={SubstanceAbuseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Substance Abuse Impairing"
+                                                >{getFieldDecorator("substance_abuse_impairing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Date of Engagement" key="7">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Date Of Engagement">
+                                                    {getFieldDecorator("dateofengagement", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Current Living Situation" key="8">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Information Date">
+                                                    {getFieldDecorator("informationdateCL", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="CurrentLivingSituation"
+                                                >{getFieldDecorator("currentlivingsituation", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false,
+                                                            type: "array"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={LivingSituationResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Verified By Project"
+                                                >{getFieldDecorator("verifiedbyproject", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ProjectCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="HasToLeaveCurrentSituation"
+                                                >{getFieldDecorator("hastoleavecurrentsituation", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(<Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="HasResourcesToObtainPermanentHousing"
+                                                >{getFieldDecorator("hasresourcestoobtainpermanenthousing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="OwnershipInPermanentHousing"
+                                                >{getFieldDecorator("ownershipinpermanenthousing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="EmployerProvided"
+                                                >{getFieldDecorator("employerprovided", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="HasClientMoved"
+                                                >{getFieldDecorator("hasclientmoved", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="LocationDetails"
+                                                >{getFieldDecorator("locationdetails", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Bed Night Date" key="9">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="BedNightDate">
+                                                    {getFieldDecorator("bednightdate", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Coordinated Entry Assessment" key="10">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Date Of Assessment">
+                                                    {getFieldDecorator("dateofassessment", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Assessment Location"
+                                                >{getFieldDecorator("assessmentlocation", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Assessment Type"
+                                                >{getFieldDecorator("assessmenttype", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Medicaid"
+                                                        options={AssessmentTypeCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Assessment Level Category"
+                                                >{getFieldDecorator("assessmentlevelcategory", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(<Cascader
+                                                        placeholder="Assessment Level Category"
+                                                        options={AssessmentLevelCategory}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Assessment Question"
+                                                >{getFieldDecorator("assessmentquestion", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Assessment Answer"
+                                                >{getFieldDecorator("assessmentanswer", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="AssessmentResultType"
+                                                >{getFieldDecorator("assessmentresulttype", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Assessment Result"
+                                                >{getFieldDecorator("assessmentresult", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Prioritization Status"
+                                                >{getFieldDecorator("prioritizationstatus", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={PrioritizationStatusCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Coordinated Entry Event" key="11">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Date Of Event">
+                                                    {getFieldDecorator("dateofevent", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Event"
+                                                >{getFieldDecorator("event", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false,
+                                                            type: "array"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={EventCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="ClientHousedOrReHoused"
+                                                >{getFieldDecorator("clienthousedorrehoused", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="ClientHousedOrReHoused"
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="EnrolledInAfterCareProject"
+                                                >{getFieldDecorator("enrolledinaftercareproject", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(<Cascader
+                                                        placeholder="Enrolled In After Care Project"
+                                                        options={YesNoResponse}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Location Of Housing"
+                                                >{getFieldDecorator("locationofhousing", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Referral Result"
+                                                >{getFieldDecorator("referralresult", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Select.."
+                                                        options={YesNoResponse}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Date Of Result">
+                                                    {getFieldDecorator("dateofevent", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                required: false
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Sexual Orientation" key="12">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="SexualOrientation">
+                                                    {getFieldDecorator("sexualorientation", {
+                                                        rules: [
+                                                            {
+                                                                message: {message},
+                                                                type: "array",
+                                                                required: false
                                                             }
                                                         ]
                                                     })(
                                                         <Cascader
                                                             placeholder="Select.."
-                                                            options={ResponseCategory}
+                                                            options={SexualOrientationCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SNAP"
-                                                    >{getFieldDecorator("snap", {
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Description"
+                                                >{getFieldDecorator("description", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Discharge Status"
+                                                        options={DischargeStatusCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="Veteran's Information" key="13">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Year Entered Military Service">
+                                                    {getFieldDecorator("yearenteredmilitaryservice", {
                                                         rules: [
                                                             {
                                                                 message: {message},
-                                                                type: "array",
-                                                                required: true,
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
-                                                        <Cascader
-                                                            placeholder="SNAP Info"
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="WIC"
-                                                    >{getFieldDecorator("wic", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: true,
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TANFChildCare"
-                                                    >{getFieldDecorator("tanfchildcare", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: true,
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TANFTransportation"
-                                                    >{getFieldDecorator("tanftransportation", {
+                                                        <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Year Separated From Military Service"
+                                                >{getFieldDecorator("yearseparatedfrommilitaryservice", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: true
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TOO: WorldWar2"
+                                                >{getFieldDecorator("theatreofoperations_worldwar2", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Theatre Of Operations: WorldWar2"
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TOO: KoreanWar"
+                                                >{getFieldDecorator("theatreofoperations_koreanwar", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true
+                                                        }
+                                                    ]
+                                                })(<Cascader
+                                                        placeholder="Theatre Of Operations: KoreanWar"
+                                                        options={ResponseCategory}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TOO: VietnamWar"
+                                                >{getFieldDecorator("theatreofoperations_vietnamwar", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Theatre Of Operations: VietnamWar"
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TOO: PersianGulfWar"
+                                                >{getFieldDecorator("theatreofoperations_persiangulfwar", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: true
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Theatre Of Operations: PersianGulfWar"
+                                                        options={ResponseCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TOO: Afghanistan">
+                                                    {getFieldDecorator("theatreofoperations_afghanistan", {
                                                         rules: [
                                                             {
                                                                 message: {message},
@@ -1129,1671 +2950,94 @@ class EnrollmentForm extends Component {
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="OtherTANF"
-                                                    >{getFieldDecorator("othertanf", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: true,
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Other Sources"
-                                                    >{getFieldDecorator("othersources", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: true,
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select"
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Specify Source"
-                                                    >{getFieldDecorator("specifysource")(
-                                                        <TextArea rows={2}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Income and Source" key="3">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Information Date">
-                                                        {getFieldDecorator("informationdateIncome", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="IncomeFromAnySources"
-                                                    >{getFieldDecorator("incomefromanysources", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false,
-                                                                type: "array"
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
+                                                            placeholder="Theatre Of Operations: Afghanistan"
                                                             options={ResponseCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Earned"
-                                                    >{getFieldDecorator("earned", {
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TOO: Iraq - IraqiFreedom">
+                                                    {getFieldDecorator("theatreofoperations_iraq_iraqifreedom", {
                                                         rules: [
                                                             {
                                                                 message: {message},
                                                                 type: "array",
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="Earned"
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="EarnedIncome"
-                                                    >{getFieldDecorator("EarnedIncome", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "integer",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(<Input/>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Unemployment"
-                                                    >{getFieldDecorator("unemployment", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Unemployment Amount"
-                                                    >{getFieldDecorator("unemploymentamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SSI"
-                                                    >{getFieldDecorator("ssi", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SSI Amount"
-                                                    >{getFieldDecorator("ssiamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SSDI"
-                                                    >{getFieldDecorator("ssdi", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SSDIAmount"
-                                                    >{getFieldDecorator("ssdiamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="VA Disability Service"
-                                                    >{getFieldDecorator("vadisabilityservice", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="VA Disability Service Amount"
-                                                    >{getFieldDecorator("vadisabilityserviceamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="VA Disability Non-Service"
-                                                    >{getFieldDecorator("vadisabilitynonservice", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="VADisabilityNonServiceNonAmount"
-                                                    >{getFieldDecorator("vadisabilitynonservicenonamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Private Disability"
-                                                    >{getFieldDecorator("privatedisability", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Private Disability Amount"
-                                                    >{getFieldDecorator("privatedisabilityamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Workers Comp"
-                                                    >{getFieldDecorator("workerscomp", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Workers Comp Amount"
-                                                    >{getFieldDecorator("workerscompamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TANF"
-                                                    >{getFieldDecorator("tanf", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TANF Amount"
-                                                    >{getFieldDecorator("tanfamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="GA"
-                                                    >{getFieldDecorator("ga", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="GA Amount"
-                                                    >{getFieldDecorator("gaamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Soc Sec Retirement"
-                                                    >{getFieldDecorator("socsecretirement", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SocSecRetirementAmount"
-                                                    >{getFieldDecorator("socsecretirementamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Pension"
-                                                    >{getFieldDecorator("pension", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Pension Amount"
-                                                    >{getFieldDecorator("pensionamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-
-                                                                required: false,
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="ChildSupport"
-                                                    >{getFieldDecorator("childsupport", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="ChildSupportAmount"
-                                                    >{getFieldDecorator("Child Support Amount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Alimony"
-                                                    >{getFieldDecorator("alimony", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Alimony Amount"
-                                                    >{getFieldDecorator("alimonyamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Other Income Sources"
-                                                    >{getFieldDecorator("otherincomesources", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Other Income Sources Amount"
-                                                    >{getFieldDecorator("otherincomesourcesamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Other Income Sources Identify"
-                                                    >{getFieldDecorator("otherincomesourcesidentify")(
-                                                        <TextArea rows={2}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Health Insurance" key="4">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Information Date">
-                                                        {getFieldDecorator("informationdateHealth", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="CoveredByHealthInsurance"
-                                                    >{getFieldDecorator("coveredbyhealthinsurance", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false,
-                                                                type: "array"
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
+                                                            placeholder="Theatre Of Operations: Iraq - IraqiFreedom"
                                                             options={ResponseCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Medicaid"
-                                                    >{getFieldDecorator("medicaid", {
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TheatreOfOperations: Iraq - NewDawn">
+                                                    {getFieldDecorator("theatreofoperations_iraq_newdawn", {
                                                         rules: [
                                                             {
                                                                 message: {message},
                                                                 type: "array",
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="Medicaid"
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Medicare"
-                                                    >{getFieldDecorator("Medicare", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(<Cascader
-                                                            placeholder="Medicaid"
-                                                            options={YesNoResponse}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SCHIP"
-                                                    >{getFieldDecorator("SCHIP", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="VAMedicalServices"
-                                                    >{getFieldDecorator("vamedicalservices", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="EmployerProvided"
-                                                    >{getFieldDecorator("employerprovided", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="COBRA"
-                                                    >{getFieldDecorator("cobra", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="PrivatePay"
-                                                    >{getFieldDecorator("privatepay", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="StateHealthInsuranceForAdults"
-                                                    >{getFieldDecorator("statehealthinsuranceforadults", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Indian Health Services"
-                                                    >{getFieldDecorator("indianhealthservices", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Other Insurance"
-                                                    >{getFieldDecorator("otherinsurance", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SpecifySource"
-                                                    >{getFieldDecorator("specifysourceHealthInsurance", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Reason"
-                                                    >{getFieldDecorator("reason", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={InsuranceReasonCategory}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Workers Comp Amount"
-                                                    >{getFieldDecorator("workerscompamount", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Domestic Violence" key="5">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Information Date">
-                                                        {getFieldDecorator("informationdateDV", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="DomesticViolenceVictim"
-                                                    >{getFieldDecorator("domesticviolencevictim", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false,
-                                                                type: "array"
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="WhenOccurred"
-                                                    >{getFieldDecorator("whenoccurred", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="When Occurred"
-                                                            options={DomesticViolenceOccurrence}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="CurrentlyFleeing"
-                                                    >{getFieldDecorator("currentlyfleeing", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(<Cascader
-                                                            placeholder="Currently Fleeing"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Disabling Condition" key="6">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Information Date">
-                                                        {getFieldDecorator("informationdateDC", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Physical Disability"
-                                                    >{getFieldDecorator("physical_disability", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false,
-                                                                type: "array"
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
+                                                            placeholder="TheatreOfOperations: Iraq - NewDawn"
                                                             options={ResponseCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Physical Disability Impairing"
-                                                    >{getFieldDecorator("physical_disability_impairing", {
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="TOO: Other Peace keeping Operations">
+                                                    {getFieldDecorator("theatreofoperations_otherpeacekeepingoperations", {
                                                         rules: [
                                                             {
                                                                 message: {message},
                                                                 type: "array",
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="Medicaid"
+                                                            placeholder="Theatre Of Operations: Other Peace keeping Operations"
                                                             options={ResponseCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Developmental Disability"
-                                                    >{getFieldDecorator("developmental_disability", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(<Cascader
-                                                            placeholder="Medicaid"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Developmental Disability Impairing"
-                                                    >{getFieldDecorator("developmental_disability_impairing", {
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Branch Of Military">
+                                                    {getFieldDecorator("branchofmilitary", {
                                                         rules: [
                                                             {
                                                                 message: {message},
                                                                 type: "array",
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
+                                                            placeholder="Branch Of Military"
+                                                            options={MilitaryBranchCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Chronic Health"
-                                                    >{getFieldDecorator("chronic_health", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Chronic Health Impairing"
-                                                    >{getFieldDecorator("chronic_health_impairing", {
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Discharge Status">
+                                                    {getFieldDecorator("dischargestatus", {
                                                         rules: [
                                                             {
                                                                 message: {message},
                                                                 type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="HIV Aids"
-                                                    >{getFieldDecorator("hiv_aids", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="HIV Aids Impairing"
-                                                    >{getFieldDecorator("hiv_aids_impairing", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Mental Health"
-                                                    >{getFieldDecorator("mental_health", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false,
-                                                                type: "array"
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Mental Health Impairing"
-                                                    >{getFieldDecorator("mental_health_impairing", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Substance Abuse"
-                                                    >{getFieldDecorator("substance_abuse", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={SubstanceAbuseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Substance Abuse Impairing"
-                                                    >{getFieldDecorator("substance_abuse_impairing", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Date of Engagement" key="7">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Date Of Engagement">
-                                                        {getFieldDecorator("dateofengagement", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Current Living Situation" key="8">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Information Date">
-                                                        {getFieldDecorator("informationdateCL", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="CurrentLivingSituation"
-                                                    >{getFieldDecorator("currentlivingsituation", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false,
-                                                                type: "array"
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={LivingSituationResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Verified By Project"
-                                                    >{getFieldDecorator("verifiedbyproject", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ProjectCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="HasToLeaveCurrentSituation"
-                                                    >{getFieldDecorator("hastoleavecurrentsituation", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(<Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="HasResourcesToObtainPermanentHousing"
-                                                    >{getFieldDecorator("hasresourcestoobtainpermanenthousing", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="OwnershipInPermanentHousing"
-                                                    >{getFieldDecorator("ownershipinpermanenthousing", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="EmployerProvided"
-                                                    >{getFieldDecorator("employerprovided", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="HasClientMoved"
-                                                    >{getFieldDecorator("hasclientmoved", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="LocationDetails"
-                                                    >{getFieldDecorator("locationdetails", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Bed Night Date" key="9">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="BedNightDate">
-                                                        {getFieldDecorator("bednightdate", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Coordinated Entry Assessment" key="10">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Date Of Assessment">
-                                                        {getFieldDecorator("dateofassessment", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Assessment Location"
-                                                    >{getFieldDecorator("assessmentlocation", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Assessment Type"
-                                                    >{getFieldDecorator("assessmenttype", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Medicaid"
-                                                            options={AssessmentTypeCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Assessment Level Category"
-                                                    >{getFieldDecorator("assessmentlevelcategory", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(<Cascader
-                                                            placeholder="Assessment Level Category"
-                                                            options={AssessmentLevelCategory}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Assessment Question"
-                                                    >{getFieldDecorator("assessmentquestion", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Assessment Answer"
-                                                    >{getFieldDecorator("assessmentanswer", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="AssessmentResultType"
-                                                    >{getFieldDecorator("assessmentresulttype", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Assessment Result"
-                                                    >{getFieldDecorator("assessmentresult", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Prioritization Status"
-                                                    >{getFieldDecorator("prioritizationstatus", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={PrioritizationStatusCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Coordinated Entry Event" key="11">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Date Of Event">
-                                                        {getFieldDecorator("dateofevent", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Event"
-                                                    >{getFieldDecorator("event", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false,
-                                                                type: "array"
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={EventCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="ClientHousedOrReHoused"
-                                                    >{getFieldDecorator("clienthousedorrehoused", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="ClientHousedOrReHoused"
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="EnrolledInAfterCareProject"
-                                                    >{getFieldDecorator("enrolledinaftercareproject", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(<Cascader
-                                                            placeholder="Enrolled In After Care Project"
-                                                            options={YesNoResponse}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Location Of Housing"
-                                                    >{getFieldDecorator("locationofhousing", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Referral Result"
-                                                    >{getFieldDecorator("referralresult", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Select.."
-                                                            options={YesNoResponse}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Date Of Result">
-                                                        {getFieldDecorator("dateofevent", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Sexual Orientation" key="12">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="SexualOrientation">
-                                                        {getFieldDecorator("sexualorientation", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Select.."
-                                                                options={SexualOrientationCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Description"
-                                                    >{getFieldDecorator("description", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: false
+                                                                required: true
                                                             }
                                                         ]
                                                     })(
@@ -2801,344 +3045,52 @@ class EnrollmentForm extends Component {
                                                             placeholder="Discharge Status"
                                                             options={DischargeStatusCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Veteran's Information" key="13">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Year Entered Military Service">
-                                                        {getFieldDecorator("yearenteredmilitaryservice", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: true
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Year Separated From Military Service"
-                                                    >{getFieldDecorator("yearseparatedfrommilitaryservice", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                required: true
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TOO: WorldWar2"
-                                                    >{getFieldDecorator("theatreofoperations_worldwar2", {
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="ConnectionWithSOAR" key="14">
+                                        <Row gutter={8}>
+                                            <Col span={16}>
+                                                <Form.Item
+                                                    label="Connection With SOAR">
+                                                    {getFieldDecorator("connectionwithsoar", {
                                                         rules: [
                                                             {
                                                                 message: {message},
                                                                 type: "array",
-                                                                required: true
+                                                                required: false
                                                             }
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="Theatre Of Operations: WorldWar2"
+                                                            placeholder="Connection With SOAR"
                                                             options={ResponseCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TOO: KoreanWar"
-                                                    >{getFieldDecorator("theatreofoperations_koreanwar", {
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="EmploymentStatus" key="15">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Information Date">
+                                                    {getFieldDecorator("informationdate", {
                                                         rules: [
                                                             {
                                                                 message: {message},
-                                                                type: "array",
-                                                                required: true
-                                                            }
-                                                        ]
-                                                    })(<Cascader
-                                                            placeholder="Theatre Of Operations: KoreanWar"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TOO: VietnamWar"
-                                                    >{getFieldDecorator("theatreofoperations_vietnamwar", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: true
+                                                                required: false
                                                             }
                                                         ]
                                                     })(
-                                                        <Cascader
-                                                            placeholder="Theatre Of Operations: VietnamWar"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TOO: PersianGulfWar"
-                                                    >{getFieldDecorator("theatreofoperations_persiangulfwar", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: true
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Cascader
-                                                            placeholder="Theatre Of Operations: PersianGulfWar"
-                                                            options={ResponseCategory}
-                                                        ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TOO: Afghanistan">
-                                                        {getFieldDecorator("theatreofoperations_afghanistan", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: true
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Theatre Of Operations: Afghanistan"
-                                                                options={ResponseCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TOO: Iraq - IraqiFreedom">
-                                                        {getFieldDecorator("theatreofoperations_iraq_iraqifreedom", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: true
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Theatre Of Operations: Iraq - IraqiFreedom"
-                                                                options={ResponseCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TheatreOfOperations: Iraq - NewDawn">
-                                                        {getFieldDecorator("theatreofoperations_iraq_newdawn", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: true
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="TheatreOfOperations: Iraq - NewDawn"
-                                                                options={ResponseCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="TOO: Other Peace keeping Operations">
-                                                        {getFieldDecorator("theatreofoperations_otherpeacekeepingoperations", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: true
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Theatre Of Operations: Other Peace keeping Operations"
-                                                                options={ResponseCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Branch Of Military">
-                                                        {getFieldDecorator("branchofmilitary", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: true
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Branch Of Military"
-                                                                options={MilitaryBranchCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Discharge Status">
-                                                        {getFieldDecorator("dischargestatus", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: true
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Discharge Status"
-                                                                options={DischargeStatusCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="ConnectionWithSOAR" key="14">
-                                            <Row gutter={8}>
-                                                <Col span={16}>
-                                                    <Form.Item
-                                                        label="Connection With SOAR">
-                                                        {getFieldDecorator("connectionwithsoar", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Connection With SOAR"
-                                                                options={ResponseCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="EmploymentStatus" key="15">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Information Date">
-                                                        {getFieldDecorator("informationdate", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Employed">
-                                                        {getFieldDecorator("employed", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Employed"
-                                                                options={YesNoResponse}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Type Of Employment">
-                                                        {getFieldDecorator("typeofemployment", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Type Of Employment"
-                                                                options={TypeOfEmploymentCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={12}>
-                                                    <Form.Item
-                                                        label="Why Not Employed">
-                                                        {getFieldDecorator("whynotemployed", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    type: "array",
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <Cascader
-                                                                placeholder="Why Not Employed"
-                                                                options={WhyNotEmployedCategory}
-                                                            ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="ServicesProvidedSSVF" key="16">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Date Of Service">
-                                                        {getFieldDecorator("dateofservice", {
-                                                            rules: [
-                                                                {
-                                                                    message: {message},
-                                                                    required: false
-                                                                }
-                                                            ]
-                                                        })(
-                                                            <DatePicker style={{width: "100%"}}/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="Type Of Service"
-                                                    >{getFieldDecorator("typeofservice", {
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Employed">
+                                                    {getFieldDecorator("employed", {
                                                         rules: [
                                                             {
                                                                 message: {message},
@@ -3148,15 +3100,15 @@ class EnrollmentForm extends Component {
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="Type Of Service"
-                                                            options={TypeOfServiceCategory}
+                                                            placeholder="Employed"
+                                                            options={YesNoResponse}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="If Assistance Obtaining VA Benefits"
-                                                    >{getFieldDecorator("ifassistanceobtainingvabenefits", {
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Type Of Employment">
+                                                    {getFieldDecorator("typeofemployment", {
                                                         rules: [
                                                             {
                                                                 message: {message},
@@ -3166,35 +3118,17 @@ class EnrollmentForm extends Component {
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="If Assistance Obtaining VA Benefits"
-                                                            options={IfAssistanceObtainingVABenefitsCategory}
+                                                            placeholder="Type Of Employment"
+                                                            options={TypeOfEmploymentCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="If Assistance Obtaining Or Coordinating Other Public Benefits"
-                                                    >{getFieldDecorator("ifassistanceobtainingorcoordinatingotherpublicbenefits", {
-                                                        rules: [
-                                                            {
-                                                                message: {message},
-                                                                type: "array",
-                                                                required: false
-                                                            }
-                                                        ]
-                                                    })(<Cascader
-                                                            placeholder="If Assistance Obtaining Or Coordinating Other Public Benefits"
-                                                            options={IfAssistanceObtainingOrCoordinatingOtherPublicBenefitsCategory}
-                                                        ></Cascader>
-                                                    )}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="If Direct Provision Of Other Public Benefits"
-                                                    >{getFieldDecorator("ifdirectprovisionofotherpublicbenefits", {
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={12}>
+                                                <Form.Item
+                                                    label="Why Not Employed">
+                                                    {getFieldDecorator("whynotemployed", {
                                                         rules: [
                                                             {
                                                                 message: {message},
@@ -3204,15 +3138,19 @@ class EnrollmentForm extends Component {
                                                         ]
                                                     })(
                                                         <Cascader
-                                                            placeholder="If Direct Provision Of Other Public Benefits"
-                                                            options={IfDirectProvisionOfOtherPublicBenefitsCategory}
+                                                            placeholder="Why Not Employed"
+                                                            options={WhyNotEmployedCategory}
                                                         ></Cascader>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        label="If Other Supportive Service Approved By VA"
-                                                    >{getFieldDecorator("ifothersupportiveserviceapprovedbyva", {
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel header="ServicesProvidedSSVF" key="16">
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Date Of Service">
+                                                    {getFieldDecorator("dateofservice", {
                                                         rules: [
                                                             {
                                                                 message: {message},
@@ -3220,28 +3158,130 @@ class EnrollmentForm extends Component {
                                                             }
                                                         ]
                                                     })(
-                                                        <Input/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                    </Collapse>
-                                    <Form.Item className="register-ant-form-item">
-                                        <Checkbox>
-                                            <span>The information entered are as provided by the client.</span>
-                                        </Checkbox>
-                                        <Button type="primary" htmlType="submit"
-                                                className="registration-submit-button">
-                                            Submit
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                            </div>
+                                                        <DatePicker style={{width: "100%"}}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="Type Of Service"
+                                                >{getFieldDecorator("typeofservice", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="Type Of Service"
+                                                        options={TypeOfServiceCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="If Assistance Obtaining VA Benefits"
+                                                >{getFieldDecorator("ifassistanceobtainingvabenefits", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="If Assistance Obtaining VA Benefits"
+                                                        options={IfAssistanceObtainingVABenefitsCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={8}>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="If Assistance Obtaining Or Coordinating Other Public Benefits"
+                                                >{getFieldDecorator("ifassistanceobtainingorcoordinatingotherpublicbenefits", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(<Cascader
+                                                        placeholder="If Assistance Obtaining Or Coordinating Other Public Benefits"
+                                                        options={IfAssistanceObtainingOrCoordinatingOtherPublicBenefitsCategory}
+                                                    ></Cascader>
+                                                )}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="If Direct Provision Of Other Public Benefits"
+                                                >{getFieldDecorator("ifdirectprovisionofotherpublicbenefits", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            type: "array",
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Cascader
+                                                        placeholder="If Direct Provision Of Other Public Benefits"
+                                                        options={IfDirectProvisionOfOtherPublicBenefitsCategory}
+                                                    ></Cascader>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8}>
+                                                <Form.Item
+                                                    label="If Other Supportive Service Approved By VA"
+                                                >{getFieldDecorator("ifothersupportiveserviceapprovedbyva", {
+                                                    rules: [
+                                                        {
+                                                            message: {message},
+                                                            required: false
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Panel>
+                                    <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here" key="17">
+                                        <Row>
+                                            <Col span={12}>
+                                                <p style={{padding: "2%"}}>
+
+
+                                                    <Checkbox>
+                                                        I acknowledge, the form is completed as per the inputs provided
+                                                        by the
+                                                        client.
+                                                    </Checkbox>
+
+                                                </p>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    <Button type="primary" block htmlType="submit"
+                                                            className="registration-submit-button">
+                                                        Submit
+                                                    </Button>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+
+                                    </Panel>
+                                </Collapse>
+                            </Form>
                         </div>
                     </Content>
+                    <StreetCardFooter/>
                 </Layout>
-                {/*<StreetCardFooter/>*/
-                }
             </Layout>
         );
     }
