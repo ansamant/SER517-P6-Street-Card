@@ -13,6 +13,7 @@ import SetAppointments from './SetAppointments'
 import EditAppointment from './EditAppointment'
 import ViewAppointmentsTable from './ViewAppointmentTable'
 import enrollmentForm from './component/enrollmentForm'
+import ClientLanding from './ClientLanding'
 
 const PrivateRoute = ({ component: Component, loggedInStatus: loggedInStatus, ...rest }) => (
   <Route render={(props) => (
@@ -261,6 +262,17 @@ isEmpty(object) {
               homelessPersonId={this.state.homelessPersonId}
               handleLogout={this.handleLogout}
               updatePageComponent={this.updatePageComponent}
+            />
+            <PrivateRoute 
+              exact 
+              path={"/clientInfo"} 
+              component={ClientLanding}
+              clearanceLevel ={this.state.clearanceLevel}
+              username ={this.state.username}
+              loggedInStatus={this.state.loggedInStatus}
+              clearanceLevel={this.state.clearanceLevel}
+              serviceProvider={this.state.serviceProvider}
+              handleLogout={this.handleLogout}
             />
           </Switch>
         </BrowserRouter>
