@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
+// import './login.css';
 // import { Form, Input, Button} from 'antd';
-import {AutoComplete, Button, Cascader, Col, DatePicker, Form, Icon, Input, Layout, Menu, Row, Select} from "antd";
+import {Button, Form, Icon, Input, Layout} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
-const {Content, Sider} = Layout;
+const {Content} = Layout;
 class GreeterView extends React.Component{
-
 
   constructor(props) {
     super(props);
@@ -36,8 +36,6 @@ class GreeterView extends React.Component{
       if (!err) {
         
         var registerRequestObject = {};
-        //registerRequestObject.serviceProvider = "FP";
-       //registerRequestObject.serviceProvider = this.state.clearanceLevel;
         registerRequestObject.serviceProvider = this.state.serviceProvider;
         registerRequestObject.clientName= "";
         console.log(registerRequestObject);
@@ -120,9 +118,9 @@ class GreeterView extends React.Component{
                     loggedInStatus={this.state.loggedInStatus} 
                     />
                     <Layout>
-                      <Content className="content">
-                      <center><h2>Hello {this.state.name}</h2></center>
-                        <div className="site-layout-content">
+                    <Content className="content-login">
+                    <center><h2>Hello {this.state.name}</h2></center>
+                      <div className="site-layout-content-login">
                           <Form onSubmit={this.handleSubmit} className="login-form">
                             <Form.Item>
                               {getFieldDecorator('personalId', {
@@ -159,41 +157,36 @@ class GreeterView extends React.Component{
           );
         }else{
           let form;
-          form =  <Layout className="layout">
-                    <Header handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+          form = <Layout className="layout">
+          <Header handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.state.loggedInStatus} 
                     />
-                    <Layout>
-                      <Content className="content">
-                        <div className="site-layout-content">
-                          <Form onSubmit={this.handleSubmit} className="login-form">
-                            <Form.Item>
-                              {getFieldDecorator('personalId', {
-                                rules: [
-                                  { 
-                                    required: true, 
-                                    message: 'Please input Identification Number!', 
-                                    whitespace: true 
-                                  }
-                                ],
-                              })(
-                                <Input
-                                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                  placeholder="Client Identification Number"
-                                />,
-                              )}
-                            </Form.Item>
-                            <Form.Item>
-                              <Button type="primary" htmlType="submit" className="login-form-button">
-                                Submit
-                              </Button>
-                            </Form.Item>
-                          </Form>
-                        </div>
-                      </Content>
-                    </Layout>
-                    <StreetCardFooter/>
-                  </Layout>;
+          <Layout>
+            <Content className="content-login">
+              <div className="site-layout-content-login">
+                <Form onSubmit={this.handleSubmit} className="login-form">
+
+                  <Form.Item>
+                    {getFieldDecorator('personalId', {
+                      rules: [{ required: true, message: 'Please input Identification Number!' }],
+                    })(
+                      <Input
+                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                        placeholder="Client Identification Number"
+                      />,
+                    )}
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" className="login-form-button">
+                      Submit
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </div>
+            </Content>
+          </Layout>
+          <StreetCardFooter/>
+        </Layout>;
           return (
             <div>{form}</div>
           );
