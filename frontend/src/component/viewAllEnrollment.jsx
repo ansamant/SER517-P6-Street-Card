@@ -145,8 +145,7 @@ class ViewAllEnrollment extends React.Component {
             <Layout className="layout">
                 <Header
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                    loggedInStatus={this.props.loggedInStatus}
-                />
+                    loggedInStatus={this.props.loggedInStatus}/>
 
                 <Layout>
                     <Sider className="site-layout-sider" breakpoint="lg"

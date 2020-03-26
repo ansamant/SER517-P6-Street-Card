@@ -4,6 +4,9 @@ import '../index.css';
 import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, Select} from "antd";
 import Header from '../Header'
 import StreetCardFooter from '../StreetCardFooter'
+import {FormOutlined, UserOutlined} from "@ant-design/icons";
+import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
+import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
 
 const {Content, Sider} = Layout;
 const {Panel} = Collapse;
@@ -39,18 +42,6 @@ class ViewEnrollmentDetails extends React.Component {
             })
     }
 
-    modifyJSON = temp => {
-        [temp].map(obj => {
-            const objKeys = Object.keys(obj);
-            return objKeys.map(itemKey => {
-              return {
-                itemKey,
-                itemValue: obj[itemKey]
-              };
-            });
-          });
-    }
-
     handleSuccessfulLogoutAction() {
         this.props.handleLogout();
         this.props.history.push('/login');
@@ -81,40 +72,6 @@ class ViewEnrollmentDetails extends React.Component {
         }
     };
 
-    // renderDynamicElWrapper() {
-    //     return this.state.opportunityDetails.map(items => {
-    //       return (
-    //         <Row type="flex" justify="space-around">
-    //           {this.renderDynamicEl(items)}
-    //         </Row>
-    //       );
-    //     });
-    //    };
-
-    // renderDynamicEl(els) {
-    //     return els.map(el => {
-    //       return (
-    //         <Col span={10}>
-    //           <Form.Item label={el.itemKey}>
-    //             <Input placeholder={el.itemValue} />
-    //           </Form.Item>
-    //         </Col>
-    //       );
-    //     });
-    //   };
-
-    // mapping = enrollment1 => {
-    //     enrollment1.map(obj => {
-    //         const objKeys = Object.keys(obj);
-    //         return objKeys.map(itemKey => {
-    //           return {
-    //             itemKey,
-    //             itemValue: obj[itemKey]
-    //           };
-    //         });
-    //       });
-    //   };
-
     render() {
         const {enrollment} = this.state;
         console.log(enrollment)
@@ -136,66 +93,101 @@ class ViewEnrollmentDetails extends React.Component {
         };
         return (
             <Layout className="layout">
-                <Header
-                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                    loggedInStatus={this.props.loggedInStatus}
-                />
-                <Layout>
-                    <Sider className="site-layout-sider"
-                    >
-                        <Menu
-                            style={{borderRight: '0px', backgroundColor: '#173e43'}}
-                            mode="inline" defaultSelectedKeys={['5']}
-                            onClick={this.handleClick}
-                        >
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                <span>Register Client</span>
+            <Header
+                handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                loggedInStatus={this.props.loggedInStatus}/>
+            <Layout>
+                <Sider className="site-layout-sider" breakpoint="lg"
+                       collapsedWidth="0"
+                       onBreakpoint={broken => {
+                           console.log(broken);
+                       }}
+                       onCollapse={(collapsed, type) => {
+                           console.log(collapsed, type);
+                       }}>
+                    <div className="menu">
+                        <Menu mode="inline" theme="dark"
+                              defaultSelectedKeys={['1']}
+                              onClick={this.handleClick}>
+                            <Menu.Item className="menuKey" key="1">
+                                <span className="nav-text">
+                                    <UserOutlined/>
+                                    Client Enrollment</span>
                             </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                <span>Update Client Information</span>
+                            <Menu.Item className="menuKey" key="2">
+                                <span className="nav-text">
+                                    <UserOutlined/>
+                                    Update Client Info</span>
                             </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                <span>Schedule Appointment</span>
+                            <Menu.Item className="menuKey" key="3">
+                                <span className="nav-text">
+                                    <CalendarOutlined/>
+                                    Schedule Appointment</span>
                             </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                <span>View Appointment</span>
+                            <Menu.Item className="menuKey" key="4">
+                                <span className="nav-text">
+                                    <CalendarOutlined/>
+                                    View Appointment</span>
                             </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                <span>View Logs</span>
+                            <Menu.Item className="menuKey" key="5">
+                                <span className="nav-text">
+                                    <ClockCircleOutlined/>
+                                    View Logs</span>
                             </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                                <span>Project Enrollment</span>
+                            <Menu.Item className="menuKey" key="6">
+                                <span className="nav-text">
+                                    <FormOutlined/>
+                                    Project Enrollment</span>
                             </Menu.Item>
-                            <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="7">
-                                <span>View Enrollment</span>
+                            <Menu.Item className="menuKey" key="7">
+                                <span className="nav-text">
+                                    <FormOutlined/>
+                                    View Enrollment</span>
                             </Menu.Item>
                         </Menu>
-                    </Sider>
-                    {
-                        Object.keys(enrollment).map((sections, mapRequiredKey) => {
-                        let sectionPeople = enrollment[sections];
-                        return(
-
-                                <Content className="content">
+                    </div>
+                </Sider>
+                <Content className="content-enroll">
+                    <div className="site-layout-content-homeless">
+                        <Form {...formItemLayout} name="enrollment">
+                            <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
                                 {
-                                    (typeof enrollment[sections] === 'object')
-                                    ?
-                                        Object.keys(sectionPeople).map((person, personId) => {
-                                        console.log(person)
+                                        Object.keys(enrollment).map((sections, mapRequiredKey) => {
+                                        let sectionDetail = enrollment[sections];
                                         return(
-                                            <div>
-                                                {person}: {sectionPeople[person]}
-                                            </div>
+                                                <Content className="content">
+                                                    {
+                                                        (typeof enrollment[sections] === 'object')
+                                                        ?
+                                                        <div><h2>{sections}</h2></div>
+
+                                                        :
+                                                        <div></div>
+                                                    }
+                                                    {
+                                                    (typeof enrollment[sections] === 'object')
+                                                    ?
+                                                        Object.keys(sectionDetail).map((key, personId) => {
+                                                            return(
+                                                                <div>
+                                                                   
+                                                                    {key}: {sectionDetail[key]}
+                                                                </div>
+                                                                );
+                                                        })
+                                                    :
+
+                                                            <div>{sections}: {sectionDetail}</div>
+                                                    }
+                                            </Content>
                                             );
                                     })
-                                    :
-                                    <div>{sections}: {sectionPeople}</div>
-
-                                }
-                               </Content>
-                            );
-                    })
-                    }
+                                    }
+                                </Collapse>
+                        </Form>
+                    </div>
+                </Content>
+                    
                 </Layout>
                 <StreetCardFooter/>
             </Layout>
