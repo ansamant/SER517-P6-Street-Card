@@ -674,8 +674,11 @@ class EnrollmentForm extends Component {
             this.props.updatePageComponent('loginfo')
             this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '6') {
-            this.setState({pageComponent: 'projectenroll'})
-            this.props.history.push('/enrollment');
+            this.props.updatePageComponent('projectenroll')
+            this.props.history.push('/socialWorkerRegister');
+        } else if (e.key === '7') {
+            this.props.updatePageComponent('viewenrollment')
+            this.props.history.push('/socialWorkerRegister');
         }
     };
 
@@ -3251,7 +3254,8 @@ class EnrollmentForm extends Component {
                                             </Col>
                                         </Row>
                                     </Panel>
-                                    <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here" key="17">
+                                    <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
+                                           key="17">
                                         <Row>
                                             <Col span={12}>
                                                 <p style={{padding: "2%"}}>

@@ -376,10 +376,10 @@ class homelessRegistration extends React.Component {
             this.props.updatePageComponent('loginfo')
             this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '6') {
-            this.setState({pageComponent: 'projectenroll'})
+            this.props.updatePageComponent('projectenroll')
             this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '7') {
-            this.setState({pageComponent: 'viewenrollment'})
+            this.props.updatePageComponent('viewenrollment')
             this.props.history.push('/socialWorkerRegister');
         }
     };

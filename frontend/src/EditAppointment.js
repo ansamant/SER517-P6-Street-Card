@@ -119,10 +119,10 @@ class EditAppointment extends React.Component {
             this.props.updatePageComponent('loginfo')
             this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '6') {
-            this.setState({pageComponent: 'projectenroll'})
+            this.props.updatePageComponent('projectenroll')
             this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '7') {
-            this.setState({pageComponent: 'viewenrollment'})
+            this.props.updatePageComponent('viewenrollment')
             this.props.history.push('/socialWorkerRegister');
         }
     };
@@ -160,7 +160,7 @@ class EditAppointment extends React.Component {
                            }}>
                         <div className="menu">
                             <Menu mode="inline" theme="dark"
-                                  defaultSelectedKeys={['1']}
+                                  defaultSelectedKeys={['4']}
                                   onClick={this.handleClick}>
                                 <Menu.Item className="menuKey" key="1">
                                     <span className="nav-text">
