@@ -55,14 +55,14 @@ DATABASES = {
 
 **RabbitMQ:**
 - **Unix**:(Homebrew see:https://brew.sh/) 
-    brew update
-    brew install rabbitmq
+    - brew update
+    - brew install rabbitmq
     **Other Commands**
-    brew services start rabbitmq --> starts rabbitmq server
-    brew services stop rabbitmq --> stops rabbitmq server
-    brew services restart rabbitmq --> restarts rabbitmq server
-    brew services list --> lists all services present on computer along with their status information.
-    For more info: https://www.rabbitmq.com/install-homebrew.html
+     - brew services start rabbitmq --> starts rabbitmq server
+     - brew services stop rabbitmq --> stops rabbitmq server
+     - brew services restart rabbitmq --> restarts rabbitmq server
+     - brew services list --> lists all services present on computer along with their status information.
+     - For more info: https://www.rabbitmq.com/install-homebrew.html
 - **Windows**:(installer)
     see:https://www.rabbitmq.com/install-windows.html
 - **Others*
@@ -70,11 +70,11 @@ DATABASES = {
 **Celery**
 - Go to top level folder of the project
 - to run celery use command: 
-    celery -A api -l worker info
+    - celery -A api -l worker info
 - info is optional but recommended as it demonstrates what is working 
-references:
-    For daemonizing celery after deployment: https://docs.celeryproject.org/en/stable/userguide/daemonizing.html
-    For celery integration in django: https://docs.celeryproject.org/en/stable/django/index.html
+**References:**
+    - For daemonizing celery after deployment: https://docs.celeryproject.org/en/stable/userguide/daemonizing.html
+    - For celery integration in django: https://docs.celeryproject.org/en/stable/django/index.html
     
 ### Important Tips for Email Configuration Information:
  This project currently utilizes google SMTP server configurations. 
