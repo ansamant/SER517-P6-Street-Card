@@ -58,7 +58,7 @@ DATABASES = {
 - **Unix**:(Homebrew see:https://brew.sh/) 
     - brew update
     - brew install rabbitmq
-    **Other Commands**
+    - **Other Commands**
      - brew services start rabbitmq --> starts rabbitmq server
      - brew services stop rabbitmq --> stops rabbitmq server
      - brew services restart rabbitmq --> restarts rabbitmq server
