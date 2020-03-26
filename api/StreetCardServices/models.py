@@ -85,7 +85,7 @@ class Homeless(models.Model):
     # Update with proper regex to validate SSN
     # Remove MaxLengthValidator and MinLengthValidator as they will throw an error for integer fields.
     # Convert to CharField because this would also contain '-' (hyphens)
-    SSN = models.IntegerField(validators=[MaxLengthValidator(9), MinLengthValidator(4)], blank=True, null=True)
+    SSN = models.CharField(max_length=9, blank=True, null=True)
     SSNDataQuality = models.IntegerField(choices=SSNDataQuality.choices)
     DOB = models.DateField(blank=True, null=True)
     DOBDataQuality = models.IntegerField(choices=DOBDataQuality.choices)
@@ -93,7 +93,7 @@ class Homeless(models.Model):
     Ethnicity = models.IntegerField(choices=Ethnicity.choices)
     Gender = models.IntegerField(choices=Gender.choices)
     VeteranStatus = models.IntegerField(choices=VeteranStatus.choices)
-    PhoneNumberPrefix = models.IntegerField(max_length=3, blank=True, null=True)
+    PhoneNumberPrefix = models.CharField(max_length=3, blank=True, null=True)
     PhoneNumber = models.CharField(max_length=128, blank=True, null=True)
     Email = models.EmailField(max_length=70, blank=True, null=True)
 

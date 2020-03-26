@@ -306,6 +306,9 @@ class homelessRegistration extends React.Component {
                 registerRequestObject.Ethnicity = values.Ethnicity[0];
                 registerRequestObject.Gender = values.Gender[0];
                 registerRequestObject.VeteranStatus = values.VeteranStatus[0];
+                registerRequestObject.PhoneNumberPrefix = values.PhoneNumberPrefix;
+                registerRequestObject.PhoneNumber = values.PhoneNumber;
+                registerRequestObject.Email = values.email;
 
                 console.log(registerRequestObject);
 
@@ -466,7 +469,7 @@ class homelessRegistration extends React.Component {
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
                             <Form {...formItemLayout} name="enrollment"
-                                  onSubmit={this.handleOnSubmit}>
+                                  onSubmit={this.handleHomelessPersonUpdateRegistrationSubmit}>
                                 <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
                                     <Panel header="Name Information" key="1">
                                         <Row gutter={8}>
@@ -624,15 +627,25 @@ class homelessRegistration extends React.Component {
                                         <Row gutter={8}>
                                             <Col span={4} push={1}>
                                                 <Form.Item>
-                                                    <Select placeholder="Area Code">
-                                                        <Option value="1">+1</Option>
-                                                        <Option value="91">+91</Option>
-                                                    </Select>
+                                                    {getFieldDecorator("PhoneNumberPrefix", {
+                                                        initialValue: this.state.homelessData.PhoneNumberPrefix ? this.state.homelessData.PhoneNumberPrefix : '',
+                                                        rules: [
+                                                            {
+                                                                required: false,
+                                                                message: "Please input your Phone Number Prefix!",
+                                                                whitespace: true
+                                                            }
+                                                        ]
+                                                    })(
+                                                        <Select placeholder="Area Code">
+                                                            <Option value="1">+1</Option>
+                                                            <Option value="91">+91</Option>
+                                                        </Select>)}
                                                 </Form.Item>
                                             </Col>
                                             <Col span={8} push={1}>
                                                 <Form.Item>
-                                                    {getFieldDecorator("Phone Number", {
+                                                    {getFieldDecorator("PhoneNumber", {
                                                         initialValue: this.state.homelessData.PhoneNumber ? this.state.homelessData.PhoneNumber : '',
                                                         rules: [
                                                             {
