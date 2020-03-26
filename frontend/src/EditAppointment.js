@@ -34,6 +34,7 @@ class EditAppointment extends React.Component {
         super(props);
         this.state = {
             appointment : {},
+            checked: false,
             isLoaded: false,
         }
     this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
@@ -56,7 +57,7 @@ class EditAppointment extends React.Component {
         appointmentRequestObject.Time = values['TimePicker'].format('hh:mm:ss');
         appointmentRequestObject.serviceProvider = values.serviceProvider[0];
         appointmentRequestObject.personalId = this.props.homelessPersonId;
-        appointmentRequestObject.alert = values.alert;
+        appointmentRequestObject.alert = this.state.checked;
 
         console.log(appointmentRequestObject);
         fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
@@ -91,18 +92,21 @@ class EditAppointment extends React.Component {
             console.log(json)
              this.setState({
                 appointment: json,
+                checked: json["alert"],
               }
+
           )
 
          })
-        console.log("Alert", this.state.appointment.alert);
+        
 
   }
 
   onChange = e => {
     console.log('checked = ', e.target.checked);
-    this.state.appointment.alert = !this.state.appointment.alert;
-    console.log(this.state.appointment.alert)
+    this.setState({
+      checked: e.target.checked,
+    });
   };
 
   handleSuccessfulLogoutAction() {
@@ -136,6 +140,7 @@ class EditAppointment extends React.Component {
 
   render() {
       const {appointment} = this.state;
+      console.log("CHECKED: ", this.state.checked);
       const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
           labelCol: {
@@ -292,7 +297,7 @@ class EditAppointment extends React.Component {
           
                 <Form.Item className="register-ant-form-item" >
                   {console.log(appointment.alert)}
-                  <Checkbox checked={appointment.alert}  onChange={this.onChange}>
+                  <Checkbox checked={this.state.checked}  onChange={this.onChange}>
                   Alert
                   </Checkbox>  
                 </Form.Item>

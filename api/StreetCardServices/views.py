@@ -8,6 +8,7 @@ from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping,Log,Appointments
 
 from django.conf import settings
+import datetime
 from .utils import primary_key_generator
 
 from .tasks import sleeper, send_email_task
@@ -192,15 +193,19 @@ class AppointmentViewSet(viewsets.ViewSet):
     def create(self, request, homeless_pk=None):
         
         enroll = request.data
+        
         if(enroll["alert"] == True):
-            print("EMAIL: ", enroll["Email"])
-            message = (f"Hello,\n We are writing this message to remind you of an appointment you have scheduled at {enroll['office']}, on {enroll['Date']} at {enroll['Time']}.\n"
+            timeFormatted = enroll["Time"].format("%H:%M[:%S]")
+            print(timeFormatted)
+            message = (f"Hello,\n We are writing this message to remind you of an appointment you have scheduled at {enroll['office']}, on {enroll['Date']} at {enroll['Time'].format('hh:mm')}.\n"
                       f"Please arrive at {enroll['streetAddress1']}, {enroll['streetAddress2']}, {enroll['city']}, {enroll['state']}, {enroll['zipCode']}.\n"
                       f"Please arrive at least 15 minutes early.\n Sincerely,\n StreetCard.")
-            receiver = 'email@email.com'
+            receiver = enroll["Email"]
             sender = settings.EMAIL_HOST_USER
             title = "Appointment Reminder from StreetCard"
-            send_email_task.delay(message, title, sender, [receiver])
+            etaObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
+            print("ETA OBJ:", etaObj)
+            send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj)
             
         enroll['personalId'] = homeless_pk
         enroll['appointmentId'] = primary_key_generator()
