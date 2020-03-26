@@ -18,28 +18,17 @@ class ClientLanding extends React.Component{
       this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
     }
   handleSubmit = e => {
-    e.preventDefault();
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
 
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-          var ClientRequestObject = {};
-        ClientRequestObject.personalId = this.props.homelessPersonId;
-        console.log(ClientRequestObject);
-        fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/appointment/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify(ClientRequestObject)
-        })
-          .then(res => res.json())
-          .then(json => {
-            this.props.history.push('/clientInfo');
-          });
-      }
-      console.log('Received values of form: ', values);
-    });
+            if (!err) {
+                console.log(values.personalId);
+                this.props.handleHomelessPersonId(values.personalId);
+                this.props.history.push('/clientInfo');
+            }
+        });
+
+
   };
 
   
@@ -82,9 +71,10 @@ class ClientLanding extends React.Component{
                   handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                   loggedInStatus={this.state.loggedInStatus}
                 />,
-                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="registration-form">
-                    <h1 style={{ marginLeft: '300px'}}>Enter Id </h1>
-                    <Form.Item label="clientID">
+                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="client-landing">
+                    <h1 >Welcome to the StreetCard services</h1>
+                    <h2 style={{ marginLeft: '100px'}}>Swipe your card or Enter your Id </h2>
+                    <Form.Item label="Client ID" >
                         {getFieldDecorator("personalId", {
                             rules: [
                             {

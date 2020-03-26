@@ -40,10 +40,18 @@ body {
 
 .client-Info {
   max-width: 1000px;
-  padding: 80px;
+  padding: 50px;
   margin: 100px;
   position: relative;
   left: 200px;
+}
+
+.client-landing {
+  max-width: 1000px;
+  padding: 50px;
+  margin: 80px;
+  position: relative;
+  left: 100px;
 }
 
 .App-link {

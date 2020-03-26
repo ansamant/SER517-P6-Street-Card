@@ -282,7 +282,7 @@ isEmpty(object) {
               loggedInStatus={this.state.loggedInStatus}
               clearanceLevel={this.state.clearanceLevel}
               serviceProvider={this.state.serviceProvider}
-              homelessPersonId={this.state.homelessPersonId}
+              homelessPersonId={this.state.handleHomelessPersonId}
               handleLogout={this.handleLogout}
             />
           </Switch>
