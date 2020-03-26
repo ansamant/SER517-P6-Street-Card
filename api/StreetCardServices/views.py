@@ -6,7 +6,12 @@ from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
     NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer,UserNameAndIdMappingSerializer,LogSerializer,AppointmentSerializer
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping,Log,Appointments
+
+from django.conf import settings
+import datetime
 from .utils import primary_key_generator
+
+from .tasks import sleeper, send_email_task
 
 class UserViewSet(viewsets.ModelViewSet):
     
@@ -51,6 +56,8 @@ class LogEntry(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
+        #Test remove later
+        # send_email_task.delay("Send Email Test", "Test", settings.EMAIL_HOST_USER, ['recipient@gmail.com'])
         enroll = request.data
         enroll['personalId'] = homeless_pk
         serializer = LogSerializer(data=enroll)
@@ -184,7 +191,22 @@ class AppointmentViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
+        
         enroll = request.data
+        
+        if(enroll["alert"] == True):
+            timeFormatted = enroll["Time"].format("%H:%M[:%S]")
+            print(timeFormatted)
+            message = (f"Hello,\n We are writing this message to remind you of an appointment you have scheduled at {enroll['office']}, on {enroll['Date']} at {enroll['Time'].format('hh:mm')}.\n"
+                      f"Please arrive at {enroll['streetAddress1']}, {enroll['streetAddress2']}, {enroll['city']}, {enroll['state']}, {enroll['zipCode']}.\n"
+                      f"Please arrive at least 15 minutes early.\n Sincerely,\n StreetCard.")
+            receiver = enroll["Email"]
+            sender = settings.EMAIL_HOST_USER
+            title = "Appointment Reminder from StreetCard"
+            etaObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
+            print("ETA OBJ:", etaObj)
+            send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj)
+            
         enroll['personalId'] = homeless_pk
         enroll['appointmentId'] = primary_key_generator()
         serializer = AppointmentSerializer(data=enroll)
@@ -210,3 +232,6 @@ class AppointmentViewSet(viewsets.ViewSet):
 
     def destroy(self, request, pk=None):
         pass
+
+    
+        

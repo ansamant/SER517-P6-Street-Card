@@ -84,6 +84,20 @@ class ViewAppointmentsTable extends React.Component {
                 width: 100,
               },
               {
+                title: 'Alert?',
+                dataIndex: 'alert',
+                width: 100,
+                key: 'alert',
+                render: val => (val ? 'Yes' : 'No'),
+                filters: [{
+                      text: 'Yes',
+                      value: true,
+                }, {
+                    text: 'No',
+                    value: false,
+                  }],
+              },
+              {
                 title: 'Action',
                 key: 'action',
                 fixed: 'right',
@@ -108,6 +122,7 @@ class ViewAppointmentsTable extends React.Component {
                 state: '',
                 Time: '',
                 Date: '',
+                alert: '',
                 serviceProvider: '',
                 personalId: '',
           }
@@ -135,10 +150,9 @@ class ViewAppointmentsTable extends React.Component {
                 isLoaded: true,
                 appointmentData: json,
               }
-          )
+          ) 
         })
-    console.log(this.appointmentData);
-
+        
   }
 
 
