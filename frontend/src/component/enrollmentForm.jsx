@@ -6,6 +6,7 @@ import {FormOutlined, UserOutlined} from "@ant-design/icons";
 import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
 import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
 import StreetCardFooter from "../StreetCardFooter";
+import SiderComponent from './SiderComponent'
 
 const {Sider, Content, Footer} = Layout;
 const {Option} = Select;
@@ -649,6 +650,7 @@ class EnrollmentForm extends Component {
         }
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.handleOnSubmit = this.handleOnSubmit.bind(this);
+        this.setPagecomponent = this.setPagecomponent.bind(this);
     }
 
     handleSuccessfulLogoutAction() {
@@ -657,26 +659,9 @@ class EnrollmentForm extends Component {
     }
 
 
-    handleClick = e => {
-        if (e.key === '3') {
-            this.props.updatePageComponent('newAppointMent')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '4') {
-            this.props.updatePageComponent('viewAppointment')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '1') {
-            this.props.updatePageComponent('registerClient')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '2') {
-            this.props.updatePageComponent('updateInformation')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '5') {
-            this.props.updatePageComponent('loginfo')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '6') {
-            this.setState({pageComponent: 'projectenroll'})
-            this.props.history.push('/enrollment');
-        }
+    setPagecomponent(pageComponentValue){
+        this.props.updatePageComponent(pageComponentValue)
+        this.props.history.push('/socialWorkerRegister');
     };
 
     componentDidMount() {
@@ -927,56 +912,9 @@ class EnrollmentForm extends Component {
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.props.loggedInStatus}/>
                 <Layout>
-                    <Sider className="site-layout-sider" breakpoint="lg"
-                           collapsedWidth="0"
-                           onBreakpoint={broken => {
-                               console.log(broken);
-                           }}
-                           onCollapse={(collapsed, type) => {
-                               console.log(collapsed, type);
-                           }}>
-                        <div className="menu">
-                            <Menu mode="inline" theme="dark"
-                                  defaultSelectedKeys={['6']}
-                                  onClick={this.handleClick}>
-                                <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                </Menu.Item>
-                            </Menu>
-                        </div>
-                    </Sider>
+                    <SiderComponent
+                        setPagecomponent = {this.setPagecomponent}
+                    />
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
                             <Form {...formItemLayout} name="enrollment"
