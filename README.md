@@ -54,6 +54,7 @@ DATABASES = {
 - `npm start`
 
 **RabbitMQ:**
+
 - **Unix**:(Homebrew see:https://brew.sh/) 
     - brew update
     - brew install rabbitmq
@@ -65,9 +66,11 @@ DATABASES = {
      - For more info: https://www.rabbitmq.com/install-homebrew.html
 - **Windows**:(installer)
     see:https://www.rabbitmq.com/install-windows.html
-- **Others*
+- **Others**
     see:https://www.rabbitmq.com/download.html
+
 **Celery**
+
 - Go to top level folder of the project
 - to run celery use command: 
     - celery -A api -l worker info
@@ -77,6 +80,7 @@ DATABASES = {
     - For celery integration in django: https://docs.celeryproject.org/en/stable/django/index.html
     
 ### Important Tips for Email Configuration Information:
+
  This project currently utilizes google SMTP server configurations. 
  The EMAIL_HOST_USER and EMAIL_HOST_PASSWORD configurations are set in host environment for security reason. 
  If you choose to link with the project through a different account make sure that your email account is 
