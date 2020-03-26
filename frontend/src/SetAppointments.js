@@ -153,6 +153,7 @@ class SetAppointments extends React.Component {
             rules: [{type: 'object', required: true, message: 'Please select time!'}],
         };
         if(items.Email != null){
+            this.state.email = items.Email;
             return (
             <Layout className="layout">
                 <Header
@@ -388,7 +389,7 @@ class SetAppointments extends React.Component {
                                             </Col>
                                         </Row>
                                     </Panel>
-                                    <Panel header="Appointment Details 1" key="2">
+                                    <Panel header="Appointment Details" key="2">
                                         <Row gutter={8}>
                                             <Col span={8} push={1}>
                                                 <Form.Item>
