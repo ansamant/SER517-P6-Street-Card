@@ -154,7 +154,7 @@ handleSuccessfulLogoutAction() {
                            }}>
                         <div className="menu">
                             <Menu mode="inline" theme="dark"
-                                  defaultSelectedKeys={['1']}
+                                  defaultSelectedKeys={['7']}
                                   onClick={this.handleClick}>
                                 <Menu.Item className="menuKey" key="1">
                                     <span className="nav-text">

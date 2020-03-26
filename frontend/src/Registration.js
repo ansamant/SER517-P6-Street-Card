@@ -351,9 +351,7 @@ class RegistrationForm extends React.Component {
     projectEnroll = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-
             if (!err) {
-                console.log(values.personId);
                 this.props.handleHomelessPersonData(values.personId);
                 this.props.history.push('/enrollment');
             }
@@ -401,7 +399,6 @@ class RegistrationForm extends React.Component {
                     body: JSON.stringify(registerRequestObject)
                 })
                     .then(res => {
-                        console.log("akash");
                         if (res.status == 201) {
                             this.props.history.push('/socialWorkerRegister');
                         }
@@ -497,7 +494,7 @@ class RegistrationForm extends React.Component {
                     .then(res => res.json())
                     .then(json => {
                         this.props.handleHomelessPersonId(registerRequestObject.PersonalId);
-                        this.props.history.push('/login');
+                        this.props.history.push('/socialWorkerRegister');
                     });
             }
         });
@@ -753,10 +750,10 @@ class RegistrationForm extends React.Component {
                                                                     }
                                                                 ]
                                                             })(
-                                                            <Select placeholder="Area Code">
-                                                                <Option value="1">+1</Option>
-                                                                <Option value="91">+91</Option>
-                                                            </Select>)}
+                                                                <Select placeholder="Area Code">
+                                                                    <Option value="1">+1</Option>
+                                                                    <Option value="91">+91</Option>
+                                                                </Select>)}
                                                         </Form.Item>
                                                     </Col>
                                                     <Col span={8} push={1}>
@@ -993,7 +990,7 @@ class RegistrationForm extends React.Component {
                                    }}>
                                 <div className="menu">
                                     <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['3']}
+                                          defaultSelectedKeys={['4']}
                                           onClick={this.handleClick}>
                                         <Menu.Item className="menuKey" key="1">
                                     <span className="nav-text">
@@ -1082,7 +1079,7 @@ class RegistrationForm extends React.Component {
                                    }}>
                                 <div className="menu">
                                     <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['4']}
+                                          defaultSelectedKeys={['3']}
                                           onClick={this.handleClick}>
                                         <Menu.Item className="menuKey" key="1">
                                     <span className="nav-text">
@@ -1560,7 +1557,6 @@ class RegistrationForm extends React.Component {
                 </Layout>
             );
         }
-
     }
 }
 

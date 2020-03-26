@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Cascader, Checkbox, DatePicker, Form, Input, Layout, Menu, TimePicker, Row, Col, Collapse} from 'antd';
+import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, TimePicker} from 'antd';
 import Header from './Header'
 import moment from 'moment';
 import {FormOutlined, UserOutlined} from "@ant-design/icons";
@@ -60,8 +60,6 @@ class EditAppointment extends React.Component {
                 appointmentRequestObject.Time = values['TimePicker'].format('hh:mm:ss');
                 appointmentRequestObject.serviceProvider = values.serviceProvider[0];
                 appointmentRequestObject.personalId = this.props.homelessPersonId;
-
-                console.log(appointmentRequestObject);
                 fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
                     method: 'PUT',
                     headers: {
@@ -75,8 +73,6 @@ class EditAppointment extends React.Component {
                         this.props.history.push('/socialWorkerRegister');
                     });
             }
-
-            console.log('Received values of form: ', values);
         });
     };
 
@@ -98,8 +94,6 @@ class EditAppointment extends React.Component {
                 )
 
             })
-        console.log(this.state.appointment);
-
     }
 
 
@@ -126,6 +120,9 @@ class EditAppointment extends React.Component {
             this.props.history.push('/socialWorkerRegister');
         } else if (e.key === '6') {
             this.setState({pageComponent: 'projectenroll'})
+            this.props.history.push('/socialWorkerRegister');
+        } else if (e.key === '7') {
+            this.setState({pageComponent: 'viewenrollment'})
             this.props.history.push('/socialWorkerRegister');
         }
     };
@@ -366,119 +363,6 @@ class EditAppointment extends React.Component {
                             </Form>
                         </div>
                     </Content>
-                    {/*<Content className="content">*/}
-                    {/*  <div className="site-layout-content-setappointment">*/}
-                    {/*    <Form {...formItemLayout} onSubmit={this.handleSubmit} className="set-appointment-form">*/}
-                    {/*    <h1 style={{marginLeft : '280px'}} >Edit Details:</h1>*/}
-                    {/*      <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator("serviceProvider", {*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            type: "array",*/}
-                    {/*            required: true,*/}
-                    {/*            message: "Please select your role!"*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<Cascader options={serviceProvider} placeholder="Service Provider" />)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*    <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator("office", {*/}
-                    {/*        initialValue: appointment.office,*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            message: "Please input the office name!",*/}
-                    {/*            whitespace: true*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<Input placeholder="Office"/>)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*    <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator("streetAddress1", {*/}
-                    {/*        initialValue: appointment.streetAddress1,*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            message: "Please input the street address!",*/}
-                    {/*            whitespace: true*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<Input placeholder="Street Address 1"/>)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*    <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator("streetAddress2", {*/}
-                    {/*        initialValue: appointment.streetAddress2,*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            message: "Please input the street address!",*/}
-                    {/*            whitespace: true*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<Input placeholder="Street Address 2"/>)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*    <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator("city", {*/}
-                    {/*        initialValue: appointment.city,*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            message: "Please input the city!",*/}
-                    {/*            whitespace: true*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<Input placeholder="City"/>)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*    <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator("zipCode", {*/}
-                    {/*        initialValue: appointment.zipCode,*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            message: "Please input the zip code!",*/}
-                    {/*            whitespace: true*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<Input placeholder="Zip Code"/>)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*    <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator("state", {*/}
-                    {/*        initialValue: appointment.state,*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            message: "Please input the state!",*/}
-                    {/*            whitespace: true*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<Input placeholder="State"/>)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*      <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator('DatePicker', {*/}
-                    {/*      initialValue: appointment.Date ? moment(appointment.Date, 'YYYY/MM/DD') : moment("1999-12-01", 'YYYY/MM/DD'),*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            type: "object",*/}
-                    {/*            required: true,*/}
-                    {/*            message: "Please input your Date!"*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<DatePicker placeholder="Appointment Date"/>)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*      <Form.Item className="register-ant-form-item" >*/}
-                    {/*      {getFieldDecorator('TimePicker', {*/}
-                    {/*        initialValue: appointment.Time ? moment(appointment.Time, 'hh:mm:ss') : moment("00-00-00", 'hh:mm:ss'),*/}
-                    {/*        rules: [*/}
-                    {/*          {*/}
-                    {/*            type: "object",*/}
-                    {/*            required: true,*/}
-                    {/*            message: "Please input your Time!"*/}
-                    {/*          }*/}
-                    {/*        ]*/}
-                    {/*      })(<TimePicker placeholder="Time Date" />)}*/}
-                    {/*    </Form.Item>*/}
-                    {/*    <Form.Item className="register-ant-form-item">*/}
-                    {/*      <Button type="primary" htmlType="submit" className="registration-submit-button">*/}
-                    {/*        Submit*/}
-                    {/*      </Button>*/}
-                    {/*    </Form.Item>*/}
-                    {/*    </Form>*/}
-                    {/*  </div>*/}
-                    {/*  </Content>*/}
                 </Layout>
                 <StreetCardFooter/>
             </Layout>
