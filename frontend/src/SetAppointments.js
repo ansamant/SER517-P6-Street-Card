@@ -44,7 +44,8 @@ class SetAppointments extends React.Component {
       console.log(this.props.homelessPersonId);
       this.state = {
           items: {},
-          alert: false,
+          checked: false,
+          email: null,
           isLoaded: false,
       }
       this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
@@ -65,7 +66,13 @@ class SetAppointments extends React.Component {
         appointmentRequestObject.Time = values['TimePicker'].format('hh:mm[:ss[.uuuuuu]]');
         appointmentRequestObject.serviceProvider = values.serviceProvider[0];
         appointmentRequestObject.personalId = this.props.homelessPersonId;
-        appointmentRequestObject.alert = this.state.alert
+        appointmentRequestObject.alert = this.state.checked;
+        appointmentRequestObject.Email = this.state.email;
+        if(this.state.email == null){
+          appointmentRequestObject.Email = ""
+        }
+        //appointmentRequestObject.email = this.state.Email
+        console.log("EMAIL", this.state.email)
         console.log("ALERT", appointmentRequestObject.alert)
         console.log(appointmentRequestObject);
         fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/appointment/', {
@@ -138,6 +145,13 @@ handleSuccessfulLogoutAction() {
     }
   };
 
+  onChange = e => {
+    console.log('checked = ', e.target.checked);
+    this.setState({
+      checked: e.target.checked,
+    });
+  };
+
   render() {
       const {items} = this.state;
       const { getFieldDecorator } = this.props.form;
@@ -154,7 +168,11 @@ handleSuccessfulLogoutAction() {
     const config = {
       rules: [{ type: 'object', required: true, message: 'Please select time!' }],
     };
-    return (
+    //console.log("Email " + items.Email)
+    if(items.Email != null){
+      this.state.email = items.Email;
+      console.log("Email2", this.state.email)
+      return (
         <Layout className="layout">
           <Header 
                   handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
@@ -306,7 +324,172 @@ handleSuccessfulLogoutAction() {
                   })(<TimePicker placeholder="Time Date" />)}
                 </Form.Item>
                 <Form.Item className="register-ant-form-item">
-                    <Checkbox onChange={this.state.alert=true}>Set Alert</Checkbox>
+                    <Checkbox checked={this.state.checked} onChange={this.onChange}>Set Alert</Checkbox>
+                </Form.Item>
+                <Form.Item className="register-ant-form-item">
+                  <Button type="primary" htmlType="submit" className="registration-submit-button">
+                    Submit
+                  </Button>
+                </Form.Item>
+                </Form>
+              </div>
+              </Content>
+          </Layout>
+          <StreetCardFooter/>
+        </Layout>
+    );
+    }
+    else{
+      return (
+        <Layout className="layout">
+          <Header 
+                  handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                  loggedInStatus={this.props.loggedInStatus}
+          />
+          <Layout>
+            <Sider className="site-layout-sider"
+            >
+              <Menu 
+                style={{ borderRight : '0px', backgroundColor: '#173e43' }} 
+                mode="inline" defaultSelectedKeys={['3']}
+                onClick={this.handleClick}
+              >
+                <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="1">
+                  <span>Register Client</span>
+                </Menu.Item>
+                <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="2">
+                  <span>Update Client Information</span>
+                </Menu.Item>
+                <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="3">
+                  <span>Schedule Appointment</span>
+                </Menu.Item>
+                <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="4">
+                  <span>View Appointment</span>
+                </Menu.Item>
+                <Menu.Item style={{ marginTop: '20px', color: '#fae596'}} key="5">
+                      <span>View Logs</span>
+                </Menu.Item>
+                <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
+                    <span>Project Enrollment</span>
+                </Menu.Item>
+              </Menu>
+            </Sider>
+            <Content className="content">
+                <Row gutter={16}>
+                  <Col span={8}>
+                    <Card style={{ borderRadius: '25px' }} title="Client Id" bordered={false}>
+                      {items.PersonalId}
+                    </Card>
+                  </Col>
+                  <Col span={8}>
+                    <Card style={{ borderRadius: '25px' }} title="First Name" bordered={false}>
+                      {items.FirstName}
+                    </Card>
+                  </Col>
+                  <Col span={8}>
+                    <Card style={{ borderRadius: '25px' }} title="Last Name" bordered={false}>
+                      {items.LastName}
+                    </Card>
+                  </Col>
+                </Row>
+              <div className="site-layout-content-setappointment">
+                <Form {...formItemLayout} onSubmit={this.handleSubmit} className="set-appointment-form">
+                <h1 style={{marginLeft: '90px', marginLeft : '180px'}} >Appointment Details:</h1>
+                  <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("serviceProvider", {
+                    rules: [
+                      {
+                        type: "array",
+                        required: true,
+                        message: "Please select your role!"
+                      }
+                    ]
+                  })(<Cascader options={serviceProvider} placeholder="Service Provider" />)}
+                </Form.Item>
+                <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("office", {
+                    rules: [
+                      {
+                        message: "Please input the office!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="Office Name"/>)}
+                </Form.Item>
+                 <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("streetAddress1", {
+                    rules: [
+                      {
+                        message: "Please input the streetAddress1!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="Street Address 1"/>)}
+                </Form.Item>
+                    <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("streetAddress2", {
+                    rules: [
+                      {
+                        message: "Please input the streetAddress2!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="Street Address 2"/>)}
+                </Form.Item>
+
+                <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("city", {
+                    rules: [
+                      {
+                        message: "Please input the city!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="City"/>)}
+                </Form.Item>
+                <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("zipCode", {
+                    rules: [
+                      {
+                        message: "Please input the zipcode!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="Zip Code"/>)}
+                </Form.Item>
+                <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator("state", {
+                    rules: [
+                      {
+                        message: "Please input the state!",
+                        whitespace: true
+                      }
+                    ]
+                  })(<Input placeholder="State"/>)}
+                </Form.Item>
+                  <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator('DatePicker', {
+                  //	initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+                  	rules: [
+                      {
+                      	type: "object",
+                        required: true,
+                        message: "Please input your Date!"
+                      }
+                    ]
+                  })(<DatePicker placeholder="Appointment Date"/>)}
+                </Form.Item>
+                  <Form.Item className="register-ant-form-item" >
+                  {getFieldDecorator('TimePicker', {
+                  //	initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+                  	rules: [
+                      {
+                      	type: "object",
+                        required: true,
+                        message: "Please input your Time!"
+                      }
+                    ]
+                  })(<TimePicker placeholder="Time Date" />)}
                 </Form.Item>
                 <Form.Item className="register-ant-form-item">
                   <Button type="primary" htmlType="submit" className="registration-submit-button">
@@ -321,6 +504,7 @@ handleSuccessfulLogoutAction() {
         </Layout>
     );
   }
+}
 }
 
 const WrappedSetAppointments = Form.create({ name: 'time_related_controls' })(SetAppointments);

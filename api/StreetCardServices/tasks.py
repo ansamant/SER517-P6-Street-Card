@@ -1,5 +1,6 @@
 # https://docs.celeryproject.org/en/stable/django/first-steps-with-django.html
-
+# Email: G4k97mdauSjxpOm5VMK17llS9bN7LvyP
+# non-email: vP184DLE6D6zSL97q1YydUfFXUVqnFK3
 # celery -A api worker -l info
 
 

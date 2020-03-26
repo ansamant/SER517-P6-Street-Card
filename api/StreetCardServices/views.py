@@ -192,6 +192,16 @@ class AppointmentViewSet(viewsets.ViewSet):
     def create(self, request, homeless_pk=None):
         
         enroll = request.data
+        if(enroll["alert"] == True):
+            print("EMAIL: ", enroll["Email"])
+            message = (f"Hello,\n We are writing this message to remind you of an appointment you have scheduled at {enroll['office']}, on {enroll['Date']} at {enroll['Time']}.\n"
+                      f"Please arrive at {enroll['streetAddress1']}, {enroll['streetAddress2']}, {enroll['city']}, {enroll['state']}, {enroll['zipCode']}.\n"
+                      f"Please arrive at least 15 minutes early.\n Sincerely,\n StreetCard.")
+            receiver = 'email@email.com'
+            sender = settings.EMAIL_HOST_USER
+            title = "Appointment Reminder from StreetCard"
+            send_email_task.delay(message, title, sender, [receiver])
+            
         enroll['personalId'] = homeless_pk
         enroll['appointmentId'] = primary_key_generator()
         serializer = AppointmentSerializer(data=enroll)
@@ -217,3 +227,6 @@ class AppointmentViewSet(viewsets.ViewSet):
 
     def destroy(self, request, pk=None):
         pass
+
+    
+        

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Form, DatePicker, TimePicker, Button, Icon,  Cascader, Input, AutoComplete, notification, Layout, Menu, Card } from 'antd';
+import { Form, DatePicker, TimePicker, Button, Icon,  Cascader, Input, AutoComplete, notification, Layout, Menu, Card, Checkbox} from 'antd';
 import WrappedViewAppointments from "./ViewAppointments";
 import Header from './Header'
 import moment from 'moment';
@@ -95,10 +95,15 @@ class EditAppointment extends React.Component {
           )
 
          })
-        console.log(this.state.appointment);
+        console.log("Alert", this.state.appointment.alert);
 
   }
 
+  onChange = e => {
+    console.log('checked = ', e.target.checked);
+    this.state.appointment.alert = !this.state.appointment.alert;
+    console.log(this.state.appointment.alert)
+  };
 
   handleSuccessfulLogoutAction() {
     this.props.handleLogout();
@@ -126,6 +131,8 @@ class EditAppointment extends React.Component {
         this.props.history.push('/socialWorkerRegister');
     }
   };
+
+ 
 
   render() {
       const {appointment} = this.state;
@@ -282,8 +289,12 @@ class EditAppointment extends React.Component {
                     ]
                   })(<TimePicker placeholder="Time Date" />)}
                 </Form.Item>
-                <Form.Item className="register-ant-form-item" checked={appointment.alert} onChange={appointment.alert= !appointment.alert}>
+          
+                <Form.Item className="register-ant-form-item" >
+                  {console.log(appointment.alert)}
+                  <Checkbox checked={appointment.alert}  onChange={this.onChange}>
                   Alert
+                  </Checkbox>  
                 </Form.Item>
                 <Form.Item className="register-ant-form-item">
                   <Button type="primary" htmlType="submit" className="registration-submit-button">
