@@ -6,7 +6,10 @@ import { Form, Descriptions, Collapse, Alert} from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
+
+
 class ClientPersonalInfo extends React.Component{
+
 
 
  constructor(props) {
@@ -19,7 +22,7 @@ class ClientPersonalInfo extends React.Component{
     }
   componentDidMount() {
      console.log(this.state.homelessPersonId);
-     fetch('http://127.0.0.1:8000/homeless/' + this.state.homelessPersonId + '/', {
+     fetch('http://127.0.0.1:8000/homeless/' + '4808584002' + '/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -45,8 +48,74 @@ class ClientPersonalInfo extends React.Component{
   }
 
     render(){
+        const {clientInfo} = this.state;
+        let race;
+        switch (clientInfo.Race) {
+            case 1: race = "American India or Alaskan Native";
+                    break;
+            case 2: race = "Asian";
+                    break;
+            case 3: race = "Black or African American";
+                    break;
+            case 4: race = "Native Hawaiian or Pacific Islander";
+                    break;
+            case 5: race = "White";
+                    break;
+            case 8: race = "Client Doesn\'t Know";
+                    break;
+            case 9: race = "Client Refused";
+                    break;
+            case 99: race = "Data Not Collected";
+                    break;
+        }
+        let ethnicity;
+        switch (clientInfo.Ethnicity) {
+            case 0: ethnicity = "Non Hispanic/Non Latino";
+                    break;
+            case 1: ethnicity = "Hispanic/Latino";
+                    break;
+            case 8: ethnicity = "Client Doesn\'t Know";
+                    break;
+            case 9: ethnicity = "Client Refused";
+                    break;
+            case 99: ethnicity = "Data Not Collected";
+                    break;
+        }
+        let gender;
+        switch (clientInfo.Gender) {
+            case 0: gender = "Female";
+                    break;
+            case 1: gender = "Male";
+                    break;
+            case 3: gender = "Trans Female";
+                    break;
+            case 4: gender = "Trans Male";
+                    break;
+            case 5: gender = "Gender Non-Conforming";
+                    break;
+            case 8: gender = "Client Doesn\'t Know";
+                    break;
+            case 9: gender = "Client Refused";
+                    break;
+            case 99: gender = "Data Not Collected";
+                    break;
+        }
+        let veteranStatus;
+        switch (clientInfo.VeteranStatus) {
+            case 0: veteranStatus = "No";
+                    break;
+            case 1: veteranStatus = "Yes";
+                    break;
+            case 8: veteranStatus = "Client Doesn\'t Know";
+                    break;
+            case 9: veteranStatus = "Client Refused";
+                    break;
+            case 99: veteranStatus = "Data Not Collected";
+                    break;
+        }
+
           const { Panel } = Collapse;
-          const {clientInfo} = this.state;
+
           const formItemLayout = {
             labelCol: {
               xs: { span: 10 },
@@ -83,10 +152,10 @@ class ClientPersonalInfo extends React.Component{
                 <Descriptions.Item label="Name Suffix">{clientInfo.NameSuffix}</Descriptions.Item>
                 <Descriptions.Item label="Social Security Number" >{clientInfo.SSN}</Descriptions.Item>
                 <Descriptions.Item label="Date of Birth">{clientInfo.DOB}</Descriptions.Item>
-                <Descriptions.Item label="Race">{clientInfo.Race}</Descriptions.Item>
-                <Descriptions.Item label="Ethnicity">{clientInfo.Ethnicity}</Descriptions.Item>
-                <Descriptions.Item label="Gender">{clientInfo.Gender}</Descriptions.Item>
-                <Descriptions.Item label="Veteran Status">{clientInfo.VeteranStatus}</Descriptions.Item>
+                <Descriptions.Item label="Race">{race}</Descriptions.Item>
+                <Descriptions.Item label="Ethnicity">{ethnicity}</Descriptions.Item>
+                <Descriptions.Item label="Gender">{gender}</Descriptions.Item>
+                <Descriptions.Item label="Veteran Status">{veteranStatus}</Descriptions.Item>
                 <Descriptions.Item label="Phone Number Prefix">{clientInfo.PhoneNumberPrefix}</Descriptions.Item>
                 <Descriptions.Item label="Phone Number">{clientInfo.PhoneNumber}</Descriptions.Item>
                 <Descriptions.Item label="Email">{clientInfo.Email}</Descriptions.Item>
