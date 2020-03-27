@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import '../index.css';
-import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, Select} from "antd";
+import {Collapse, Form, Layout, Menu} from "antd";
 import Header from '../Header'
 import StreetCardFooter from '../StreetCardFooter'
 import {FormOutlined, UserOutlined} from "@ant-design/icons";
@@ -74,9 +74,6 @@ class ViewEnrollmentDetails extends React.Component {
 
     render() {
         const {enrollment} = this.state;
-        console.log(enrollment)
-        // this.mapping(enrollment)
-        // const {enrollment1} = enrollment.employment_Status;
         const {getFieldDecorator} = this.props.form;
         const formItemLayout = {
             labelCol: {
@@ -91,103 +88,92 @@ class ViewEnrollmentDetails extends React.Component {
         const config = {
             rules: [{type: 'object', required: true, message: 'Please select time!'}],
         };
+
+        const enrollMainDetails = []
+        const enrollPanel = []
+
+        for (const key in enrollment) {
+            if (typeof (enrollment[key]) === 'object') {
+                const eVal = []
+                for (const x in enrollment[key]) {
+                    eVal.push(<p>{x} : {enrollment[key][x]}</p>);
+                }
+                enrollPanel.push(<Panel header={key} key={key}>{eVal}</Panel>)
+            } else {
+                enrollMainDetails.push(<p> {key} : {enrollment[key]} </p>)
+            }
+
+        }
+
+
         return (
             <Layout className="layout">
-            <Header
-                handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                loggedInStatus={this.props.loggedInStatus}/>
-            <Layout>
-                <Sider className="site-layout-sider" breakpoint="lg"
-                       collapsedWidth="0"
-                       onBreakpoint={broken => {
-                           console.log(broken);
-                       }}
-                       onCollapse={(collapsed, type) => {
-                           console.log(collapsed, type);
-                       }}>
-                    <div className="menu">
-                        <Menu mode="inline" theme="dark"
-                              defaultSelectedKeys={['7']}
-                              onClick={this.handleClick}>
-                            <Menu.Item className="menuKey" key="1">
+                <Header
+                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                    loggedInStatus={this.props.loggedInStatus}/>
+                <Layout>
+                    <Sider className="site-layout-sider" breakpoint="lg"
+                           collapsedWidth="0"
+                           onBreakpoint={broken => {
+                               console.log(broken);
+                           }}
+                           onCollapse={(collapsed, type) => {
+                               console.log(collapsed, type);
+                           }}>
+                        <div className="menu">
+                            <Menu mode="inline" theme="dark"
+                                  defaultSelectedKeys={['7']}
+                                  onClick={this.handleClick}>
+                                <Menu.Item className="menuKey" key="1">
                                 <span className="nav-text">
                                     <UserOutlined/>
                                     Client Enrollment</span>
-                            </Menu.Item>
-                            <Menu.Item className="menuKey" key="2">
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="2">
                                 <span className="nav-text">
                                     <UserOutlined/>
                                     Update Client Info</span>
-                            </Menu.Item>
-                            <Menu.Item className="menuKey" key="3">
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="3">
                                 <span className="nav-text">
                                     <CalendarOutlined/>
                                     Schedule Appointment</span>
-                            </Menu.Item>
-                            <Menu.Item className="menuKey" key="4">
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="4">
                                 <span className="nav-text">
                                     <CalendarOutlined/>
                                     View Appointment</span>
-                            </Menu.Item>
-                            <Menu.Item className="menuKey" key="5">
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="5">
                                 <span className="nav-text">
                                     <ClockCircleOutlined/>
                                     View Logs</span>
-                            </Menu.Item>
-                            <Menu.Item className="menuKey" key="6">
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="6">
                                 <span className="nav-text">
                                     <FormOutlined/>
                                     Project Enrollment</span>
-                            </Menu.Item>
-                            <Menu.Item className="menuKey" key="7">
+                                </Menu.Item>
+                                <Menu.Item className="menuKey" key="7">
                                 <span className="nav-text">
                                     <FormOutlined/>
                                     View Enrollment</span>
-                            </Menu.Item>
-                        </Menu>
-                    </div>
-                </Sider>
-                <Content className="content-enroll">
-                    <div className="site-layout-content-homeless">
-                        <Form {...formItemLayout} name="enrollment">
-                            <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
-                                {
-                                        Object.keys(enrollment).map((sections, mapRequiredKey) => {
-                                        let sectionDetail = enrollment[sections];
-                                        return(
-                                                <Content className="content">
-                                                    {
-                                                        (typeof enrollment[sections] === 'object')
-                                                        ?
-                                                        <div><h2>{sections}</h2></div>
-
-                                                        :
-                                                        <div></div>
-                                                    }
-                                                    {
-                                                    (typeof enrollment[sections] === 'object')
-                                                    ?
-                                                        Object.keys(sectionDetail).map((key, personId) => {
-                                                            return(
-                                                                <div>
-                                                                   
-                                                                    {key}: {sectionDetail[key]}
-                                                                </div>
-                                                                );
-                                                        })
-                                                    :
-
-                                                            <div>{sections}: {sectionDetail}</div>
-                                                    }
-                                            </Content>
-                                            );
-                                    })
-                                    }
+                                </Menu.Item>
+                            </Menu>
+                        </div>
+                    </Sider>
+                    <Content className="content-enroll">
+                        <div className="site-layout-content-homeless">
+                            <Form {...formItemLayout} name="enrollment">
+                                <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                                    <Panel key="1" header="Enrollment Details">
+                                        {enrollMainDetails}
+                                    </Panel>
+                                    {enrollPanel}
                                 </Collapse>
-                        </Form>
-                    </div>
-                </Content>
-                    
+                            </Form>
+                        </div>
+                    </Content>
                 </Layout>
                 <StreetCardFooter/>
             </Layout>
