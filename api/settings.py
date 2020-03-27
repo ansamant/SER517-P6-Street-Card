@@ -184,3 +184,26 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:3000',
 ]
+
+# Celery Config Options:
+# Utilizing Local RabbitMQ as a broker depending on what messaging queue is being used you 
+# requires CELERY_WORKER_CONCURRENCY
+# can use a different one. 
+# Check Celery Documentation: http://docs.celeryproject.org/en/master/getting-started/first-steps-with-celery.html#rabbitmq
+# see: https://docs.celeryproject.org/en/stable/django/first-steps-with-django.html
+# make sure that all worker configs are 
+CELERY_BROKER_URL= 'amqp://localhost'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+# Email Use info
+# using gmail, my gmail id
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = get_val_from_env('DJANGO_EMAIL_USR')
+EMAIL_HOST_PASSWORD = get_val_from_env('DJANGO_EMAIL_PWD')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+ 

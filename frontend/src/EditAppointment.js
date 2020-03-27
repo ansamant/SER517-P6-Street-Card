@@ -1,13 +1,11 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Menu, Row, TimePicker} from 'antd';
+import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Row, TimePicker} from 'antd';
 import Header from './Header'
 import moment from 'moment';
-import {FormOutlined, UserOutlined} from "@ant-design/icons";
-import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
-import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
 import StreetCardFooter from './StreetCardFooter'
+import SiderComponent from './component/SiderComponent'
 
 const {Panel} = Collapse;
 
@@ -36,12 +34,16 @@ class EditAppointment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+
             appointment: {},
+            checked: false,
             isLoaded: false,
         }
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
+        this.setPagecomponent = this.setPagecomponent.bind(this);
 
     }
+
 
     handleSubmit = e => {
         e.preventDefault();
@@ -60,6 +62,7 @@ class EditAppointment extends React.Component {
                 appointmentRequestObject.Time = values['TimePicker'].format('hh:mm:ss');
                 appointmentRequestObject.serviceProvider = values.serviceProvider[0];
                 appointmentRequestObject.personalId = this.props.homelessPersonId;
+                appointmentRequestObject.alert = this.state.checked;
                 fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
                     method: 'PUT',
                     headers: {
@@ -84,48 +87,35 @@ class EditAppointment extends React.Component {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
-        })
-            .then(res => res.json())
+        }).then(res => res.json())
             .then(json => {
                 console.log(json)
                 this.setState({
                         appointment: json,
+                        checked: json["alert"],
                     }
                 )
 
             })
     }
 
+    onChange = e => {
+        console.log('checked = ', e.target.checked);
+        this.setState({
+            checked: e.target.checked,
+        });
+    };
 
     handleSuccessfulLogoutAction() {
         this.props.handleLogout();
         this.props.history.push('/login');
     }
 
-    handleClick = e => {
-        if (e.key === '3') {
-            this.props.updatePageComponent('newAppointMent')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '4') {
-            this.props.updatePageComponent('viewAppointment')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '1') {
-            this.props.updatePageComponent('registerClient')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '2') {
-            this.props.updatePageComponent('updateInformation')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '5') {
-            this.props.updatePageComponent('loginfo')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '6') {
-            this.props.updatePageComponent('projectenroll')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '7') {
-            this.props.updatePageComponent('viewenrollment')
-            this.props.history.push('/socialWorkerRegister');
-        }
+    setPagecomponent(pageComponentValue) {
+        this.props.updatePageComponent(pageComponentValue)
+        this.props.history.push('/socialWorkerRegister');
     };
+
 
     render() {
         const {appointment} = this.state;
@@ -150,56 +140,10 @@ class EditAppointment extends React.Component {
                     loggedInStatus={this.props.loggedInStatus}
                 />
                 <Layout>
-                    <Sider className="site-layout-sider" breakpoint="lg"
-                           collapsedWidth="0"
-                           onBreakpoint={broken => {
-                               console.log(broken);
-                           }}
-                           onCollapse={(collapsed, type) => {
-                               console.log(collapsed, type);
-                           }}>
-                        <div className="menu">
-                            <Menu mode="inline" theme="dark"
-                                  defaultSelectedKeys={['4']}
-                                  onClick={this.handleClick}>
-                                <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                </Menu.Item>
-                            </Menu>
-                        </div>
-                    </Sider>
+
+                    <SiderComponent
+                        setPagecomponent={this.setPagecomponent}
+                    />
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
                             <Form {...formItemLayout} onSubmit={this.handleSubmit}>
@@ -330,6 +274,14 @@ class EditAppointment extends React.Component {
                                                             }
                                                         ]
                                                     })(<TimePicker placeholder="Time Date"/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={8} push={1}>
+                                                <Form.Item className="register-ant-form-item">
+                                                    {console.log(appointment.alert)}
+                                                    <Checkbox checked={this.state.checked} onChange={this.onChange}>
+                                                        Alert
+                                                    </Checkbox>
                                                 </Form.Item>
                                             </Col>
                                         </Row>

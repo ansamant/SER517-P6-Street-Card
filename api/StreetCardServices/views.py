@@ -1,15 +1,23 @@
+import datetime
+import pytz
+
+from django.conf import settings
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets, permissions
-from rest_framework.response import Response
-from rest_framework import status
 from django.shortcuts import get_object_or_404
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.response import Response
+
+from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources, UserNameAndIdMapping, Log, \
+    Appointments
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
-    NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer,UserNameAndIdMappingSerializer,LogSerializer,AppointmentSerializer
-from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources,UserNameAndIdMapping,Log,Appointments
+    NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer, UserNameAndIdMappingSerializer, LogSerializer, \
+    AppointmentSerializer
+from .tasks import send_email_task
 from .utils import primary_key_generator
 
+
 class UserViewSet(viewsets.ModelViewSet):
-    
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -36,8 +44,8 @@ class SocialWorkerDetails(viewsets.ModelViewSet):
     queryset = SocialWorker.objects.all()
     serializer_class = SocialWorkerSerializer
 
+
 class LogEntry(viewsets.ModelViewSet):
-    
 
     def list(self, request, homeless_pk=None):
         queryset = Log.objects.filter(personalId_id=homeless_pk)
@@ -51,6 +59,8 @@ class LogEntry(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
+        # Test remove later
+        # send_email_task.delay("Send Email Test", "Test", settings.EMAIL_HOST_USER, ['recipient@gmail.com'])
         enroll = request.data
         enroll['personalId'] = homeless_pk
         serializer = LogSerializer(data=enroll)
@@ -69,9 +79,11 @@ class LogEntry(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         pass
 
+
 class UserMapping(viewsets.ModelViewSet):
     queryset = UserNameAndIdMapping.objects.all()
     serializer_class = UserNameAndIdMappingSerializer
+
 
 class IncomeDetails(viewsets.ModelViewSet):
     queryset = IncomeAndSources.objects.all()
@@ -184,7 +196,27 @@ class AppointmentViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
+
         enroll = request.data
+
+        if (enroll["alert"] == True):
+            timeFormatted = enroll["Time"].format("%H:%M[:%S]")
+            print(timeFormatted)
+            message = (
+                f"Hello,\n We are writing this message to remind you of an appointment you have scheduled at {enroll['office']}, on {enroll['Date']} at {enroll['Time'].format('hh:mm')}.\n"
+                f"Please arrive at {enroll['streetAddress1']}, {enroll['streetAddress2']}, {enroll['city']}, {enroll['state']}, {enroll['zipCode']}.\n"
+                f"Please arrive at least 15 minutes early.\n Sincerely,\n StreetCard.")
+            receiver = enroll["Email"]
+            sender = settings.EMAIL_HOST_USER
+            title = "Appointment Reminder from StreetCard"
+            az_tz = pytz.timezone('US/Arizona')
+            dateTimeObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
+            az_dt = az_tz.localize(dateTimeObj)
+            etaObj = az_dt.astimezone(pytz.UTC)
+            # etaObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
+            # print("ETA OBJ:", etaObj)
+            send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj)
+
         enroll['personalId'] = homeless_pk
         enroll['appointmentId'] = primary_key_generator()
         serializer = AppointmentSerializer(data=enroll)
@@ -203,7 +235,6 @@ class AppointmentViewSet(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
     def partial_update(self, request, pk=None):
         pass

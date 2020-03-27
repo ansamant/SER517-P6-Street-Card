@@ -13,16 +13,13 @@ import {
     Icon,
     Input,
     Layout,
-    Menu,
     Row,
     Select
 } from "antd";
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
-import {FormOutlined, UserOutlined} from "@ant-design/icons";
-import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
-import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
 import moment from 'moment';
+import SiderComponent from './component/SiderComponent'
 
 const {Option} = Select;
 const AutoCompleteOption = AutoComplete.Option;
@@ -224,6 +221,7 @@ class homelessRegistration extends React.Component {
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.handleHomelessPersonUpdateRegistrationSubmit = this.handleHomelessPersonUpdateRegistrationSubmit.bind(this);
         this.isEmpty = this.isEmpty.bind(this);
+        this.setPagecomponent = this.setPagecomponent.bind(this);
     }
 
 
@@ -264,8 +262,6 @@ class homelessRegistration extends React.Component {
                 registerRequestObject.Ethnicity = values.Ethnicity[0];
                 registerRequestObject.Gender = values.Gender[0];
                 registerRequestObject.VeteranStatus = values.VeteranStatus[0];
-
-                console.log(registerRequestObject);
 
                 fetch('http://localhost:8000/homeless/', {
                     method: 'POST',
@@ -359,31 +355,11 @@ class homelessRegistration extends React.Component {
         return true;
     }
 
-    handleClick = e => {
-        if (e.key === '3') {
-            this.props.updatePageComponent('newAppointMent')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '4') {
-            this.props.updatePageComponent('viewAppointment')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '1') {
-            this.props.updatePageComponent('registerClient')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '2') {
-            this.props.updatePageComponent('updateInformation')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '5') {
-            this.props.updatePageComponent('loginfo')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '6') {
-            this.props.updatePageComponent('projectenroll')
-            this.props.history.push('/socialWorkerRegister');
-        } else if (e.key === '7') {
-            this.props.updatePageComponent('viewenrollment')
-            this.props.history.push('/socialWorkerRegister');
-        }
-    };
 
+    setPagecomponent(pageComponentValue) {
+        this.props.updatePageComponent(pageComponentValue)
+        this.props.history.push('/socialWorkerRegister');
+    };
 
     render() {
         const {getFieldDecorator} = this.props.form;
@@ -419,56 +395,9 @@ class homelessRegistration extends React.Component {
                     loggedInStatus={this.state.loggedInStatus}
                 />
                 <Layout>
-                    <Sider className="site-layout-sider" breakpoint="lg"
-                           collapsedWidth="0"
-                           onBreakpoint={broken => {
-                               console.log(broken);
-                           }}
-                           onCollapse={(collapsed, type) => {
-                               console.log(collapsed, type);
-                           }}>
-                        <div className="menu">
-                            <Menu mode="inline" theme="dark"
-                                  defaultSelectedKeys={['2']}
-                                  onClick={this.handleClick}>
-                                <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                </Menu.Item>
-                                <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                </Menu.Item>
-                            </Menu>
-                        </div>
-                    </Sider>
+                    <SiderComponent
+                        setPagecomponent={this.setPagecomponent}
+                    />
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
                             <Form {...formItemLayout} name="enrollment"

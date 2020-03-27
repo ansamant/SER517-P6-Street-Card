@@ -13,15 +13,12 @@ import {
     Icon,
     Input,
     Layout,
-    Menu,
     Row,
     Select
 } from "antd";
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
-import {FormOutlined, UserOutlined} from "@ant-design/icons";
-import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
-import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
+import SiderComponent from './component/SiderComponent'
 
 const nameDataQuality = [
     {
@@ -265,6 +262,7 @@ class RegistrationForm extends React.Component {
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.homelessRegistration = this.homelessRegistration.bind(this);
         this.handleHomelessPersonRegistrationSubmit = this.handleHomelessPersonRegistrationSubmit.bind(this);
+        this.setPagecomponent = this.setPagecomponent.bind(this);
 
     }
 
@@ -440,22 +438,11 @@ class RegistrationForm extends React.Component {
         this.props.history.push('/homelessRegistration');
     }
 
-    handleClick = e => {
-        if (e.key === '3') {
-            this.setState({pageComponent: 'newAppointMent'})
-        } else if (e.key === '4') {
-            this.setState({pageComponent: 'viewAppointment'})
-        } else if (e.key === '1') {
-            this.setState({pageComponent: 'registerClient'})
-        } else if (e.key === '2') {
-            this.setState({pageComponent: 'updateInformation'})
-        } else if (e.key === '5') {
-            this.setState({pageComponent: 'loginfo'})
-        } else if (e.key === '6') {
-            this.setState({pageComponent: 'projectenroll'})
-        } else if (e.key === '7') {
-            this.setState({pageComponent: 'viewenrollment'})
-        }
+    setPagecomponent(pageComponentValue) {
+        console.log(pageComponentValue)
+        this.setState({
+            pageComponent: pageComponentValue
+        });
     };
 
     handleHomelessPersonRegistrationSubmit = e => {
@@ -540,56 +527,9 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider" breakpoint="lg"
-                                   collapsedWidth="0"
-                                   onBreakpoint={broken => {
-                                       console.log(broken);
-                                   }}
-                                   onCollapse={(collapsed, type) => {
-                                       console.log(collapsed, type);
-                                   }}>
-                                <div className="menu">
-                                    <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['1']}
-                                          onClick={this.handleClick}>
-                                        <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                        </Menu.Item>
-                                    </Menu>
-                                </div>
-                            </Sider>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
                             <Content className="content-enroll">
                                 <div className="site-layout-content-homeless">
                                     <Form {...formItemLayout} name="enrollment"
@@ -895,56 +835,9 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider" breakpoint="lg"
-                                   collapsedWidth="0"
-                                   onBreakpoint={broken => {
-                                       console.log(broken);
-                                   }}
-                                   onCollapse={(collapsed, type) => {
-                                       console.log(collapsed, type);
-                                   }}>
-                                <div className="menu">
-                                    <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['2']}
-                                          onClick={this.handleClick}>
-                                        <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                        </Menu.Item>
-                                    </Menu>
-                                </div>
-                            </Sider>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
                             <Content className="content-login">
                                 <div className="site-layout-content-login">
                                     <Form onSubmit={this.handleUpdateClientInformationdSubmit.bind(this)}>
@@ -984,56 +877,10 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider" breakpoint="lg"
-                                   collapsedWidth="0"
-                                   onBreakpoint={broken => {
-                                       console.log(broken);
-                                   }}
-                                   onCollapse={(collapsed, type) => {
-                                       console.log(collapsed, type);
-                                   }}>
-                                <div className="menu">
-                                    <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['4']}
-                                          onClick={this.handleClick}>
-                                        <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                        </Menu.Item>
-                                    </Menu>
-                                </div>
-                            </Sider>
+
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
                             <Content className="content-login">
                                 <div className="site-layout-content-login">
                                     <Form onSubmit={this.handleEditAppointMentdSubmit.bind(this)}>
@@ -1073,56 +920,10 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider" breakpoint="lg"
-                                   collapsedWidth="0"
-                                   onBreakpoint={broken => {
-                                       console.log(broken);
-                                   }}
-                                   onCollapse={(collapsed, type) => {
-                                       console.log(collapsed, type);
-                                   }}>
-                                <div className="menu">
-                                    <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['3']}
-                                          onClick={this.handleClick}>
-                                        <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                        </Menu.Item>
-                                    </Menu>
-                                </div>
-                            </Sider>
+
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
                             <Content className="content-login">
                                 <div className="site-layout-content-login">
                                     <Form onSubmit={this.handleCreateAppointMentdSubmit.bind(this)}>
@@ -1162,56 +963,9 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider" breakpoint="lg"
-                                   collapsedWidth="0"
-                                   onBreakpoint={broken => {
-                                       console.log(broken);
-                                   }}
-                                   onCollapse={(collapsed, type) => {
-                                       console.log(collapsed, type);
-                                   }}>
-                                <div className="menu">
-                                    <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['5']}
-                                          onClick={this.handleClick}>
-                                        <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                        </Menu.Item>
-                                    </Menu>
-                                </div>
-                            </Sider>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
                             <Content className="content-login">
                                 <div className="site-layout-content-login">
                                     <Form onSubmit={this.viewLongs.bind(this)}>
@@ -1251,56 +1005,9 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider" breakpoint="lg"
-                                   collapsedWidth="0"
-                                   onBreakpoint={broken => {
-                                       console.log(broken);
-                                   }}
-                                   onCollapse={(collapsed, type) => {
-                                       console.log(collapsed, type);
-                                   }}>
-                                <div className="menu">
-                                    <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['6']}
-                                          onClick={this.handleClick}>
-                                        <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                        </Menu.Item>
-                                    </Menu>
-                                </div>
-                            </Sider>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
                             <Content className="content-login">
                                 <div className="site-layout-content-login">
                                     <Form onSubmit={this.projectEnroll.bind(this)}>
@@ -1340,56 +1047,9 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider" breakpoint="lg"
-                                   collapsedWidth="0"
-                                   onBreakpoint={broken => {
-                                       console.log(broken);
-                                   }}
-                                   onCollapse={(collapsed, type) => {
-                                       console.log(collapsed, type);
-                                   }}>
-                                <div className="menu">
-                                    <Menu mode="inline" theme="dark"
-                                          defaultSelectedKeys={['7']}
-                                          onClick={this.handleClick}>
-                                        <Menu.Item className="menuKey" key="1">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Client Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="2">
-                                    <span className="nav-text">
-                                        <UserOutlined/>
-                                        Update Client Info</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="3">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        Schedule Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="4">
-                                    <span className="nav-text">
-                                        <CalendarOutlined/>
-                                        View Appointment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        View Logs</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        Project Enrollment</span>
-                                        </Menu.Item>
-                                        <Menu.Item className="menuKey" key="7">
-                                    <span className="nav-text">
-                                        <FormOutlined/>
-                                        View Enrollment</span>
-                                        </Menu.Item>
-                                    </Menu>
-                                </div>
-                            </Sider>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
                             <Content className="content-login">
                                 <div className="site-layout-content-login">
                                     <Form onSubmit={this.handleViewAllEnrollment.bind(this)}>
