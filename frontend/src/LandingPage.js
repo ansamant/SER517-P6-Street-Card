@@ -30,10 +30,11 @@ export default class LandingPage extends React.Component {
       <Header 
       handleSuccessfulLoginAction={this.handleSuccessfulLoginAction}
       loggedInStatus={this.state.loggedInStatus}
-       />,
-      <div><LocationMap className ="location-map"/></div>
-      <StreetCardFooter/>
-      </Layout>
+       />
+      <LocationMap className ="location-map"/>
+        <StreetCardFooter/>
+        </Layout>
+
     );
   }
 } 
