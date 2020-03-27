@@ -14,6 +14,8 @@ import ViewAppointmentsTable from './ViewAppointmentTable'
 import enrollmentForm from './component/enrollmentForm'
 import viewAllEnrollment from './component/viewAllEnrollment'
 import viewEnrollmentDetails from './component/viewEnrollmentDetails'
+import ClientLanding from './ClientLanding'
+import ClientPersonalInfo from "./ClientPersonalInfo";
 
 const PrivateRoute = ({component: Component, loggedInStatus: loggedInStatus, ...rest}) => (
     <Route render={(props) => (
@@ -31,10 +33,8 @@ const PrivateRoute = ({component: Component, loggedInStatus: loggedInStatus, ...
 )
 export default class App extends React.Component {
 
-
     constructor() {
         super();
-
         this.state = {
             loggedInStatus: localStorage.getItem('token') ? "LOGGED_IN" : "NOT_LOGGED_IN",
             username: '',
@@ -116,12 +116,10 @@ export default class App extends React.Component {
                 homelessPersonId: personId
             });
         } else {
-
             this.setState({
                 homelessPersonId: ''
             });
         }
-
     }
 
     handleHomelessPersonJson(json) {
@@ -290,6 +288,31 @@ export default class App extends React.Component {
                             enrollmentId={this.state.enrollmentId}
                             handleLogout={this.handleLogout}
                             updatePageComponent={this.updatePageComponent}
+                        />
+                        <PrivateRoute
+                            exact
+                            path={"/clientLanding"}
+                            component={ClientLanding}
+                            username={this.state.username}
+                            loggedInStatus={this.state.loggedInStatus}
+                            clearanceLevel={this.state.clearanceLevel}
+                            serviceProvider={this.state.serviceProvider}
+                            handleLogout={this.handleLogout}
+                            handleHomelessPersonJson={this.handleHomelessPersonJson}
+                            handleAppointmentJson={this.handleAppointmentJson}
+                        />
+                        <PrivateRoute
+                            exact
+                            path={"/clientInfo"}
+                            component={ClientPersonalInfo}
+                            username={this.state.username}
+                            loggedInStatus={this.state.loggedInStatus}
+                            clearanceLevel={this.state.clearanceLevel}
+                            serviceProvider={this.state.serviceProvider}
+                            homelessPersonId={this.state.handleHomelessPersonId}
+                            handleLogout={this.handleLogout}
+                            homelessData={this.state.homelessData}
+                            appointmentData={this.state.xyz}
                         />
                     </Switch>
                 </BrowserRouter>

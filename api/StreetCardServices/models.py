@@ -112,6 +112,7 @@ class SocialWorker(models.Model):
         GREETER = "greeter", _("Greeter")
         CASEWORKER = "caseworker", _("CaseWorker")
         SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
+        CLIENT = "client", _("Client")
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)

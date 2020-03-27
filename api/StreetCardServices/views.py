@@ -173,7 +173,7 @@ class EnrollmentViewSet(viewsets.ViewSet):
 class AppointmentViewSet(viewsets.ViewSet):
 
     def list(self, request, homeless_pk=None):
-        queryset = Appointments.objects.filter(personalId_id=homeless_pk)
+        queryset = Appointments.objects.filter(personalId_id=homeless_pk).order_by('Date')
         serializer = AppointmentSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

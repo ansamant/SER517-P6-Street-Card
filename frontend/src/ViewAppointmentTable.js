@@ -136,20 +136,20 @@ class ViewAppointmentsTable extends React.Component {
             })
         console.log(this.appointmentData);
 
-    }
+  }
 
 
-    handleSuccessfulLogoutAction() {
-        this.props.handleLogout();
-        this.props.history.push('/login');
-    }
+  handleSuccessfulLogoutAction() {
+    this.props.handleLogout();
+    this.props.history.push('/login');
+  }
 
 
-    editAppointment(record) {
-        console.log(record.appointmentId)
-        this.props.updateAppointmentId(record.appointmentId);
-        this.props.history.push('/editAppointment');
-    }
+  editAppointment(record) {
+    console.log(record.appointmentId)
+    this.props.updateAppointmentId(record.appointmentId);
+    this.props.history.push('/editAppointment');
+  }
 
     handleClick = e => {
         if (e.key === '3') {
