@@ -273,6 +273,7 @@ isEmpty(object) {
               clearanceLevel={this.state.clearanceLevel}
               serviceProvider={this.state.serviceProvider}
               handleLogout={this.handleLogout}
+              handleHomelessPersonJson={this.handleHomelessPersonJson}
             />
             <PrivateRoute
               exact
@@ -284,6 +285,7 @@ isEmpty(object) {
               serviceProvider={this.state.serviceProvider}
               homelessPersonId={this.state.handleHomelessPersonId}
               handleLogout={this.handleLogout}
+              homelessData={this.state.homelessData}
             />
           </Switch>
         </BrowserRouter>

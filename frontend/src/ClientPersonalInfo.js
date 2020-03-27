@@ -15,32 +15,12 @@ class ClientPersonalInfo extends React.Component{
  constructor(props) {
       super(props);
       this.state = {
-          clientInfo: {},
+          clientInfo: this.props.homelessData,
           isLoaded: false,
       }
       this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
     }
-  componentDidMount() {
-     console.log(this.state.homelessPersonId);
-     fetch('http://127.0.0.1:8000/homeless/' + '4808584002' + '/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-        })
-         .then(res => res.json())
-         .then(json => {
-            console.log(json)
-             this.setState({
-                clientInfo: json,
-              }
-          )
-
-         })
-
-
-  }
+  
 
   handleSuccessfulLogoutAction() {
     this.props.handleLogout();

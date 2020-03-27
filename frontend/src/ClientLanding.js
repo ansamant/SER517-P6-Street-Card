@@ -20,11 +20,20 @@ class ClientLanding extends React.Component{
   handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-
+          
             if (!err) {
-                console.log(values.personalId);
-                this.props.handleHomelessPersonId(values.personalId);
-                this.props.history.push('/clientInfo');
+                fetch('http://localhost:8000/homeless/' + values.personId + '/', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+                    .then(res => res.json())
+                    .then(json => {
+                        console.log(json)
+                        this.props.handleHomelessPersonJson(json);
+                        this.props.history.push('/clientInfo');
+                    });
+
             }
         });
 
@@ -75,7 +84,7 @@ class ClientLanding extends React.Component{
                     <h1 >Welcome to the StreetCard services</h1>
                     <h2 style={{ marginLeft: '100px'}}>Swipe your card or Enter your Id </h2>
                     <Form.Item label="Client ID" >
-                        {getFieldDecorator("personalId", {
+                        {getFieldDecorator("personId", {
                             rules: [
                             {
                                 required: true,
