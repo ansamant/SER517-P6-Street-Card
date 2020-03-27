@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Collapse, Descriptions, Form, Layout} from 'antd';
+import {Collapse, Descriptions, Form, Layout ,Alert} from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
@@ -40,7 +40,7 @@ class ClientPersonalInfo extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(this.test(), 5000);
+        setTimeout(this.test(), 7000);
 
     }
 
@@ -153,7 +153,7 @@ class ClientPersonalInfo extends React.Component {
                 sm: {span: 6}
             }
         };
-
+         console.log(this.state.appointment[0])
         return (
             <Layout>
                 <Header
@@ -163,7 +163,14 @@ class ClientPersonalInfo extends React.Component {
                 <Content className="content-login">
                     <div className="site-layout-content-login">
                         {!this.state.isLoaded && <p> Data Loading</p>}
-                        {this.state.isLoaded && <p> {this.state.appointment[0].appointmentId}</p>}
+                        {this.state.isLoaded && 
+                          <Alert
+                            message="Warning"
+                            description=<p>You have upcoming appointment on {this.state.appointment[0].Date} at {this.state.appointment[0].Time}</p>
+                            type="warning"
+                            showIcon
+                          />
+                        }
                         <Descriptions title="Your Personal Info" bordered>
                             <Descriptions.Item
                                 label="First Name">{this.state.clientInfo.FirstName}</Descriptions.Item>
