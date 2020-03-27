@@ -20,7 +20,7 @@ class ClientLanding extends React.Component{
   handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-          
+
             if (!err) {
                 fetch('http://localhost:8000/homeless/' + values.personId + '/', {
                     headers: {
@@ -31,11 +31,14 @@ class ClientLanding extends React.Component{
                     .then(json => {
                         console.log(json)
                         this.props.handleHomelessPersonJson(json);
+                        this.props.handleAppointmentJson(json);
                         this.props.history.push('/clientInfo');
                     });
 
             }
         });
+
+
 
 
   };

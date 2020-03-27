@@ -14,9 +14,11 @@ class ClientPersonalInfo extends React.Component{
 
  constructor(props) {
       super(props);
+      console.log(this.props.appointmentData)
       this.state = {
           clientInfo: this.props.homelessData,
           isLoaded: false,
+          clientappointmentData:this.props.appointmentData
       }
       this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
     }
@@ -28,9 +30,9 @@ class ClientPersonalInfo extends React.Component{
   }
 
     render(){
-        const {clientInfo} = this.state;
         let race;
-        switch (clientInfo.Race) {
+        console.log(this.state.clientappointmentData)
+        switch (this.state.clientInfo.Race) {
             case 1: race = "American India or Alaskan Native";
                     break;
             case 2: race = "Asian";
@@ -49,7 +51,7 @@ class ClientPersonalInfo extends React.Component{
                     break;
         }
         let ethnicity;
-        switch (clientInfo.Ethnicity) {
+        switch (this.state.clientInfo.Ethnicity) {
             case 0: ethnicity = "Non Hispanic/Non Latino";
                     break;
             case 1: ethnicity = "Hispanic/Latino";
@@ -62,7 +64,7 @@ class ClientPersonalInfo extends React.Component{
                     break;
         }
         let gender;
-        switch (clientInfo.Gender) {
+        switch (this.state.clientInfo.Gender) {
             case 0: gender = "Female";
                     break;
             case 1: gender = "Male";
@@ -81,7 +83,7 @@ class ClientPersonalInfo extends React.Component{
                     break;
         }
         let veteranStatus;
-        switch (clientInfo.VeteranStatus) {
+        switch (this.state.clientInfo.VeteranStatus) {
             case 0: veteranStatus = "No";
                     break;
             case 1: veteranStatus = "Yes";
@@ -112,38 +114,32 @@ class ClientPersonalInfo extends React.Component{
                   handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                   loggedInStatus={this.props.loggedInStatus}
           />
-          <Collapse defaultActiveKey={['1']}>
-          <Panel header="Click here to view your recent appointments" key="1">
+          
           <Form {...formItemLayout} className="client-Info">
               <Alert
                 message="Appointment Notification"
-                description="You have an upcoming appointment at:-----"
-                type="info"
+                description = ""
+                type="warning"
                 showIcon
               />
          </Form>
-         </Panel>
-          <Panel header="Click here to view your personal Information" key="2">
           <Form {...formItemLayout} className="client-Info">
             <Descriptions title="Your Personal Info" bordered>
-                <Descriptions.Item label="First Name">{clientInfo.FirstName}</Descriptions.Item>
-                <Descriptions.Item label="Middle Name">{clientInfo.MiddleName}</Descriptions.Item>
-                <Descriptions.Item label="Last Name">{clientInfo.LastName}</Descriptions.Item>
-                <Descriptions.Item label="Name Suffix">{clientInfo.NameSuffix}</Descriptions.Item>
-                <Descriptions.Item label="Social Security Number" >{clientInfo.SSN}</Descriptions.Item>
-                <Descriptions.Item label="Date of Birth">{clientInfo.DOB}</Descriptions.Item>
+                <Descriptions.Item label="First Name">{this.state.clientInfo.FirstName}</Descriptions.Item>
+                <Descriptions.Item label="Middle Name">{this.state.clientInfo.MiddleName}</Descriptions.Item>
+                <Descriptions.Item label="Last Name">{this.state.clientInfo.LastName}</Descriptions.Item>
+                <Descriptions.Item label="Name Suffix">{this.state.clientInfo.NameSuffix}</Descriptions.Item>
+                <Descriptions.Item label="Social Security Number" >{this.state.clientInfo.SSN}</Descriptions.Item>
+                <Descriptions.Item label="Date of Birth">{this.state.clientInfo.DOB}</Descriptions.Item>
                 <Descriptions.Item label="Race">{race}</Descriptions.Item>
                 <Descriptions.Item label="Ethnicity">{ethnicity}</Descriptions.Item>
                 <Descriptions.Item label="Gender">{gender}</Descriptions.Item>
                 <Descriptions.Item label="Veteran Status">{veteranStatus}</Descriptions.Item>
-                <Descriptions.Item label="Phone Number Prefix">{clientInfo.PhoneNumberPrefix}</Descriptions.Item>
-                <Descriptions.Item label="Phone Number">{clientInfo.PhoneNumber}</Descriptions.Item>
-                <Descriptions.Item label="Email">{clientInfo.Email}</Descriptions.Item>
+                <Descriptions.Item label="Phone Number Prefix">{this.state.clientInfo.PhoneNumberPrefix}</Descriptions.Item>
+                <Descriptions.Item label="Phone Number">{this.state.clientInfo.PhoneNumber}</Descriptions.Item>
+                <Descriptions.Item label="Email">{this.state.clientInfo.Email}</Descriptions.Item>
             </Descriptions>
          </Form>
-         </Panel>
-         </Collapse>
-
           <StreetCardFooter/>
          </div>
      );

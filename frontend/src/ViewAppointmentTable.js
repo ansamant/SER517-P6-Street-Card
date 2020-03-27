@@ -132,7 +132,6 @@ class ViewAppointmentsTable extends React.Component {
               }
           )
         })
-    console.log(this.appointmentData);
 
   }
 

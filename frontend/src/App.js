@@ -41,7 +41,8 @@ export default class App extends React.Component {
       username: '',
       homelessPersonId: 0,
       homelessData:{},
-      pageComponent: 'registerClient'
+      pageComponent: 'registerClient',
+      xyz:[]
     };
 
     this.handleLogin = this.handleLogin.bind(this);
@@ -53,6 +54,8 @@ export default class App extends React.Component {
     this.updateAppointmentId = this.updateAppointmentId.bind(this);
     this.handleHomelessPersonJson = this.handleHomelessPersonJson.bind(this);
     this.updatePageComponent=this.updatePageComponent.bind(this);
+    this.handleAppointmentJson = this.handleAppointmentJson.bind(this);
+    this.test = this.test.bind(this);
   }
 
 
@@ -130,6 +133,29 @@ isEmpty(object) {
             });
   }
 
+  handleAppointmentJson(json){
+    console.log(json)
+    fetch('http://127.0.0.1:8000/homeless/' + json.PersonalId + '/appointment/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+    })
+        .then(res => res.json())
+        .then(json => {
+            console.log(json)
+          this.test(json)
+        })
+
+    console.log(this.state.xyz)
+  }
+
+  test(json){
+    this.setState({
+        xyz: json
+        })
+  }
   updateAppointmentId(appointmentId){
     this.setState({ 
               appointmentId: appointmentId
@@ -274,6 +300,7 @@ isEmpty(object) {
               serviceProvider={this.state.serviceProvider}
               handleLogout={this.handleLogout}
               handleHomelessPersonJson={this.handleHomelessPersonJson}
+              handleAppointmentJson={this.handleAppointmentJson}
             />
             <PrivateRoute
               exact
@@ -286,6 +313,7 @@ isEmpty(object) {
               homelessPersonId={this.state.handleHomelessPersonId}
               handleLogout={this.handleLogout}
               homelessData={this.state.homelessData}
+              appointmentData={this.state.xyz}
             />
           </Switch>
         </BrowserRouter>
