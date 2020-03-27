@@ -165,13 +165,15 @@ class ClientPersonalInfo extends React.Component {
                         {!this.state.isLoaded && <p> Data Loading</p>}
                         {this.state.isLoaded && 
                           <Alert
-                            message="Warning"
+                            message="Appointment Information"
                             description=<p>You have upcoming appointment on {this.state.appointment[0].Date} at {this.state.appointment[0].Time}</p>
                             type="warning"
                             showIcon
                           />
                         }
-                        <Descriptions title="Your Personal Info" bordered>
+                        <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                        <Panel header="Your Personal Info" key="1">
+                        <Descriptions bordered>
                             <Descriptions.Item
                                 label="First Name">{this.state.clientInfo.FirstName}</Descriptions.Item>
                             <Descriptions.Item
@@ -193,6 +195,8 @@ class ClientPersonalInfo extends React.Component {
                                 label="Phone Number">{this.state.clientInfo.PhoneNumber}</Descriptions.Item>
                             <Descriptions.Item label="Email">{this.state.clientInfo.Email}</Descriptions.Item>
                         </Descriptions>
+                        </Panel>
+                        </Collapse>
                     </div>
                 </Content>
                 <StreetCardFooter/>
