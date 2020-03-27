@@ -1,10 +1,11 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Alert, Collapse, Descriptions, Form} from 'antd';
+import {Collapse, Descriptions, Form, Layout} from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
+const {Content} = Layout;
 
 class ClientPersonalInfo extends React.Component {
     constructor(props) {
@@ -154,50 +155,45 @@ class ClientPersonalInfo extends React.Component {
         };
 
         return (
-            <div>
+            <Layout>
                 <Header
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.props.loggedInStatus}
                 />
-
-                <Form {...formItemLayout} className="client-Info">
-                    <Alert
-                        message="Appointment Notification"
-                        description=""
-                        type="warning"
-                        showIcon
-                    />
-
-                </Form>
-                <div>
-                    {!this.state.isLoaded && <p> Data Loading</p>}
-                    {this.state.isLoaded && <p> {this.state.appointment[0].appointmentId}</p>}
-                </div>
-                <Form {...formItemLayout} className="client-Info">
-                    <Descriptions title="Your Personal Info" bordered>
-                        <Descriptions.Item label="First Name">{this.state.clientInfo.FirstName}</Descriptions.Item>
-                        <Descriptions.Item
-                            label="Middle Name">{this.state.clientInfo.MiddleName}</Descriptions.Item>
-                        <Descriptions.Item label="Last Name">{this.state.clientInfo.LastName}</Descriptions.Item>
-                        <Descriptions.Item
-                            label="Name Suffix">{this.state.clientInfo.NameSuffix}</Descriptions.Item>
-                        <Descriptions.Item
-                            label="Social Security Number">{this.state.clientInfo.SSN}</Descriptions.Item>
-                        <Descriptions.Item label="Date of Birth">{this.state.clientInfo.DOB}</Descriptions.Item>
-                        <Descriptions.Item label="Race">{race}</Descriptions.Item>
-                        <Descriptions.Item label="Ethnicity">{ethnicity}</Descriptions.Item>
-                        <Descriptions.Item label="Gender">{gender}</Descriptions.Item>
-                        <Descriptions.Item label="Veteran Status">{veteranStatus}</Descriptions.Item>
-                        <Descriptions.Item
-                            label="Phone Number Prefix">{this.state.clientInfo.PhoneNumberPrefix}</Descriptions.Item>
-                        <Descriptions.Item
-                            label="Phone Number">{this.state.clientInfo.PhoneNumber}</Descriptions.Item>
-                        <Descriptions.Item label="Email">{this.state.clientInfo.Email}</Descriptions.Item>
-                    </Descriptions>
-                </Form>
+                <Content className="content-login">
+                    <div className="site-layout-content-login">
+                        {!this.state.isLoaded && <p> Data Loading</p>}
+                        {this.state.isLoaded && <p> {this.state.appointment[0].appointmentId}</p>}
+                        <Descriptions title="Your Personal Info" bordered>
+                            <Descriptions.Item
+                                label="First Name">{this.state.clientInfo.FirstName}</Descriptions.Item>
+                            <Descriptions.Item
+                                label="Middle Name">{this.state.clientInfo.MiddleName}</Descriptions.Item>
+                            <Descriptions.Item
+                                label="Last Name">{this.state.clientInfo.LastName}</Descriptions.Item>
+                            <Descriptions.Item
+                                label="Name Suffix">{this.state.clientInfo.NameSuffix}</Descriptions.Item>
+                            <Descriptions.Item
+                                label="Social Security Number">{this.state.clientInfo.SSN}</Descriptions.Item>
+                            <Descriptions.Item label="Date of Birth">{this.state.clientInfo.DOB}</Descriptions.Item>
+                            <Descriptions.Item label="Race">{race}</Descriptions.Item>
+                            <Descriptions.Item label="Ethnicity">{ethnicity}</Descriptions.Item>
+                            <Descriptions.Item label="Gender">{gender}</Descriptions.Item>
+                            <Descriptions.Item label="Veteran Status">{veteranStatus}</Descriptions.Item>
+                            <Descriptions.Item
+                                label="Phone Number Prefix">{this.state.clientInfo.PhoneNumberPrefix}</Descriptions.Item>
+                            <Descriptions.Item
+                                label="Phone Number">{this.state.clientInfo.PhoneNumber}</Descriptions.Item>
+                            <Descriptions.Item label="Email">{this.state.clientInfo.Email}</Descriptions.Item>
+                        </Descriptions>
+                    </div>
+                </Content>
                 <StreetCardFooter/>
-            </div>
-        );
+            </Layout>
+
+
+        )
+            ;
 
     }
 }

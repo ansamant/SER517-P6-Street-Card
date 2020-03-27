@@ -71,10 +71,6 @@ class SetAppointments extends React.Component {
                 if (this.state.email == null) {
                     appointmentRequestObject.Email = ""
                 }
-                //appointmentRequestObject.email = this.state.Email
-                console.log("EMAIL", this.state.email)
-                console.log("ALERT", appointmentRequestObject.alert)
-                console.log(appointmentRequestObject);
                 fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/appointment/', {
                     method: 'POST',
                     headers: {
@@ -85,7 +81,6 @@ class SetAppointments extends React.Component {
                 })
                     .then(res => res.json())
                     .then(json => {
-                        console.log("Aditya")
                         this.props.history.push('/socialWorkerRegister');
                     });
             }
@@ -372,11 +367,8 @@ class SetAppointments extends React.Component {
                                         <Panel header="Client Details" key="1">
                                             <Row gutter={8}>
                                                 <Col span={8}>
-
                                                     <Form.Item label="Personal Id">
-
                                                         <Input defaultValue={items.PersonalId} disabled={true}/>
-
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={8}>
