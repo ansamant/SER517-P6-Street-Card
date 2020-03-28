@@ -1,9 +1,24 @@
 import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
-import {AutoComplete, Button, Cascader, Col, DatePicker, Form, Icon, Input, Layout, Menu, Row, Select} from "antd";
+import {
+    AutoComplete,
+    Button,
+    Cascader,
+    Checkbox,
+    Col,
+    Collapse,
+    DatePicker,
+    Form,
+    Icon,
+    Input,
+    Layout,
+    Row,
+    Select
+} from "antd";
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
+import SiderComponent from './component/SiderComponent'
 
 const nameDataQuality = [
     {
@@ -191,6 +206,7 @@ const VeteranStatus = [
 ];
 
 const {Option} = Select;
+const {Panel} = Collapse;
 const AutoCompleteOption = AutoComplete.Option;
 
 const {Content, Sider} = Layout;
@@ -207,6 +223,10 @@ const clearanceLevel = [
     {
         value: "service_provider_emp",
         label: "Service Provider Employee"
+    },
+    {
+        value: "client",
+        label: "Client"
     }
 ];
 
@@ -242,6 +262,7 @@ class RegistrationForm extends React.Component {
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.homelessRegistration = this.homelessRegistration.bind(this);
         this.handleHomelessPersonRegistrationSubmit = this.handleHomelessPersonRegistrationSubmit.bind(this);
+        this.setPagecomponent = this.setPagecomponent.bind(this);
 
     }
 
@@ -332,12 +353,22 @@ class RegistrationForm extends React.Component {
     projectEnroll = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-
             if (!err) {
                 this.props.handleHomelessPersonData(values.personId);
                 this.props.history.push('/enrollment');
             }
         });
+    };
+
+    handleViewAllEnrollment = e => {
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                this.props.handleHomelessPersonData(values.personId);
+                this.props.history.push('/viewAllEnrollment');
+            }
+        });
+
     };
 
     handleSocialWorkerRegistrationSubmit = e => {
@@ -370,7 +401,6 @@ class RegistrationForm extends React.Component {
                     body: JSON.stringify(registerRequestObject)
                 })
                     .then(res => {
-                        console.log("akash");
                         if (res.status == 201) {
                             this.props.history.push('/socialWorkerRegister');
                         }
@@ -408,28 +438,22 @@ class RegistrationForm extends React.Component {
         this.props.history.push('/homelessRegistration');
     }
 
-    handleClick = e => {
-        if (e.key === '3') {
-            this.setState({pageComponent: 'newAppointMent'})
-        } else if (e.key === '4') {
-            this.setState({pageComponent: 'viewAppointment'})
-        } else if (e.key === '1') {
-            this.setState({pageComponent: 'registerClient'})
-        } else if (e.key === '2') {
-            this.setState({pageComponent: 'updateInformation'})
-        } else if (e.key === '5') {
-            this.setState({pageComponent: 'loginfo'})
-        } else if (e.key === '6') {
-            this.setState({pageComponent: 'projectenroll'})
-        }
+    setPagecomponent(pageComponentValue) {
+        console.log(pageComponentValue)
+        this.setState({
+            pageComponent: pageComponentValue
+        });
     };
 
     handleHomelessPersonRegistrationSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
 
+
             if (!err) {
                 var registerRequestObject = {};
+                console.log(values.PhoneNumberPrefix);
+                console.log(values.PhoneNumber);
                 //registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? this.state.homelessData.PersonalId : Math.floor(100000 + Math.random() * 900000);
                 registerRequestObject.FirstName = values.FirstName ? values.FirstName : null;
                 registerRequestObject.MiddleName = values.MiddleName ? values.MiddleName : null;
@@ -444,6 +468,9 @@ class RegistrationForm extends React.Component {
                 registerRequestObject.Ethnicity = values.Ethnicity[0];
                 registerRequestObject.Gender = values.Gender[0];
                 registerRequestObject.VeteranStatus = values.VeteranStatus[0];
+                registerRequestObject.PhoneNumberPrefix = values.PhoneNumberPrefix;
+                registerRequestObject.PhoneNumber = values.PhoneNumber;
+                registerRequestObject.Email = values.email;
 
                 console.log(registerRequestObject);
 
@@ -458,7 +485,7 @@ class RegistrationForm extends React.Component {
                     .then(res => res.json())
                     .then(json => {
                         this.props.handleHomelessPersonId(registerRequestObject.PersonalId);
-                        this.props.history.push('/login');
+                        this.props.history.push('/socialWorkerRegister');
                     });
             }
         });
@@ -500,244 +527,300 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider"
-                            >
-                                <Menu
-                                    style={{borderRight: '0px', backgroundColor: '#173e43'}}
-                                    mode="inline" defaultSelectedKeys={['1']}
-                                    onClick={this.handleClick}
-                                >
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                        <span>Register Client</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                        <span>Update Client Information</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                        <span>Schedule Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                        <span>View Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                        <span>View Logs</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                                        <span>Project Enrollment</span>
-                                    </Menu.Item>
-                                </Menu>
-                            </Sider>
-                            <Content className="content">
-                                <div className="site-layout-content-registration-client">
-                                    <Form {...formItemLayout} onSubmit={this.handleHomelessPersonRegistrationSubmit}>
-                                        <h1 style={{marginLeft: '240px'}}>Register Client</h1>
-                                        <Row className="register-ant-form-item-3">
-                                            <Col span={8}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("FirstName", {
-                                                        rules: [
-                                                            {
-                                                                required: false,
-                                                                message: "Please input your First Name!",
-                                                                whitespace: true
-                                                            }
-                                                        ]
-                                                    })(<Input
-                                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="First Name"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={8}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("MiddleName", {
-                                                        rules: [
-                                                            {
-                                                                required: false,
-                                                                message: "Please input your Middle Name!",
-                                                                whitespace: true
-                                                            }
-                                                        ]
-                                                    })(<Input
-                                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="Middle Name"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={8}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("LastName", {
-                                                        rules: [
-                                                            {
-                                                                required: false,
-                                                                message: "Please input your Last Name!",
-                                                                whitespace: true
-                                                            }
-                                                        ]
-                                                    })(<Input
-                                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="Last Name"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <Row className="register-ant-form-item-2">
-                                            <Col span={12}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("NameSuffix", {
-                                                        rules: [
-                                                            {
-                                                                required: false,
-                                                                message: "Please input your Name Suffix!",
-                                                                whitespace: true
-                                                            }
-                                                        ]
-                                                    })(<Input
-                                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="Name Suffix"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={12}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("NameDataQuality", {
-                                                        rules: [
-                                                            {
-                                                                type: "array",
-                                                                required: true,
-                                                                message: "Please select Quality level of Name Data!"
-                                                            }
-                                                        ]
-                                                    })(<Cascader options={nameDataQuality}
-                                                                 placeholder="Name Quality"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <Row className="register-ant-form-item-2">
-                                            <Col span={12}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("SSN", {
-                                                        rules: [
-                                                            {
-                                                                required: false,
-                                                                message: "Please input your SSN!",
-                                                                whitespace: true
-                                                            }
-                                                        ]
-                                                    })(<Input placeholder="SSN"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={12}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("SSNDataQuality", {
-                                                        rules: [
-                                                            {
-                                                                type: "array",
-                                                                required: true,
-                                                                message: "Please select Quality level of SSN Data!"
-                                                            }
-                                                        ]
-                                                    })(<Cascader options={SSNDataQuality} placeholder="SSN Quality"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <Row className="register-ant-form-item-2">
-                                            <Col span={12}>
-                                                <Form.Item>
-                                                    {getFieldDecorator('DOB', {
-                                                        rules: [
-                                                            {
-                                                                type: "object",
-                                                                required: false,
-                                                                message: "Please input your DOB!"
-                                                            }
-                                                        ]
-                                                    })(<DatePicker/>)}
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={12}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("DOBDataQuality", {
-                                                        rules: [
-                                                            {
-                                                                type: "array",
-                                                                required: true,
-                                                                message: "Please select Quality level of DOB Data!"
-                                                            }
-                                                        ]
-                                                    })(<Cascader options={DOBDataQuality} placeholder="DOB Quality"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <Row className="register-ant-form-item">
-                                            <Col span={24}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("Race", {
-                                                        rules: [
-                                                            {
-                                                                type: "array",
-                                                                required: true,
-                                                                message: "Please select your Race!"
-                                                            }
-                                                        ]
-                                                    })(<Cascader options={Race} placeholder="Race"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <Row className="register-ant-form-item">
-                                            <Col span={24}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("Ethnicity", {
-                                                        rules: [
-                                                            {
-                                                                type: "array",
-                                                                required: true,
-                                                                message: "Please select your Ethnicity!"
-                                                            }
-                                                        ]
-                                                    })(<Cascader options={Ethnicity} placeholder="Ethnicity"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <Row className="register-ant-form-item">
-                                            <Col span={24}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("Gender", {
-                                                        rules: [
-                                                            {
-                                                                type: "array",
-                                                                required: true,
-                                                                message: "Please select your Gender!"
-                                                            }
-                                                        ]
-                                                    })(<Cascader options={Gender} placeholder="Gender"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <Row className="register-ant-form-item">
-                                            <Col span={24}>
-                                                <Form.Item>
-                                                    {getFieldDecorator("VeteranStatus", {
-                                                        rules: [
-                                                            {
-                                                                type: "array",
-                                                                required: true,
-                                                                message: "Please select your Veteran Status!"
-                                                            }
-                                                        ]
-                                                    })(<Cascader options={VeteranStatus}
-                                                                 placeholder="Veteran Status"/>)}
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <Row className="register-ant-form-item">
-                                            <Col span={24}>
-                                                <Form.Item {...tailFormItemLayout}>
-                                                    <Button type="primary" htmlType="submit"
-                                                            className="registration-submit-button">
-                                                        Submit
-                                                    </Button>
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                    </Form>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-enroll">
+                                <div className="site-layout-content-homeless">
+                                    <Form {...formItemLayout} name="enrollment"
+                                          onSubmit={this.handleHomelessPersonRegistrationSubmit}>
+                                        <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                                            <Panel header="Name Information" key="1">
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("FirstName", {
+                                                                rules: [
+                                                                    {
+                                                                        required: false,
+                                                                        message: "Please input your First Name!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input
+                                                                prefix={<Icon type="user"
+                                                                              style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                                placeholder="First Name"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("MiddleName", {
+                                                                rules: [
+                                                                    {
+                                                                        required: false,
+                                                                        message: "Please input your Middle Name!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input
+                                                                prefix={<Icon type="user"
+                                                                              style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                                placeholder="Middle Name"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("LastName", {
+                                                                rules: [
+                                                                    {
+                                                                        required: false,
+                                                                        message: "Please input your Last Name!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input
+                                                                prefix={<Icon type="user"
+                                                                              style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                                placeholder="Last Name"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("NameSuffix", {
+                                                                rules: [
+                                                                    {
+                                                                        required: false,
+                                                                        message: "Please input your Name Suffix!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input
+                                                                prefix={<Icon type="user"
+                                                                              style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                                placeholder="Name Suffix"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("NameDataQuality", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select Quality level of Name Data!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={nameDataQuality}
+                                                                         placeholder="Name Quality"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel header="Social Security" key="2">
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("SSN", {
+                                                                rules: [
+                                                                    {
+                                                                        required: false,
+                                                                        message: "Please input your SSN!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="SSN"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("SSNDataQuality", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select Quality level of SSN Data!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={SSNDataQuality}
+                                                                         placeholder="SSN Quality"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel header="Date of Birth" key="3">
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator('DOB', {
+                                                                rules: [
+                                                                    {
+                                                                        type: "object",
+                                                                        required: false,
+                                                                        message: "Please input your DOB!"
+                                                                    }
+                                                                ]
+                                                            })(<DatePicker/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("DOBDataQuality", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select Quality level of DOB Data!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={DOBDataQuality}
+                                                                         placeholder="DOB Quality"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel header="Contact Details" key="4">
+                                                <Row gutter={8}>
+                                                    <Col span={4} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("PhoneNumberPrefix", {
+                                                                rules: [
+                                                                    {
+                                                                        required: false,
+                                                                        message: "Please input your Phone Number Prefix!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(
+                                                                <Select placeholder="Area Code">
+                                                                    <Option value="1">+1</Option>
+                                                                    <Option value="91">+91</Option>
+                                                                </Select>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("PhoneNumber", {
+                                                                rules: [
+                                                                    {
+                                                                        required: false,
+                                                                        message: "Please input your Phone Number!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Phone Number"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("email", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "email",
+                                                                        message: "The input is not valid E-mail!"
+                                                                    },
+                                                                    {
+                                                                        required: false,
+                                                                        message: "Please input your E-mail!"
+                                                                    }
+                                                                ]
+                                                            })(<Input
+                                                                prefix={<Icon type="mail"
+                                                                              style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                                placeholder="E-mail"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel header="Demographic Details" key="5">
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("Race", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select your Race!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={Race} placeholder="Race"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("Ethnicity", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select your Ethnicity!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={Ethnicity} placeholder="Ethnicity"/>)}
+                                                        </Form.Item>
+                                                    </Col>
 
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("Gender", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select your Gender!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={Gender} placeholder="Gender"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel header="Veteran Status" key="6">
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("VeteranStatus", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select your Veteran Status!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={VeteranStatus}
+                                                                         placeholder="Veteran Status"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
+                                                   key="7">
+                                                <Row>
+                                                    <Col span={12} push={1}>
+                                                        <p style={{padding: "2%"}}>
+                                                            <Checkbox>
+                                                                I acknowledge, the form is completed as per the inputs
+                                                                provided
+                                                                by the
+                                                                client.
+                                                            </Checkbox>
+                                                        </p>
+                                                    </Col>
+                                                    <Col span={12}>
+                                                        <Form.Item>
+                                                            <Button type="primary" block htmlType="submit"
+                                                                    className="registration-submit-button">
+                                                                Submit
+                                                            </Button>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                        </Collapse>
+                                    </Form>
                                 </div>
                             </Content>
                         </Layout>
@@ -752,57 +835,31 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider"
-                            >
-                                <Menu
-                                    style={{borderRight: '0px', backgroundColor: '#173e43'}}
-                                    mode="inline" defaultSelectedKeys={['1']}
-                                    onClick={this.handleClick}
-                                >
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                        <span>Register Client</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                        <span>Update Client Information</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                        <span>Schedule Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                        <span>View Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                        <span>View Logs</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                                        <span>Project Enrollment</span>
-                                    </Menu.Item>
-                                </Menu>
-                            </Sider>
-                            <Content className="content">
-                                <div className="personId-form-input">
-                                    <Form {...formItemLayout}
-                                          onSubmit={this.handleUpdateClientInformationdSubmit.bind(this)}>
-                                        <Form.Item className="register-ant-form-item">
-                                            {getFieldDecorator("personId", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input Identification Number!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Client Identification Number"/>)}
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleUpdateClientInformationdSubmit.bind(this)}>
+                                        <Form.Item>
+                                            {getFieldDecorator('personId', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please input Client's Personal Identification !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="Client's Personal Identification"
+                                                />,
+                                            )}
                                         </Form.Item>
-                                        <Form.Item {...tailFormItemLayout} className="register-ant-form-item">
-                                            <Button type="primary" htmlType="submit" style={{
-                                                fontSize: 22,
-                                                width: '250px',
-                                                height: '50px',
-                                                marginLeft: '80px'
-                                            }}>
-                                                Update Information
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
                                             </Button>
                                         </Form.Item>
                                     </Form>
@@ -820,56 +877,32 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider"
-                            >
-                                <Menu
-                                    style={{borderRight: '0px', backgroundColor: '#173e43'}}
-                                    mode="inline" defaultSelectedKeys={['1']}
-                                    onClick={this.handleClick}
-                                >
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                        <span>Register Client</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                        <span>Update Client Information</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                        <span>Schedule Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                        <span>View Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                        <span>View Logs</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                                        <span>Project Enrollment</span>
-                                    </Menu.Item>
-                                </Menu>
-                            </Sider>
-                            <Content className="content">
-                                <div className="personId-form-input">
-                                    <Form {...formItemLayout} onSubmit={this.handleEditAppointMentdSubmit.bind(this)}>
-                                        <Form.Item className="register-ant-form-item">
-                                            {getFieldDecorator("personId", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input Identification Number!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Client Identification Number"/>)}
+
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleEditAppointMentdSubmit.bind(this)}>
+                                        <Form.Item>
+                                            {getFieldDecorator('personId', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please input Client's Personal Identification !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="Client's Personal Identification"
+                                                />,
+                                            )}
                                         </Form.Item>
-                                        <Form.Item {...tailFormItemLayout} className="register-ant-form-item">
-                                            <Button type="primary" htmlType="submit" style={{
-                                                fontSize: 22,
-                                                width: '250px',
-                                                height: '50px',
-                                                marginLeft: '80px'
-                                            }}>
-                                                View Appointment
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
                                             </Button>
                                         </Form.Item>
                                     </Form>
@@ -887,56 +920,32 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider"
-                            >
-                                <Menu
-                                    style={{borderRight: '0px', backgroundColor: '#173e43'}}
-                                    mode="inline" defaultSelectedKeys={['1']}
-                                    onClick={this.handleClick}
-                                >
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                        <span>Register Client</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                        <span>Update Client Information</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                        <span>Schedule Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                        <span>View Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                        <span>View Logs</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                                        <span>Project Enrollment</span>
-                                    </Menu.Item>
-                                </Menu>
-                            </Sider>
-                            <Content className="content">
-                                <div className="personId-form-input">
-                                    <Form {...formItemLayout} onSubmit={this.handleCreateAppointMentdSubmit.bind(this)}>
-                                        <Form.Item className="register-ant-form-item">
-                                            {getFieldDecorator("personId", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input Identification Number!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Client Identification Number"/>)}
+
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleCreateAppointMentdSubmit.bind(this)}>
+                                        <Form.Item>
+                                            {getFieldDecorator('personId', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please input Client's Personal Identification !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="Client's Personal Identification"
+                                                />,
+                                            )}
                                         </Form.Item>
-                                        <Form.Item {...tailFormItemLayout} className="register-ant-form-item">
-                                            <Button type="primary" htmlType="submit" style={{
-                                                fontSize: 22,
-                                                width: '250px',
-                                                height: '50px',
-                                                marginLeft: '80px'
-                                            }}>
-                                                Create Appointment
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
                                             </Button>
                                         </Form.Item>
                                     </Form>
@@ -954,56 +963,31 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider"
-                            >
-                                <Menu
-                                    style={{borderRight: '0px', backgroundColor: '#173e43'}}
-                                    mode="inline" defaultSelectedKeys={['1']}
-                                    onClick={this.handleClick}
-                                >
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                        <span>Register Client</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                        <span>Update Client Information</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                        <span>Schedule Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                        <span>View Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                        <span>View Logs</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                                        <span>Project Enrollment</span>
-                                    </Menu.Item>
-                                </Menu>
-                            </Sider>
-                            <Content className="content">
-                                <div className="personId-form-input">
-                                    <Form {...formItemLayout} onSubmit={this.viewLongs.bind(this)}>
-                                        <Form.Item className="register-ant-form-item">
-                                            {getFieldDecorator("personId", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input Identification Number!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Client Identification Number"/>)}
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.viewLongs.bind(this)}>
+                                        <Form.Item>
+                                            {getFieldDecorator('personId', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please input Client's Personal Identification !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="Client's Personal Identification"
+                                                />,
+                                            )}
                                         </Form.Item>
-                                        <Form.Item {...tailFormItemLayout} className="register-ant-form-item">
-                                            <Button type="primary" htmlType="submit" style={{
-                                                fontSize: 22,
-                                                width: '250px',
-                                                height: '50px',
-                                                marginLeft: '80px'
-                                            }}>
-                                                View Log
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
                                             </Button>
                                         </Form.Item>
                                     </Form>
@@ -1021,56 +1005,73 @@ class RegistrationForm extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                         />
                         <Layout>
-                            <Sider className="site-layout-sider"
-                            >
-                                <Menu
-                                    style={{borderRight: '0px', backgroundColor: '#173e43'}}
-                                    mode="inline" defaultSelectedKeys={['6']}
-                                    onClick={this.handleClick}
-                                >
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="1">
-                                        <span>Register Client</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="2">
-                                        <span>Update Client Information</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="3">
-                                        <span>Schedule Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="4">
-                                        <span>View Appointment</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="5">
-                                        <span>View Logs</span>
-                                    </Menu.Item>
-                                    <Menu.Item style={{marginTop: '20px', color: '#fae596'}} key="6">
-                                        <span>Project Enrollment</span>
-                                    </Menu.Item>
-                                </Menu>
-                            </Sider>
-                            <Content className="content">
-                                <div className="personId-form-input">
-                                    <Form {...formItemLayout} onSubmit={this.projectEnroll.bind(this)}>
-                                        <Form.Item className="register-ant-form-item">
-                                            {getFieldDecorator("personId", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input Identification Number!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Client Identification Number"/>)}
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.projectEnroll.bind(this)}>
+                                        <Form.Item>
+                                            {getFieldDecorator('personId', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please input Client's Personal Identification !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="Client's Personal Identification"
+                                                />,
+                                            )}
                                         </Form.Item>
-                                        <Form.Item {...tailFormItemLayout} className="register-ant-form-item">
-                                            <Button type="primary" htmlType="submit" style={{
-                                                fontSize: 22,
-                                                width: '250px',
-                                                height: '50px',
-                                                marginLeft: '80px'
-                                            }}>
-                                                Enroll to Project
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
+                    </Layout>
+                );
+            } else if (this.state.pageComponent === 'viewenrollment') {
+                return (
+                    <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.state.loggedInStatus}
+                        />
+                        <Layout>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleViewAllEnrollment.bind(this)}>
+                                        <Form.Item>
+                                            {getFieldDecorator('personId', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please input Client's Personal Identification !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="Client's Personal Identification"
+                                                />,
+                                            )}
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
                                             </Button>
                                         </Form.Item>
                                     </Form>
@@ -1088,139 +1089,170 @@ class RegistrationForm extends React.Component {
                         handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                         loggedInStatus={this.state.loggedInStatus}
                     />
-                    <Layout>
-                        <Content className="content">
-                            <div className="site-layout-content-registration">
-                                <Form {...formItemLayout} onSubmit={this.handleSocialWorkerRegistrationSubmit}>
-                                    <h1 style={{marginLeft: '180px'}}>Register Social Worker</h1>
-                                    <Form.Item className="register-ant-form-item">
-                                        {getFieldDecorator("username", {
-                                            initialValue: this.state.username,
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: "Please input your username!",
-                                                    whitespace: true
-                                                }
-                                            ]
-                                        })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                  placeholder="Username"/>)}
-                                    </Form.Item>
-                                    <Form.Item hasFeedback className="register-ant-form-item">
-                                        {getFieldDecorator("password", {
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: "Please input your password!"
-                                                },
-                                                {
-                                                    validator: this.validateToNextPassword
-                                                }
-                                            ]
-                                        })(<Input.Password
-                                            prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                            placeholder="Password"/>)}
-                                    </Form.Item>
-                                    <Form.Item hasFeedback className="register-ant-form-item">
-                                        {getFieldDecorator("confirm", {
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: "Please confirm your password!"
-                                                },
-                                                {
-                                                    validator: this.compareToFirstPassword
-                                                }
-                                            ]
-                                        })(<Input.Password
-                                            prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                            placeholder="Confirm Password" onBlur={this.handleConfirmBlur}/>)}
-                                    </Form.Item>
-                                    <Form.Item className="register-ant-form-item">
-                                        {getFieldDecorator("email", {
-                                            rules: [
-                                                {
-                                                    type: "email",
-                                                    message: "The input is not valid E-mail!"
-                                                },
-                                                {
-                                                    required: true,
-                                                    message: "Please input your E-mail!"
-                                                }
-                                            ]
-                                        })(<Input prefix={<Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                  placeholder="E-mail"/>)}
-                                    </Form.Item>
-                                    <Form.Item className="register-ant-form-item">
-                                        {getFieldDecorator("first_name", {
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: "Please input your first name!",
-                                                    whitespace: true
-                                                }
-                                            ]
-                                        })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                  placeholder="First Name"/>)}
-                                    </Form.Item>
-                                    <Form.Item className="register-ant-form-item">
-                                        {getFieldDecorator("last_name", {
-                                            rules: [
-                                                {
-                                                    message: "Please input your last name!",
-                                                    whitespace: true
-                                                }
-                                            ]
-                                        })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                  placeholder="Last Name"/>)}
-                                    </Form.Item>
-                                    <Form.Item className="register-ant-form-item">
-                                        {getFieldDecorator("address", {
-                                            rules: [
-                                                {
-                                                    message: "Please input your address!",
-                                                    whitespace: true
-                                                }
-                                            ]
-                                        })(<Input prefix={<Icon type="home" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                  placeholder="Address"/>)}
-                                    </Form.Item>
-                                    <Form.Item className="register-ant-form-item">
-                                        {getFieldDecorator("clearanceLevel", {
-                                            rules: [
-                                                {
-                                                    type: "array",
-                                                    required: true,
-                                                    message: "Please select your role!"
-                                                }
-                                            ]
-                                        })(<Cascader options={clearanceLevel} placeholder="Clearence Level"/>)}
-                                    </Form.Item>
-                                    <Form.Item className="register-ant-form-item">
-                                        {getFieldDecorator("serviceProvider", {
-                                            rules: [
-                                                {
-                                                    type: "array",
-                                                    required: true,
-                                                    message: "Please select your role!"
-                                                }
-                                            ]
-                                        })(<Cascader options={serviceProvider} placeholder="Service Provider"/>)}
-                                    </Form.Item>
-                                    <Form.Item {...tailFormItemLayout} className="register-ant-form-item">
-                                        <Button type="primary" htmlType="submit" className="registration-submit-button">
-                                            Submit
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                            </div>
-                        </Content>
-                    </Layout>
+                    <Content className="content-login">
+                        <div className="site-layout-content-login">
+                            <Form onSubmit={this.handleSocialWorkerRegistrationSubmit}>
+                                <Row gutter={36}>
+                                    <Col span={12}>
+                                        <Form.Item>
+                                            {getFieldDecorator("username", {
+                                                initialValue: this.state.username,
+                                                rules: [
+                                                    {
+                                                        required: true,
+                                                        message: "Please input your username!",
+                                                        whitespace: true
+                                                    }
+                                                ]
+                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                      placeholder="Username"/>)}
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item>
+                                            {getFieldDecorator("email", {
+                                                rules: [
+                                                    {
+                                                        type: "email",
+                                                        message: "The input is not valid E-mail!"
+                                                    },
+                                                    {
+                                                        required: true,
+                                                        message: "Please input your E-mail!"
+                                                    }
+                                                ]
+                                            })(<Input prefix={<Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                      placeholder="E-mail"/>)}
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row gutter={36}>
+
+                                    <Col span={12}>
+                                        <Form.Item hasFeedback>
+                                            {getFieldDecorator("password", {
+                                                rules: [
+                                                    {
+                                                        required: true,
+                                                        message: "Please input your password!"
+                                                    },
+                                                    {
+                                                        validator: this.validateToNextPassword
+                                                    }
+                                                ]
+                                            })(<Input.Password
+                                                prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                placeholder="Password"/>)}
+                                        </Form.Item>
+
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item hasFeedback className="register-ant-form-item">
+                                            {getFieldDecorator("confirm", {
+                                                rules: [
+                                                    {
+                                                        required: true,
+                                                        message: "Please confirm your password!"
+                                                    },
+                                                    {
+                                                        validator: this.compareToFirstPassword
+                                                    }
+                                                ]
+                                            })(<Input.Password
+                                                prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                placeholder="Confirm Password" onBlur={this.handleConfirmBlur}/>)}
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row gutter={36}>
+                                    <Col span={12}>
+                                        <Form.Item>
+                                            {getFieldDecorator("first_name", {
+                                                rules: [
+                                                    {
+                                                        required: true,
+                                                        message: "Please input your first name!",
+                                                        whitespace: true
+                                                    }
+                                                ]
+                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                      placeholder="First Name"/>)}
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item>
+                                            {getFieldDecorator("last_name", {
+                                                rules: [
+                                                    {
+                                                        message: "Please input your last name!",
+                                                        whitespace: true
+                                                    }
+                                                ]
+                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                      placeholder="Last Name"/>)}
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row gutter={36}>
+                                    <Col span={12}>
+                                        <Form.Item>
+                                            {getFieldDecorator("serviceProvider", {
+                                                rules: [
+                                                    {
+                                                        type: "array",
+                                                        required: true,
+                                                        message: "Please select your role!"
+                                                    }
+                                                ]
+                                            })(<Cascader options={serviceProvider} placeholder="Service Provider"/>)}
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item>
+                                            {getFieldDecorator("clearanceLevel", {
+                                                rules: [
+                                                    {
+                                                        type: "array",
+                                                        required: true,
+                                                        message: "Please select your role!"
+                                                    }
+                                                ]
+                                            })(<Cascader options={clearanceLevel} placeholder="Clearence Level"/>)}
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <Form.Item>
+                                            {getFieldDecorator("address", {
+                                                rules: [
+                                                    {
+                                                        message: "Please input your address!",
+                                                        whitespace: true
+                                                    }
+                                                ]
+                                            })(<Input prefix={<Icon type="home" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                      placeholder="Address"/>)}
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row gutter={36}>
+                                    <Col span={12}>
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit"
+                                                    className="registration-submit-button">
+                                                Submit
+                                            </Button>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </div>
+                    </Content>
                     <StreetCardFooter/>
                 </Layout>
             );
         }
-
     }
 }
 

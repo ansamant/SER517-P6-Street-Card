@@ -9,7 +9,7 @@ export default class LandingPage extends React.Component {
   constructor(props) {
     super(props);
      this.state = {
-      loggedInStatus: this.props.loggedInStatus
+      loggedInStatus: 'NOT_LOGGED_IN'
     };
     this.handleSuccessfulLoginAction = this.handleSuccessfulLoginAction.bind(this);
 
@@ -20,7 +20,7 @@ export default class LandingPage extends React.Component {
     this.props.history.push('/login');
   }
 
-  handleLogoutClick() {
+  componentDidUpdate() {
     this.props.handleLogout();
   }
 
@@ -30,10 +30,11 @@ export default class LandingPage extends React.Component {
       <Header 
       handleSuccessfulLoginAction={this.handleSuccessfulLoginAction}
       loggedInStatus={this.state.loggedInStatus}
-       />,
-      <div><LocationMap className ="location-map"/></div>
-      <StreetCardFooter/>
-      </Layout>
+       />
+      <LocationMap className ="location-map"/>
+        <StreetCardFooter/>
+        </Layout>
+
     );
   }
 } 
