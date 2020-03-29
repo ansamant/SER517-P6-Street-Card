@@ -107,18 +107,6 @@ class ServiceProvider(models.TextChoices):
     OTHERS = "OTH", _("Others")
 
 
-class SocialWorker(models.Model):
-    class ClearanceLevel(models.TextChoices):
-        GREETER = "greeter", _("Greeter")
-        CASEWORKER = "caseworker", _("CaseWorker")
-        SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
-        CLIENT = "client", _("Client")
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
-    address = models.CharField(max_length=500)
-    serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
 
 # Log table, used to display information on Case Worker page
 # Log should be recorded whenever greeter swipes card
@@ -152,6 +140,22 @@ class Appointments(models.Model):
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
     alert = models.BooleanField(default=False, null=True)
     Email = models.EmailField(max_length=70, blank=True, null=True)
+
+
+class SocialWorker(models.Model):
+    
+    class ClearanceLevel(models.TextChoices):
+        GREETER = "greeter", _("Greeter")
+        CASEWORKER = "caseworker", _("CaseWorker")
+        SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
+        CLIENT = "client", _("Client")
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
+    address = models.CharField(max_length=500)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
 
 
 class ProjectCategory(models.TextChoices):

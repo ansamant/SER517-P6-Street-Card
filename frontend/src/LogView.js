@@ -59,8 +59,8 @@ class LogView extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.handleHomelessPersonId)
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.handleHomelessPersonId + '/logs/', {
+        console.log("HOMELESS ID", this.props.handleHomelessPersonId)
+        fetch('http://127.0.0.1:8000/homeless/' + this.props.handleHomelessPersonId.toString() + '/logs/', {  
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,9 +76,8 @@ class LogView extends React.Component {
                     }
                 )
             })
-        console.log(this.items);
+        console.log(this.state.dataSource);
     }
-
 
     handleSuccessfulLogoutAction() {
         this.props.handleLogout();
