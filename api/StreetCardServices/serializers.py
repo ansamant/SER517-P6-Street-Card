@@ -68,15 +68,7 @@ class LogSerializer(ModelSerializer):
     class Meta:
         model = Log
         fields = '__all__'
-
     # datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', )
-
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        print(response)
-        response['socialWorker'] = SocialWorkerSerializer(
-            SocialWorker.objects.get(user_id=response['id'])).data
-        return response
 
 
 class HomelessSerializer(ModelSerializer):

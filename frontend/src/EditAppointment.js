@@ -30,6 +30,22 @@ const serviceProvider = [
 
 const {Content, Sider} = Layout;
 
+//timezones as defined by the pytz library
+const tz_Options = [
+    {value: 'Alaska', label: 'Alaska'},
+    {value: 'Aleutian', label: 'Aleutian'},
+    {value: 'Arizona', label: 'Arizona'},
+    {value: 'Central', label: 'Central'},
+    {value: 'East-Indiana', label: 'East-Indiana'},
+    {value: 'Eastern', label: 'Eastern'},
+    {value: 'Hawaii', label: 'Hawaii'},
+    {value: 'Indiana-Starke', label: 'Indiana-Starke'},
+    {value: 'Michigan', label: 'Michigan'},
+    {value: 'Mountain', label: 'Mountain'},
+    {value: 'Pacific', label: 'Pacific'},
+    {value: 'Pacific-New', label: 'Pacific-New'},
+    {value: 'Samoa', label: 'Samoa'}
+ ];
 class EditAppointment extends React.Component {
     constructor(props) {
         super(props);
@@ -51,7 +67,6 @@ class EditAppointment extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 var appointmentRequestObject = {};
-                console.log()
                 appointmentRequestObject.office = values.office;
                 appointmentRequestObject.streetAddress1 = values.streetAddress1;
                 appointmentRequestObject.streetAddress2 = values.streetAddress2;
@@ -63,6 +78,7 @@ class EditAppointment extends React.Component {
                 appointmentRequestObject.serviceProvider = values.serviceProvider[0];
                 appointmentRequestObject.personalId = this.props.homelessPersonId;
                 appointmentRequestObject.alert = this.state.checked;
+                appointmentRequestObject.TimeZone = values.timeZone[0];
                 fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
                     method: 'PUT',
                     headers: {
@@ -276,6 +292,20 @@ class EditAppointment extends React.Component {
                                                     })(<TimePicker placeholder="Time Date"/>)}
                                                 </Form.Item>
                                             </Col>
+                                            <Col span={8} push={1}>
+                                                    <Form.Item>
+                                                        {getFieldDecorator("timeZone", {
+                                                            rules: [
+                                                                {
+                                                                    type: "array",
+                                                                    required: true,
+                                                                    message: "Please select the Time Zone!"
+                                                                }
+                                                            ]
+                                                        })(<Cascader options={tz_Options}
+                                                                     placeholder="Time Zone"/>)}
+                                                    </Form.Item>
+                                                </Col>
                                             <Col span={8} push={1}>
                                                 <Form.Item className="register-ant-form-item">
                                                     {console.log(appointment.alert)}

@@ -209,7 +209,9 @@ class AppointmentViewSet(viewsets.ViewSet):
             receiver = enroll["Email"]
             sender = settings.EMAIL_HOST_USER
             title = "Appointment Reminder from StreetCard"
-            az_tz = pytz.timezone('US/Arizona')
+            us_tz = 'US/'+ enroll["TimeZone"]
+            print('USTZ', us_tz)
+            az_tz = pytz.timezone(us_tz)
             dateTimeObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
             az_dt = az_tz.localize(dateTimeObj)
             etaObj = az_dt.astimezone(pytz.UTC)

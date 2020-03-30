@@ -33,10 +33,25 @@ const gridStyle = {
     textAlign: 'center',
 };
 
-
+//timezones as defined by the pytz library
+const tz_Options = [
+       {value: 'Alaska', label: 'Alaska'},
+       {value: 'Aleutian', label: 'Aleutian'},
+       {value: 'Arizona', label: 'Arizona'},
+       {value: 'Central', label: 'Central'},
+       {value: 'East-Indiana', label: 'East-Indiana'},
+       {value: 'Eastern', label: 'Eastern'},
+       {value: 'Hawaii', label: 'Hawaii'},
+       {value: 'Indiana-Starke', label: 'Indiana-Starke'},
+       {value: 'Michigan', label: 'Michigan'},
+       {value: 'Mountain', label: 'Mountain'},
+       {value: 'Pacific', label: 'Pacific'},
+       {value: 'Pacific-New', label: 'Pacific-New'},
+       {value: 'Samoa', label: 'Samoa'}
+    ];
 class SetAppointments extends React.Component {
 
-
+    
     constructor(props) {
         super(props);
         console.log(this.props.homelessPersonId);
@@ -68,6 +83,8 @@ class SetAppointments extends React.Component {
                 appointmentRequestObject.personalId = this.props.homelessPersonId;
                 appointmentRequestObject.alert = this.state.checked;
                 appointmentRequestObject.Email = this.state.email;
+                appointmentRequestObject.TimeZone = values.timeZone[0];
+                console.log("AppointmentRequestObj", appointmentRequestObject.TimeZone)
                 if (this.state.email == null) {
                     appointmentRequestObject.Email = ""
                 }
@@ -307,6 +324,20 @@ class SetAppointments extends React.Component {
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={8} push={1}>
+                                                    <Form.Item>
+                                                        {getFieldDecorator("timeZone", {
+                                                            rules: [
+                                                                {
+                                                                    type: "array",
+                                                                    required: true,
+                                                                    message: "Please select the Time Zone!"
+                                                                }
+                                                            ]
+                                                        })(<Cascader options={tz_Options}
+                                                                     placeholder="Time Zone"/>)}
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={8} push={1}>
                                                     <Form.Item className="register-ant-form-item">
                                                         <Checkbox checked={this.state.checked} onChange={this.onChange}>Set
                                                             Alert</Checkbox>
@@ -505,6 +536,20 @@ class SetAppointments extends React.Component {
                                                         })(<TimePicker placeholder="Time Date"/>)}
                                                     </Form.Item>
                                                 </Col>
+                                                <Col span={8} push={1}>
+                                                    <Form.Item className="register-ant-form-item">
+                                                        {getFieldDecorator("timeZone", {
+                                                            rules: [
+                                                                {
+                                                                    type: "array",
+                                                                    required: true,
+                                                                    message: "Please select the Time Zone!"
+                                                                }
+                                                            ]
+                                                        })(<Cascader options={tz_Options}
+                                                                     placeholder="Time Zone"/>)}
+                                                    </Form.Item>
+                                                </Col>
                                             </Row>
                                         </Panel>
                                         <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
@@ -512,7 +557,6 @@ class SetAppointments extends React.Component {
                                             <Row>
                                                 <Col span={12}>
                                                     <p style={{padding: "2%"}}>
-
 
                                                         <Checkbox>
                                                             I acknowledge, the form is completed as per the inputs
