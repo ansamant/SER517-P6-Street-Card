@@ -225,7 +225,7 @@ body {
 .content-login {
     background-color: #0f4d92;
     height: 84vh;
-    padding: 10%;
+    padding: 5%;
     text-align: center;
 }
 
@@ -273,14 +273,6 @@ body {
     border-radius: 8px;
 }
 
-.site-layout-content-registration-client {
-    background: #3fb0ac;
-    margin-left: 24%;
-    max-width: 800px;
-    background-color: #fff;
-    border: 5px solid #fae596;
-
-}
 
 /*.site-layout-content-setappointment {*/
 /*    background: #3fb0ac;*/
@@ -321,3 +313,6 @@ input::placeholder {
     font-size: 14px;
 }
 
+td{
+    background-color: whitesmoke;
+}
