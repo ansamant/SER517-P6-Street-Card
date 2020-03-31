@@ -1,6 +1,6 @@
 import datetime
-import pytz
 
+import pytz
 from django.conf import settings
 from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404
@@ -9,10 +9,10 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources, UserNameAndIdMapping, Log, \
-    Appointments
+    Appointments, Product
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
     NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer, UserNameAndIdMappingSerializer, LogSerializer, \
-    AppointmentSerializer
+    AppointmentSerializer, ProductSerializer
 from .tasks import send_email_task
 from .utils import primary_key_generator
 
@@ -237,6 +237,39 @@ class AppointmentViewSet(viewsets.ViewSet):
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+class ProductViewSet(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = Product.objects.all()
+        serializer = ProductSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None):
+        queryset = Product.objects.filter(pk=pk)
+        product = get_object_or_404(queryset, pk=pk)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        product = request.data
+        product['productId'] = primary_key_generator()
+        serializer = ProductSerializer(data=product)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def partial_update(self, request, pk=None, homeless_pk=None):
         pass
 
     def destroy(self, request, pk=None):

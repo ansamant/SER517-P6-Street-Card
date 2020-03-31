@@ -13,19 +13,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.contrib import admin
 from django.urls import include, path
 from rest_framework_nested import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from api.StreetCardServices import views
 from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails, \
-    NonCashDetails, IncomeDetails, EnrollmentViewSet, HomelessViewSet,UserViewSet,UserMapping,LogEntry,AppointmentViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from django.contrib import admin
+    NonCashDetails, IncomeDetails, EnrollmentViewSet, HomelessViewSet, UserViewSet, UserMapping, LogEntry, \
+    AppointmentViewSet, ProductViewSet
 
 router = routers.DefaultRouter()
 router.register('mapping', UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register('register', SocialWorkerRegistration)
 router.register('socialinfo', SocialWorkerDetails)
+router.register('product', ProductViewSet, basename='product')
 router.register('user', UserMapping)
 router.register('income', IncomeDetails)
 router.register('noncash', NonCashDetails)
@@ -34,7 +37,6 @@ enroll_router = routers.NestedSimpleRouter(router, r'homeless', lookup='homeless
 enroll_router.register(r'enrollment', EnrollmentViewSet, basename='enrollment')
 enroll_router.register(r'logs', LogEntry, basename='logs')
 enroll_router.register(r'appointment', AppointmentViewSet, basename='appointment')
-
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

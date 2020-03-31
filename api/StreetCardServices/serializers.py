@@ -1,15 +1,15 @@
 from django.contrib.auth.models import User, Group
-from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .utils import check_and_assign
+
 from .models import SocialWorker, IncomeAndSources, NonCashBenefits, Enrollment, DisablingCondition, \
     DomesticViolence, HealthInsurance, W1ServicesProvidedHOPWA, FinancialAssistanceHOPWA, MedicalAssistanceHOPWA, \
     TCellCD4AndViralLoadHOPWA, HousingAssessmentAtExitHOPWA, Homeless, CurrentLivingSituation, DateOfEngagement, \
     BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation, UserNameAndIdMapping, Log, \
     VeteranInformation, ServicesProvidedSSVF, FinancialAssistanceSSVF, PercentOfAMI, LastPermanentAddress, \
     SSVFHPTargetingCriteria, HUDVASHVoucherTracking, HUDVASHExitInformation, ConnectionWithSOAR, LastGradeCompleted, \
-    EmploymentStatus, Appointments
+    EmploymentStatus, Appointments, TransactionDetails, Transactions, Product
+from .utils import check_and_assign
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -33,6 +33,24 @@ class SocialWorkerSerializer(ModelSerializer):
 class HomelessSerializer(ModelSerializer):
     class Meta:
         model = Homeless
+        fields = '__all__'
+
+
+class ProductSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
+class TransactionSerializer(ModelSerializer):
+    class Meta:
+        model = Transactions
+        fields = '__all__'
+
+
+class TransactionDetailSerializer(ModelSerializer):
+    class Meta:
+        model = TransactionDetails
         fields = '__all__'
 
 

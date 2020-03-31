@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -118,6 +117,29 @@ class SocialWorker(models.Model):
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+# Inventory Tables:
+
+class Product(models.Model):
+    productName = models.CharField(max_length=100)
+    productId = models.CharField(primary_key=True, default=None, max_length=32, blank=True)
+    costPerItem = models.FloatField()
+    unitsAvailable = models.IntegerField()
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+class Transactions(models.Model):
+    transactionId = models.CharField(primary_key=True, default=None, max_length=32)
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    totalAmount = models.IntegerField()
+
+
+class TransactionDetails(models.Model):
+    transactionDetailId = models.CharField(primary_key=True, default=None, max_length=32)
+    transactionId = models.ForeignKey(Transactions, on_delete=models.CASCADE)
+    productId = models.ForeignKey(Product, on_delete=models.CASCADE)
+    unitPurchased = models.IntegerField()
 
 
 # Log table, used to display information on Case Worker page
