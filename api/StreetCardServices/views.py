@@ -9,10 +9,10 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources, UserNameAndIdMapping, Log, \
-    Appointments, Product
+    Appointments, Product, Transactions
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
     NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer, UserNameAndIdMappingSerializer, LogSerializer, \
-    AppointmentSerializer, ProductSerializer
+    AppointmentSerializer, ProductSerializer, TransactionSerializer
 from .tasks import send_email_task
 from .utils import primary_key_generator
 
@@ -263,6 +263,41 @@ class ProductViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def partial_update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+class TransactionViewSet(viewsets.ViewSet):
+
+    def list(self, request, homeless_pk=None):
+        queryset = Transactions.objects.filter(personalId_id=homeless_pk)
+        serializer = TransactionSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, homeless_pk=None):
+        queryset = Transactions.objects.filter(pk=pk, personalId_id=homeless_pk)
+        transaction = get_object_or_404(queryset, pk=pk)
+        serializer = TransactionSerializer(transaction)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, homeless_pk=None):
+        transaction = request.data
+        transaction['personalId'] = homeless_pk
+        transaction['transactionId'] = primary_key_generator()
+        print(transaction)
+        serializer = TransactionSerializer(data=transaction)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

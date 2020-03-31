@@ -8,8 +8,9 @@ from .models import SocialWorker, IncomeAndSources, NonCashBenefits, Enrollment,
     BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation, UserNameAndIdMapping, Log, \
     VeteranInformation, ServicesProvidedSSVF, FinancialAssistanceSSVF, PercentOfAMI, LastPermanentAddress, \
     SSVFHPTargetingCriteria, HUDVASHVoucherTracking, HUDVASHExitInformation, ConnectionWithSOAR, LastGradeCompleted, \
-    EmploymentStatus, Appointments, TransactionDetails, Transactions, Product
+    EmploymentStatus, Appointments, TransactionDetails, Product, Transactions
 from .utils import check_and_assign
+from .utils import primary_key_generator
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,22 +37,39 @@ class HomelessSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class TransactionDetailSerializer(ModelSerializer):
+    class Meta:
+        model = TransactionDetails
+        fields = '__all__'
+
+
 class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
 
 
-class TransactionSerializer(ModelSerializer):
+class TransactionSerializer(serializers.ModelSerializer):
+    transaction_detail = TransactionDetailSerializer(required=False)
+
     class Meta:
         model = Transactions
-        fields = '__all__'
+        fields = ['transactionId', 'personalId', 'totalAmount', 'transaction_detail']
 
+    def create(self, validated_data):
+        transaction_detail_data = check_and_assign('transaction_detail', validated_data)
+        transaction = Transactions.objects.create(**validated_data)
+        if transaction_detail_data is not None:
+            TransactionDetails.objects.create(transactionId_id=transaction.transactionId,
+                                              transactionDetailId=primary_key_generator(), **transaction_detail_data)
+        return transaction
 
-class TransactionDetailSerializer(ModelSerializer):
-    class Meta:
-        model = TransactionDetails
-        fields = '__all__'
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        if TransactionDetails.objects.filter(transactionId_id=response['transactionId']).exists():
+            response['transaction_detail'] = TransactionDetailSerializer(
+                TransactionDetails.objects.get(transactionId_id=response['transactionId'])).data
+        return response
 
 
 class UserSerializer(ModelSerializer):

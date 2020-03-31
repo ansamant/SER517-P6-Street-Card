@@ -137,7 +137,7 @@ class Transactions(models.Model):
 
 class TransactionDetails(models.Model):
     transactionDetailId = models.CharField(primary_key=True, default=None, max_length=32)
-    transactionId = models.ForeignKey(Transactions, on_delete=models.CASCADE)
+    transactionId = models.ForeignKey(Transactions, on_delete=models.CASCADE, default=None)
     productId = models.ForeignKey(Product, on_delete=models.CASCADE)
     unitPurchased = models.IntegerField()
 
