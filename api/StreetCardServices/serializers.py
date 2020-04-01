@@ -50,25 +50,30 @@ class ProductSerializer(ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    transaction_detail = TransactionDetailSerializer(required=False)
+    transaction_detail = TransactionDetailSerializer(required=False, many=True)
 
     class Meta:
         model = Transactions
         fields = ['transactionId', 'personalId', 'totalAmount', 'transaction_detail']
 
     def create(self, validated_data):
-        transaction_detail_data = check_and_assign('transaction_detail', validated_data)
+        transaction_detail_list = validated_data.pop('transaction_detail')
         transaction = Transactions.objects.create(**validated_data)
-        if transaction_detail_data is not None:
-            TransactionDetails.objects.create(transactionId_id=transaction.transactionId,
-                                              transactionDetailId=primary_key_generator(), **transaction_detail_data)
+        for item in transaction_detail_list:
+            transaction_detail_data = item
+            if transaction_detail_data is not None:
+                TransactionDetails.objects.create(transactionId_id=transaction.transactionId,
+                                                  transactionDetailId=primary_key_generator(),
+                                                  **transaction_detail_data)
         return transaction
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
         if TransactionDetails.objects.filter(transactionId_id=response['transactionId']).exists():
-            response['transaction_detail'] = TransactionDetailSerializer(
-                TransactionDetails.objects.get(transactionId_id=response['transactionId'])).data
+            list_of_transactions = TransactionDetails.objects.filter(transactionId_id=response['transactionId'])
+            response['transaction_detail'] = []
+            for transaction in list_of_transactions:
+                response['transaction_detail'].append(TransactionDetailSerializer(transaction).data)
         return response
 
 

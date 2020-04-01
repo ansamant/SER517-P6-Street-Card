@@ -66,7 +66,7 @@ class LogEntry(viewsets.ModelViewSet):
         serializer = LogSerializer(data=enroll)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -161,7 +161,7 @@ class EnrollmentViewSet(viewsets.ViewSet):
         serializer = EnrollmentSerializer(data=enroll)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -222,7 +222,7 @@ class AppointmentViewSet(viewsets.ViewSet):
         serializer = AppointmentSerializer(data=enroll)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -293,11 +293,10 @@ class TransactionViewSet(viewsets.ViewSet):
         transaction = request.data
         transaction['personalId'] = homeless_pk
         transaction['transactionId'] = primary_key_generator()
-        print(transaction)
         serializer = TransactionSerializer(data=transaction)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
