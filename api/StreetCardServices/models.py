@@ -141,6 +141,8 @@ class Appointments(models.Model):
     alert = models.BooleanField(default=False, null=True)
     Email = models.EmailField(max_length=70, blank=True, null=True)
     TimeZone = models.CharField(max_length=200, blank=True, null=True)
+    # is the way to determine what task id is being used, only > -1 if alert == True
+    AlertTaskID = models.CharField(max_length=36, default="", blank=True, null=True)
 
 
 class SocialWorker(models.Model):

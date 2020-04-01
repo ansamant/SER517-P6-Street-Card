@@ -83,7 +83,7 @@ class SetAppointments extends React.Component {
                 appointmentRequestObject.personalId = this.props.homelessPersonId;
                 appointmentRequestObject.alert = this.state.checked;
                 appointmentRequestObject.Email = this.state.email;
-                appointmentRequestObject.TimeZone = values.timeZone[0];
+                appointmentRequestObject.TimeZone = values.timeZone[0];  
                 console.log("AppointmentRequestObj", appointmentRequestObject.TimeZone)
                 if (this.state.email == null) {
                     appointmentRequestObject.Email = ""
@@ -123,6 +123,7 @@ class SetAppointments extends React.Component {
                     }
                 )
             })
+            
         console.log(this.items);
 
     }

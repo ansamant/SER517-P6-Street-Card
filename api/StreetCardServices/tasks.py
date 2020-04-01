@@ -6,7 +6,7 @@
 
 from celery import shared_task
 from time import sleep
-
+from api.celery import app
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -30,3 +30,8 @@ def send_email_task(message, title, sender, recipient):
               from_email=sender, 
               recipient_list=recipient,
               fail_silently=False)    
+
+@shared_task
+def revoke_email_task(taskId):
+    app.control.revoke(taskId, terminate=True)
+    print("REVOKED TASK: ", taskId)

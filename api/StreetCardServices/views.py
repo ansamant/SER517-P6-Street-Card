@@ -7,13 +7,15 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
-
+from uuid import uuid4
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources, UserNameAndIdMapping, Log, \
     Appointments
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
     NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer, UserNameAndIdMappingSerializer, LogSerializer, \
     AppointmentSerializer
-from .tasks import send_email_task
+from .tasks import send_email_task, revoke_email_task
+from api.celery import app
+
 from .utils import primary_key_generator
 
 
@@ -198,8 +200,9 @@ class AppointmentViewSet(viewsets.ViewSet):
     def create(self, request, homeless_pk=None):
 
         enroll = request.data
-
         if (enroll["alert"] == True):
+            # generate random id for Celery.
+            enroll["AlertTaskID"] = str(uuid4())
             timeFormatted = enroll["Time"].format("%H:%M[:%S]")
             print(timeFormatted)
             message = (
@@ -217,7 +220,9 @@ class AppointmentViewSet(viewsets.ViewSet):
             etaObj = az_dt.astimezone(pytz.UTC)
             # etaObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
             # print("ETA OBJ:", etaObj)
-            send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj)
+            # send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj, task_id=enroll["AlertTaskID"])
+            send_email_task.apply_async((message, title, sender, [receiver]), eta=datetime.datetime.now() + datetime.timedelta(seconds=10), task_id=enroll["AlertTaskID"])
+            revoke_email_task(str(enroll['AlertTaskID']))
 
         enroll['personalId'] = homeless_pk
         enroll['appointmentId'] = primary_key_generator()
@@ -231,7 +236,15 @@ class AppointmentViewSet(viewsets.ViewSet):
     def update(self, request, pk=None, homeless_pk=None):
         queryset = Appointments.objects.filter(personalId_id=homeless_pk)
         enroll = get_object_or_404(queryset, pk=pk)
-        serializer = AppointmentSerializer(enroll, data=request.data)
+        # print("REQ", request.data)
+        requestData = request.data
+        if(requestData["Email"] !="" and requestData['alert'] == False and requestData["AlertTaskID"] !=""):
+            print("ALERT",requestData['AlertTaskID'])
+            #app.control.revoke(str(requestData['AlertTaskID']), terminate=True)
+            revoke_email_task(str(requestData['AlertTaskID']))
+            requestData['AlertTaskID'] = ""
+
+        serializer = AppointmentSerializer(enroll, data=requestData)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
