@@ -3,6 +3,7 @@ import datetime
 import pytz
 from django.conf import settings
 from django.contrib.auth.models import User, Group
+from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import viewsets
@@ -48,23 +49,35 @@ class SocialWorkerDetails(viewsets.ModelViewSet):
 class LogEntry(viewsets.ModelViewSet):
 
     def list(self, request, homeless_pk=None):
-        queryset = Log.objects.filter(personalId_id=homeless_pk)
-        serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'log'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Log.objects.filter(personalId_id=homeless_pk)
+            serializer = LogSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
-        queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
-        enroll = get_object_or_404(queryset, pk=pk)
-        serializer = LogSerializer(enroll)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'log' + pk
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
+            enroll = get_object_or_404(queryset, pk=pk)
+            serializer = LogSerializer(enroll)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
         # Test remove later
         # send_email_task.delay("Send Email Test", "Test", settings.EMAIL_HOST_USER, ['recipient@gmail.com'])
+        cache_key = 'log' + homeless_pk
         enroll = request.data
         enroll['personalId'] = homeless_pk
         serializer = LogSerializer(data=enroll)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -98,44 +111,63 @@ class NonCashDetails(viewsets.ModelViewSet):
 class HomelessViewSet(viewsets.ViewSet):
 
     def list(self, request):
-        queryset = Homeless.objects.filter()
-        serializer = HomelessSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = 'homeless'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Homeless.objects.filter()
+            serializer = HomelessSerializer(queryset, many=True)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
-        queryset = Homeless.objects.filter(pk=pk)
-        enroll = get_object_or_404(queryset, pk=pk)
-        serializer = HomelessSerializer(enroll)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = 'homeless' + pk
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Homeless.objects.filter(pk=pk)
+            homeless = get_object_or_404(queryset, pk=pk)
+            serializer = HomelessSerializer(homeless)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        cache_key = 'homeless'
         homeless = request.data
         homeless['PersonalId'] = primary_key_generator()
         serializer = HomelessSerializer(data=homeless)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
+        cache_key = 'homeless' + pk
         queryset = Homeless.objects.filter(pk=pk)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = HomelessSerializer(enroll, data=request.data)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk=None):
+        cache_key = 'homeless' + pk
         queryset = Homeless.objects.filter(pk=pk)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = HomelessSerializer(enroll, data=request.data, partial=True)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
         pass
@@ -144,32 +176,48 @@ class HomelessViewSet(viewsets.ViewSet):
 class EnrollmentViewSet(viewsets.ViewSet):
 
     def list(self, request, homeless_pk=None):
-        queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
-        serializer = EnrollmentSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'enrollment'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
+            serializer = EnrollmentSerializer(queryset, many=True)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
-        queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
-        enroll = get_object_or_404(queryset, pk=pk)
-        serializer = EnrollmentSerializer(enroll)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'enrollment' + pk
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
+            enroll = get_object_or_404(queryset, pk=pk)
+            serializer = EnrollmentSerializer(enroll)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
+        cache_key = homeless_pk + 'enrollment'
         enroll = request.data
         enroll['PersonalId'] = homeless_pk
         enroll['EnrollmentID'] = primary_key_generator()
         serializer = EnrollmentSerializer(data=enroll)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None, homeless_pk=None):
+        cache_key = homeless_pk + 'enrollment' + pk
         queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = EnrollmentSerializer(enroll, data=request.data)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -185,20 +233,29 @@ class EnrollmentViewSet(viewsets.ViewSet):
 class AppointmentViewSet(viewsets.ViewSet):
 
     def list(self, request, homeless_pk=None):
-        queryset = Appointments.objects.filter(personalId_id=homeless_pk).order_by('-Date')
-        serializer = AppointmentSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'appointment'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Appointments.objects.filter(personalId_id=homeless_pk).order_by('-Date')
+            serializer = AppointmentSerializer(queryset, many=True)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
-        queryset = Appointments.objects.filter(pk=pk, personalId_id=homeless_pk)
-        enroll = get_object_or_404(queryset, pk=pk)
-        serializer = AppointmentSerializer(enroll)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'appointment'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Appointments.objects.filter(pk=pk, personalId_id=homeless_pk)
+            enroll = get_object_or_404(queryset, pk=pk)
+            serializer = AppointmentSerializer(enroll)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
-
         enroll = request.data
-
         if (enroll["alert"] == True):
             timeFormatted = enroll["Time"].format("%H:%M[:%S]")
             print(timeFormatted)
@@ -216,21 +273,24 @@ class AppointmentViewSet(viewsets.ViewSet):
             # etaObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
             # print("ETA OBJ:", etaObj)
             send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj)
-
         enroll['personalId'] = homeless_pk
         enroll['appointmentId'] = primary_key_generator()
         serializer = AppointmentSerializer(data=enroll)
+        cache_key = homeless_pk + 'appointment'
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None, homeless_pk=None):
+        cache_key = homeless_pk + 'appointment'
         queryset = Appointments.objects.filter(personalId_id=homeless_pk)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = AppointmentSerializer(enroll, data=request.data)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -246,28 +306,51 @@ class AppointmentViewSet(viewsets.ViewSet):
 class ProductViewSet(viewsets.ViewSet):
 
     def list(self, request):
-        queryset = Product.objects.all()
-        serializer = ProductSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = 'product'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Product.objects.all()
+            serializer = ProductSerializer(queryset, many=True)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
-        queryset = Product.objects.filter(pk=pk)
-        product = get_object_or_404(queryset, pk=pk)
-        serializer = ProductSerializer(product)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = 'product' + pk
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Product.objects.filter(pk=pk)
+            product = get_object_or_404(queryset, pk=pk)
+            serializer = ProductSerializer(product)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        cache_key = 'product'
         product = request.data
         product['productId'] = primary_key_generator()
         serializer = ProductSerializer(data=product)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def update(self, request, pk=None, homeless_pk=None):
-        pass
+    def update(self, request, pk=None):
+        cache_key = 'product' + pk
+        queryset = Product.objects.filter(pk=pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = ProductSerializer(enroll, data=request.data)
+        if serializer.is_valid():
+            cache.delete(cache_key)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk=None, homeless_pk=None):
         pass
