@@ -5,6 +5,7 @@ import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layo
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './component/SiderComponent'
+import { OneToOneOutlined } from '@ant-design/icons';
 
 
 const serviceProvider = [
@@ -54,7 +55,7 @@ class SetAppointments extends React.Component {
     
     constructor(props) {
         super(props);
-        console.log(this.props.homelessPersonId);
+        //console.log(this.props.homelessPersonId);
         this.state = {
             items: {},
             checked: false,
@@ -79,12 +80,13 @@ class SetAppointments extends React.Component {
                 appointmentRequestObject.state = values.state;
                 appointmentRequestObject.Date = values['DatePicker'].format('YYYY-MM-DD');
                 appointmentRequestObject.Time = values['TimePicker'].format('hh:mm[:ss[.uuuuuu]]');
+                
                 appointmentRequestObject.serviceProvider = values.serviceProvider[0];
                 appointmentRequestObject.personalId = this.props.homelessPersonId;
                 appointmentRequestObject.alert = this.state.checked;
                 appointmentRequestObject.Email = this.state.email;
                 appointmentRequestObject.TimeZone = values.timeZone[0];  
-                console.log("AppointmentRequestObj", appointmentRequestObject.TimeZone)
+                //console.log("AppointmentRequestObj", appointmentRequestObject)
                 if (this.state.email == null) {
                     appointmentRequestObject.Email = ""
                 }
@@ -115,7 +117,7 @@ class SetAppointments extends React.Component {
         })
             .then(res => res.json())
             .then(json => {
-                console.log(json)
+                //console.log(json)
                 this.setState({
                         isLoaded: true,
                         alert: false,
@@ -124,7 +126,7 @@ class SetAppointments extends React.Component {
                 )
             })
             
-        console.log(this.items);
+       // console.log(this.items);
 
     }
 

@@ -83,7 +83,7 @@ class EditAppointment extends React.Component {
                 appointmentRequestObject.Email = this.state.email;
                 appointmentRequestObject.TimeZone = values.timeZone[0];
                 appointmentRequestObject.AlertTaskID = this.state.taskId;
-                console.log(JSON.stringify(appointmentRequestObject));
+                //console.log(JSON.stringify(appointmentRequestObject));
                 fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
                     method: 'PUT',
                     headers: {
