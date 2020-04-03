@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Form, Layout} from "antd";
+import {Button, Form, Layout, Table} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './component/SiderComponent';
@@ -12,14 +12,70 @@ class Transaction extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            transaction: {},
             isLoaded: false,
+            columns: [
+                {
+                    title: 'productId',
+                    dataIndex: 'productId',
+                    key: 'productId',
+                    width: 80,
+                },
+                {
+                    title: 'productName',
+                    dataIndex: 'productName',
+                    key: 'productName',
+                    width: 30,
+                },
+                {
+                    title: 'costPerItem',
+                    dataIndex: 'costPerItem',
+                    key: 'costPerItem',
+                    width: 30,
+                },
+                {
+                    title: 'unitsAvailable',
+                    dataIndex: 'unitsAvailable',
+                    key: 'unitsAvailable',
+                    width: 30,
+                },
+                {
+                    title: 'serviceProvider',
+                    dataIndex: 'serviceProvider',
+                    key: 'serviceProvider',
+                    width: 30,
+                },
+            ],
+            productData: [
+                {
+                    productId: '',
+                    productName: '',
+                    costPerItem: '',
+                    unitsAvailable: '',
+                    serviceProvider: '',
+                }
+            ]
         }
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
     }
 
     componentDidMount() {
+        fetch('http://localhost:8000/product/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+        })
+            .then(res => res.json())
+            .then(json => {
+                this.setState({
+                        isLoaded: true,
+                        productData: json,
+                    }
+                )
+            })
+        console.log(this.productData);
     }
 
     handleSuccessfulLogoutAction() {
@@ -32,34 +88,6 @@ class Transaction extends React.Component {
         this.props.history.push('/socialWorkerRegister');
     };
 
-    // handleInventory = e => {
-    //     e.preventDefault();
-    //     this.props.form.validateFieldsAndScroll((err, values) => {
-    //
-    //         var transactionObject = {};
-    //         employmentStatusObject.InformationDate = values['informationdate'] != null ? values['informationdate'].format('YYYY-MM-DD') : null;
-    //         employmentStatusObject.Employed = this.handleValue(values.employed)
-    //         employmentStatusObject.TypeOfEmployment = this.handleValue(values.typeofemployment)
-    //         employmentStatusObject.WhyNotEmployed = this.handleValue(values.whynotemployed)
-    //         enrollmentRequestObject.employment_Status = employmentStatusObject;
-    //         this.handleEmptyObject(enrollmentRequestObject);
-    //         console.log(enrollmentRequestObject);
-    //
-    //         fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/transaction/', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Authorization: `Bearer ${localStorage.getItem('token')}`
-    //             },
-    //             body: JSON.stringify(transactionObject)
-    //         })
-    //             .then(res => res.json())
-    //             .then(json => {
-    //                 this.props.history.push('/socialWorkerRegister');
-    //             });
-    //
-    //     });
-    // };
 
     render() {
         console.log(this.props.homelessPersonId)
@@ -71,7 +99,8 @@ class Transaction extends React.Component {
                 <Layout>
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
-
+                            <Table className="site-layout-content-viewappointment"
+                                   dataSource={this.state.productData} columns={this.state.columns}/>
                         </div>
                     </Content>
                 </Layout>
