@@ -1,48 +1,54 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Form, Layout, Table} from "antd";
+import {Button, Form, Layout, Table, InputNumber} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent';
 
 const {Content} = Layout;
 
 class Transaction extends React.Component {
     constructor(props) {
+
+
         super(props);
         this.state = {
             isLoaded: false,
+            selectedRowKeys: [],
             columns: [
                 {
-                    title: 'productId',
+                    title: 'Product Id',
                     dataIndex: 'productId',
                     key: 'productId',
                     width: 80,
                 },
                 {
-                    title: 'productName',
+                    title: 'Product Name',
                     dataIndex: 'productName',
                     key: 'productName',
                     width: 30,
                 },
                 {
-                    title: 'costPerItem',
+                    title: 'Cost Per Item',
                     dataIndex: 'costPerItem',
                     key: 'costPerItem',
                     width: 30,
                 },
                 {
-                    title: 'unitsAvailable',
+                    title: 'Units Available',
                     dataIndex: 'unitsAvailable',
                     key: 'unitsAvailable',
                     width: 30,
                 },
                 {
-                    title: 'serviceProvider',
-                    dataIndex: 'serviceProvider',
-                    key: 'serviceProvider',
+                    title: 'Units Given',
+                    key: 'action',
                     width: 30,
+                    render: () => (
+                        <span>
+                        <InputNumber min={0} max={100} defaultValue={0}/>
+                        </span>
+                    ),
                 },
             ],
             productData: [
@@ -88,8 +94,34 @@ class Transaction extends React.Component {
         this.props.history.push('/socialWorkerRegister');
     };
 
+    start = () => {
+        this.setState({ loading: true });
+        // ajax request after empty completing
+        setTimeout(() => {
+        this.setState({
+        selectedRowKeys: [],
+        loading: false,
+        });
+        }, 1000);
+    };
+
+    onSelectChange = selectedRowKeys => {
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        this.setState({ selectedRowKeys });
+    };
+
+
+    onChange(value) {
+  console.log('changed', value);
+}
 
     render() {
+        const { loading, selectedRowKeys } = this.state;
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: this.onSelectChange,
+            };
+        const hasSelected = selectedRowKeys.length > 0;
         console.log(this.props.homelessPersonId)
         return (
             <Layout className="layout">
@@ -99,7 +131,7 @@ class Transaction extends React.Component {
                 <Layout>
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
-                            <Table className="site-layout-content-viewappointment"
+                            <Table rowSelection={rowSelection} className="site-layout-content-viewappointment"
                                    dataSource={this.state.productData} columns={this.state.columns}/>
                         </div>
                     </Content>
