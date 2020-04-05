@@ -11,19 +11,19 @@
   width: 100%;
 }
 
-#inventory td, #students th {
+#inventory td, #inventory th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#inventory tr:nth-child(even){background-color: #f2f2f2;}
+#inventory tr:nth-child(even){background-color: #6495ED;}
 
-#inventory tr:hover {background-color: #ddd;}
+#inventory tr:hover {background-color: #6495ED;}
 
 #inventory th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
-  background-color: #4CAF50;
+  background-color: #0f4d92;
   color: white;
 }

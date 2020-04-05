@@ -7,6 +7,7 @@ import './transaction.css'
 import StreetCardFooter from './StreetCardFooter'
 
 const {Content} = Layout;
+const header =["Product Id", "Product Name","Cost Per Item", "Units Available","Service Provider","Given Units", "Amount"];
 
 class Transaction extends React.Component {
     constructor(props) {
@@ -31,13 +32,14 @@ class Transaction extends React.Component {
         }
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
+        this.renderTableHeader = this.renderTableHeader.bind(this);
     }
 
     takeIntput = (e, index) => {
 
         let prodData = JSON.parse(JSON.stringify(this.state.productData));
         prodData[index].quantity = e.target.value;
-        prodData[index].amount = e.target.value *  prodData[index].costPerItem;
+        prodData[index].amount = e.target.value * prodData[index].costPerItem;
         this.setState({productData: prodData})
         this.state.totalAmount += prodData[index].amount;
     }
@@ -55,9 +57,11 @@ class Transaction extends React.Component {
             .then(json => {
                 let prod = [];
                 json.forEach((key, index) => {
-                    key = {...key, "unitsPurchased": 0,
-                        "amount": 0 , "index1" : index  }
-                        prod.push(key)
+                    key = {
+                        ...key, "unitsPurchased": 0,
+                        "amount": 0, "index1": index
+                    }
+                    prod.push(key)
 
                 })
                 console.log(prod)
@@ -80,16 +84,13 @@ class Transaction extends React.Component {
         this.props.history.push('/socialWorkerRegister');
     }
 
-    renderTableHeader= () => {
-        let head = {
-
+    renderTableHeader() {
+        let res = [];
+        for (let i = 0; i < header.length; i++) {
+            res.push(<th key={header[i]}>{header[i]}</th>)
         }
-      let header =["Product Id", "Product Name","Cost Per Item", "Units Available","Service Provider","Given Units", "Amount"]
-      return header.forEach((key, index) => {
-          console.log("header",key);
-         return (<th key={index}>{key.toUpperCase()}</th>)
-      })
-   }
+            return res;
+    }
 
     renderTableData() {
       return this.state.productData.map((product, index) => {
@@ -120,6 +121,9 @@ class Transaction extends React.Component {
                         <div className="site-layout-content-homeless">
                             <h1 align="center">Inventory Details</h1>
                             <table id='inventory'>
+                                <thead>
+                                    <tr>{this.renderTableHeader()}</tr>
+                                </thead>
                                 <tbody >
                                     <tr>{this.renderTableHeader}</tr>
                                     {this.renderTableData()}
