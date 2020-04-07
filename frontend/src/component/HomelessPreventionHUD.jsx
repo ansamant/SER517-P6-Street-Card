@@ -345,7 +345,7 @@ class HomelessPreventionHUD extends Component {
                 })
                     .then(res => res.json())
                     .then(json => {
-                        this.props.history.push('/socialWorkerRegister');
+                        this.props.history.push('/success');
                     });
             }
         });
