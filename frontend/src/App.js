@@ -17,6 +17,8 @@ import viewEnrollmentDetails from './component/viewEnrollmentDetails'
 import ClientLanding from './ClientLanding'
 import ClientPersonalInfo from "./ClientPersonalInfo";
 import Transaction from "./Transaction"
+import SuccessfulRegistration from "./component/SuccessfulRegistration";
+import LoginError from "./component/LoginError";
 
 const PrivateRoute = ({component: Component, loggedInStatus: loggedInStatus, ...rest}) => (
     <Route render={(props) => (
@@ -331,6 +333,22 @@ export default class App extends React.Component {
                             handleLogout={this.handleLogout}
                             homelessData={this.state.homelessData}
                             appointmentData={this.state.xyz}
+                        />
+                        <PrivateRoute
+                            exact
+                            path={"/success"}
+                            component={SuccessfulRegistration}
+                            loggedInStatus={this.state.loggedInStatus}
+                            homelessPersonId={this.state.homelessPersonId}
+                            handleLogout={this.handleLogout}
+                            updatePageComponent={this.updatePageComponent}
+                        />
+                        <Route
+                            exact
+                            path={"/loginError"}
+                            component={LoginError}
+                            loggedInStatus={this.state.loggedInStatus}
+                            handleLogout={this.handleLogout}
                         />
                     </Switch>
                 </BrowserRouter>

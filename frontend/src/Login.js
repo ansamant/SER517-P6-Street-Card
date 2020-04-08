@@ -6,7 +6,7 @@ import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
 const {Content} = Layout;
-
+const displayerror = [];
 class NormalLoginForm extends React.Component {
 
     constructor(props) {
@@ -30,10 +30,22 @@ class NormalLoginForm extends React.Component {
                     },
                     body: JSON.stringify(values)
                 })
-                    .then(res => res.json())
-                    .then(json => {
-                        this.props.handleLogin(json, values.username);
-                        this.props.history.push('/social');
+                    .then(res =>{
+                        if(res.status===200){
+                            return res.json();
+                        }
+                        else{
+                            return null;
+                        }
+                    })
+                    .then((resp) => {
+                        if(resp===null){
+                            this.props.history.push('/loginError');
+                        }
+                        else{
+                            this.props.handleLogin(resp, values.username);
+                            this.props.history.push('/social');
+                        }
                     });
             }
         });
@@ -79,7 +91,7 @@ class NormalLoginForm extends React.Component {
                 <StreetCardFooter/>
             </Layout>;
         return (
-            <div>{form}</div>
+            <div>{form} </div>
         );
     }
 }
