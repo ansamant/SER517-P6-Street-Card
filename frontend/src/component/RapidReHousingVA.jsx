@@ -128,6 +128,257 @@ const InsuranceReasonCategory = [
         value: 99,
         label: "Data Not Collected"
     }];
+    const MilitaryBranchCategory = [
+        {
+            value: 1,
+            label: "Army"
+        },
+        {
+            value: 2,
+            label: "Air Force"
+        },
+        {
+            value: 3,
+            label: "Navy"
+        },
+        {
+            value: 4,
+            label: "Marines"
+        },
+        {
+            value: 6,
+            label: "Coast Guard"
+        },
+        {
+            value: 8,
+            label: "Client Doesn't Know"
+        },
+        {
+            value: 9,
+            label: "Client Refused"
+        },
+        {
+            value: 99,
+            label: "Data Not Collected"
+        }
+    ];
+    const DischargeStatusCategory = [
+        {
+            value: 1,
+            label: "Honorable"
+        },
+        {
+            value: 2,
+            label: "General under honorable conditions"
+        },
+        {
+            value: 6,
+            label: "Under other than honorable conditions (OTH)"
+        },
+        {
+            value: 4,
+            label: "Bad conduct"
+        },
+        {
+            value: 5,
+            label: "Dishonorable"
+        },
+        {
+            value: 7,
+            label: "Uncharacterized"
+        },
+        {
+            value: 8,
+            label: "Client Doesn't Know"
+        },
+        {
+            value: 9,
+            label: "Client Refused"
+        },
+        {
+            value: 99,
+            label: "Data Not Collected"
+        }
+    ];
+    const TypeOfEmploymentCategory = [
+        {
+            value: 1,
+            label: "Full-time"
+        },
+        {
+            value: 2,
+            label: "Part-time"
+        }
+    ];
+    const WhyNotEmployedCategory = [
+        {
+            value: 1,
+            label: "WhyNotEmployedCategory"
+        },
+        {
+            value: 2,
+            label: "Unable to work"
+        },
+        {
+            value: 3,
+            label: "Not looking for work"
+        }];
+    const TypeOfServiceCategory = [
+        {
+            value: 1,
+            label: "Outreach services"
+        },
+        {
+            value: 2,
+            label: "Case management services"
+        },
+        {
+            value: 3,
+            label: "Assistance obtaining VA benefits"
+        },
+        {
+            value: 4,
+            label: "Assistance obtaining/coordinating other public benefits"
+        },
+        {
+            value: 5,
+            label: "Direct provision of other public benefits"
+        },
+        {
+            value: 6,
+            label: "Other (non TFA)supportive service approved by VA"
+        },
+        {
+            value: 7,
+            label: "Extended Shallow Subsidy"
+        },
+        {
+            value: 8,
+            label: "Returning Homey"
+        },
+        {
+            value: 9,
+            label: "Rapid Resolution"
+        }
+    ];
+    const IfAssistanceObtainingOrCoordinatingOtherPublicBenefitsCategory = [
+        {
+            value: 1,
+            label: "Health care services"
+        },
+        {
+            value: 2,
+            label: "Daily living services"
+        },
+        {
+            value: 3,
+            label: "Personal financial planning services"
+        },
+        {
+            value: 4,
+            label: "Transportation services"
+        },
+        {
+            value: 5,
+            label: "Income support services"
+        },
+        {
+            value: 6,
+            label: "Fiduciary and representative payee services"
+        },
+        {
+            value: 7,
+            label: "Legal services - child support"
+        },
+        {
+            value: 8,
+            label: "Legal services - eviction prevention"
+        },
+        {
+            value: 9,
+            label: "Legal services - outstanding fines and penalties"
+        },
+        {
+            value: 10,
+            label: "Legal services - restore/acquire drivers license"
+        },
+        {
+            value: 11,
+            label: "Legal services - other"
+        },
+        {
+            value: 12,
+            label: "Child care"
+        },
+        {
+            value: 13,
+            label: "Housing counseling"
+        }
+    ];
+    const IfDirectProvisionOfOtherPublicBenefitsCategory = [
+        {
+            value: 1,
+            label: "Personal financial planning services"
+        },
+        {
+            value: 2,
+            label: "Transportation services"
+        },
+        {
+            value: 3,
+            label: "Income support services"
+        },
+        {
+            value: 4,
+            label: "Fiduciary and representative payee services"
+        },
+        {
+            value: 5,
+            label: "Legal services - child support"
+        },
+        {
+            value: 6,
+            label: "Legal services - eviction prevention"
+        },
+        {
+            value: 7,
+            label: "Legal services - outstanding fines and penalties"
+        },
+        {
+            value: 8,
+            label: "Legal services - restore/acquire drivers license"
+        },
+        {
+            value: 9,
+            label: "Legal services - other"
+        },
+        {
+            value: 10,
+            label: "Child care"
+        },
+        {
+            value: 11,
+            label: "Housing counseling"
+        }
+    ];
+    const IfAssistanceObtainingVABenefitsCategory = [
+        {
+            value: 1,
+            label: "VA vocational and rehabilitation counseling"
+        },
+        {
+            value: 2,
+            label: "Employment and training services"
+        },
+        {
+            value: 3,
+            label: "Educational assistance"
+        },
+        {
+            value: 4,
+            label: "Health care services"
+        }
+    ];
 const formItemLayout = {
     labelCol: {
         xs: {
