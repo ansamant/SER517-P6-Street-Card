@@ -44,7 +44,7 @@ export class LocationMap extends Component {
     );
   }
 }
-
+//console.log("ENV", process.env.REACT_APP_KEY)
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyDjrdIRdyJaZDtA8rqAIhzJp5cJxwHSMcU'
+  apiKey: process.env.REACT_APP_KEY
 })(LocationMap);
