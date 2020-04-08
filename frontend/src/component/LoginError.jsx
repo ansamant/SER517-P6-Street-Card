@@ -2,15 +2,16 @@ import React, {Component} from "react";
 import "antd/dist/antd.css";
 import {Button, Form, Layout, Result} from 'antd';
 import Header from "../Header";
-import SiderComponent from "./SiderComponent";
 import StreetCardFooter from "../StreetCardFooter";
 
 const {Content} = Layout;
 
-class SuccessfulRegistration extends Component {
+class LoginError extends Component {
     constructor(props) {
         super(props);
-        this.setPagecomponent = this.setPagecomponent.bind(this);
+        this.state = {
+            loginPageStatus: "LOGIN_HEADER"
+        };
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.handleButton = this.handleButton.bind(this);
     }
@@ -20,34 +21,23 @@ class SuccessfulRegistration extends Component {
         this.props.history.push('/login');
     }
 
-    setPagecomponent(pageComponentValue) {
-        this.props.updatePageComponent(pageComponentValue)
-        this.props.history.push('/socialWorkerRegister');
-    };
-
     handleButton(){
-        this.props.history.push('/homelessRegistration');
+        this.props.history.push('/login');
     }
 
     render() {
         return (
             <Layout>
-                <Header
-                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                    loggedInStatus={this.props.loggedInStatus}/>
-                <Layout>
-                    <SiderComponent
-                        setPagecomponent={this.setPagecomponent}
-                    />
+                <Header loginPageStatus={this.state.loginPageStatus}/>
                     <Content className="content-login">
                         <div className="site-layout-content-login">
                             <Result
-                                status="success"
-                                title="Successfully Registered"
-                                subTitle=""
+                                status="error"
+                                title="Login Error"
+                                subTitle="Wrong Username/Password Combination"
                                 extra={[
                                     <Button type="primary" key="console" onClick={this.handleButton}>
-                                        Go to Registration Page
+                                        Login Again
                                     </Button>,
                                 ]}
                             />
@@ -55,14 +45,8 @@ class SuccessfulRegistration extends Component {
                     </Content>
                     <StreetCardFooter/>
                 </Layout>
-            </Layout>
         )
     }
 }
 
-
-const WrappedCSuccessfulRegistration = Form.create({name: "clientLanding"})(
-    SuccessfulRegistration
-);
-
-export default WrappedCSuccessfulRegistration;
+export default LoginError;
