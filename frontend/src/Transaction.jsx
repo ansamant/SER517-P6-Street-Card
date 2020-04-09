@@ -48,13 +48,13 @@ class Transaction extends React.Component {
                         })
                     }
                 })
-                console.log("1111",prodData);
+                console.log("Product details :",prodData);
                 var transactionPostObject = {
                     totalAmount  : this.state.totalAmount,
                     transaction_detail : prodData
                 };
-                console.log("22222",transactionPostObject);
-                fetch('http://localhost:8000/homeless/vP184DLE6D6zSL97q1YydUfFXUVqnFK3/transaction/', {
+                console.log("Total Transaction details",transactionPostObject);
+                fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/transaction/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
