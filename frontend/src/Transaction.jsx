@@ -38,9 +38,22 @@ class Transaction extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err) => {
             if (!err) {
-                var transactionPostObject = {};
-                transactionPostObject.totalAmount = this.state.totalAmount;
 
+                var prodData = [];
+                this.state.productData.forEach((key, index) => {
+                    if(key.quantity > 0 ) {
+                        prodData.push( {
+                            productId : key.productId,
+                            unitPurchased :  key.quantity
+                        })
+                    }
+                })
+                console.log("1111",prodData);
+                var transactionPostObject = {
+                    totalAmount  : this.state.totalAmount,
+                    transaction_detail : prodData
+                };
+                console.log("22222",transactionPostObject);
                 fetch('http://localhost:8000/homeless/vP184DLE6D6zSL97q1YydUfFXUVqnFK3/transaction/', {
                     method: 'POST',
                     headers: {
@@ -59,7 +72,9 @@ class Transaction extends React.Component {
 
         let prodData = JSON.parse(JSON.stringify(this.state.productData));
         prodData[index].quantity = e.target.value;
+        this.state.productData[index].quantity = prodData[index].quantity;
         prodData[index].amount = e.target.value * prodData[index].costPerItem;
+        this.state.productData[index].amount = prodData[index].amount;
         this.setState({productData: prodData});
         this.state.totalAmount += prodData[index].amount;
 
@@ -163,7 +178,7 @@ class Transaction extends React.Component {
                                     {this.renderTableData()}
                                 </tbody>
                             </table>
-                            <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+                            <Form {...formItemLayout}>
                                 <Form.Item>
                                 <Descriptions >
                                     <Descriptions.Item label="Total Amount ">{ this.state.totalAmount }</Descriptions.Item>
@@ -171,7 +186,7 @@ class Transaction extends React.Component {
                                 </Form.Item>
                                 <Form.Item>
                                     <Button type="primary" block htmlType="submit"
-                                            className="registration-submit-button">Submit</Button>
+                                            className="registration-submit-button" onClick={this.handleSubmit}>Submit</Button>
                                 </Form.Item>
                             </Form>
                         </div>
