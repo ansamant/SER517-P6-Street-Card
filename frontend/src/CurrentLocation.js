@@ -14,7 +14,6 @@ export class CurrentLocation extends React.Component {
 
 	constructor(props) {
     super(props);
-
     const { lat, lng } = this.props.initialCenter;
     this.state = {
       currentLocation: {
@@ -22,7 +21,7 @@ export class CurrentLocation extends React.Component {
         lng: lng
       }
     };
-    this.getCurrentLocation = this.getCurrentLocation.bind(this)
+   // this.getCurrentLocation = this.getCurrentLocation.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -61,12 +60,12 @@ export class CurrentLocation extends React.Component {
         alert("Not able to get geolocation coordinates, check if browser version is compatible.")
       }
     }*/
-    console.log("ENV", process.env.REACT_APP_KEY);
-    fetch("https://www.googleapis.com/geolocation/v1/geolocate?key="+process.env.REACT_APP_KEY,{
+    //Get geolocation info from API then render it in map markings.
+    fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.REACT_APP_KEY}`,{
       method:'POST'
     }) .then(res => res.json())
     .then(json => {
-      console.log("JSONRES", json.location.lat, json.location.lng);
+      //console.log("JSONRES", json.location.lat, json.location.lng);
       this.setState({
         currentLocation:{
           lat: json.location.lat,
@@ -78,10 +77,6 @@ export class CurrentLocation extends React.Component {
     this.loadMap();
   }
 
-  getCurrentLocation(position){
-    alert("REACHED HERE!");
-    console.log("POS", position);
-  }
   loadMap() {
     if (this.props && this.props.google) {
       // checks if google is available
@@ -99,15 +94,15 @@ export class CurrentLocation extends React.Component {
       const mapConfig = Object.assign(
         {},
         {
-          center: {lat: lat, lng: lng},
+          center: center,
           zoom: zoom
         }
       );
-
       // maps.Map() is constructor that instantiates the map
       this.map = new maps.Map(node, mapConfig);
     }
   }
+
 
    renderChildren() {
     const { children } = this.props;
@@ -139,6 +134,7 @@ export class CurrentLocation extends React.Component {
 
 }
 export default CurrentLocation;
+
 
 CurrentLocation.defaultProps = {
   zoom: 14,
