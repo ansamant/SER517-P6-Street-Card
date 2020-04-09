@@ -63,8 +63,30 @@ class Transaction extends React.Component {
                     body: JSON.stringify(transactionPostObject)
                 })
                     .then(res => res.json())
-            }
 
+                this.state.productData.forEach((key, index) => {
+                if(key.quantity > 0 ) {
+                    var updateProductDetails = {
+                        productId : key.productId,
+                        costPerItem :  key.costPerItem,
+                        productName : key.productName,
+                        unitsAvailable : key.unitsAvailable - key.quantity,
+                        serviceProvider : key.serviceProvider
+                        };
+
+                    console.log("Update Product Json :",updateProductDetails);
+                    fetch('http://localhost:8000/product/' + key.productId + '/', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(updateProductDetails)
+                })
+                    .then(res => res.json())
+                }
+                })
+            }
         });
     }
 
@@ -78,7 +100,7 @@ class Transaction extends React.Component {
         this.setState({productData: prodData});
         this.state.totalAmount += prodData[index].amount;
 
-        console.log("Input function" + JSON.parse(JSON.stringify(this.state.productData)));
+        console.log("Input function", JSON.parse(JSON.stringify(this.state.productData)));
 
     }
 
