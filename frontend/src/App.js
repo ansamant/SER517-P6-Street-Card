@@ -7,6 +7,7 @@ import Registration from './Registration';
 import HomelessRegistration from './HomelessRegistration';
 import LogView from './LogView';
 import WrappedGreeterForm from './GreeterView';
+import WrappedServiceProvider from './ServiceProvider';
 import SocialWorker from './SocialWorker';
 import SetAppointments from './SetAppointments'
 import EditAppointment from './EditAppointment'
@@ -231,6 +232,17 @@ export default class App extends React.Component {
                             clearanceLevel={this.state.clearanceLevel}
                             serviceProvider={this.state.serviceProvider}
                             inputPersonalId={this.inputPersonalId}
+                            handleLogout={this.handleLogout}
+                        />
+                        <PrivateRoute
+                            exact
+                            path={"/serviceProvider"}
+                            component={WrappedServiceProvider}
+                            clearanceLevel={this.state.clearanceLevel}
+                            username={this.state.username}
+                            loggedInStatus={this.state.loggedInStatus}
+                            clearanceLevel={this.state.clearanceLevel}
+                            serviceProvider={this.state.serviceProvider}
                             handleLogout={this.handleLogout}
                         />
                         <PrivateRoute

@@ -5,6 +5,7 @@ import Header from "../Header";
 import StreetCardFooter from "../StreetCardFooter";
 import SiderComponent from './SiderComponent'
 import HomelessPreventionHUD from "./HomelessPreventionHUD";
+import RapidReHousingVA from "./RapidReHousingVA";
 
 const {Content} = Layout;
 const {Panel} = Collapse;
@@ -142,6 +143,11 @@ class EnrollmentForm extends Component {
                 changingPanel.pop();
                 changingPanel.push(<HomelessPreventionHUD data={e[0]} personalId={this.state.items.PersonalId}
                                                           history={this.props.history}/>)
+                break;
+            case "VA: SSVF - Rapid Re-Housing":
+                changingPanel.pop();
+                changingPanel.push(<RapidReHousingVA data={e[0]} personalId={this.state.items.PersonalId}
+                                                     history={this.props.history} />)
                 break;
         }
     }
