@@ -4,10 +4,11 @@ import {Button, Form, Layout, Result} from 'antd';
 import Header from "../Header";
 import SiderComponent from "./SiderComponent";
 import StreetCardFooter from "../StreetCardFooter";
+import SmileOutlined from "@ant-design/icons/lib/icons/SmileOutlined";
 
 const {Content} = Layout;
 
-class SuccessfulRegistration extends Component {
+class SuccessfulUpdate extends Component {
     constructor(props) {
         super(props);
         this.setPagecomponent = this.setPagecomponent.bind(this);
@@ -43,7 +44,7 @@ class SuccessfulRegistration extends Component {
                         <div className="site-layout-content-login">
                             <Result
                                 status="success"
-                                title="Successfully Registered"
+                                title="Update Successful"
                                 subTitle=""
                                 extra={[
                                     <Button type="primary" key="console" onClick={this.handleButton}>
@@ -61,8 +62,4 @@ class SuccessfulRegistration extends Component {
 }
 
 
-const WrappedCSuccessfulRegistration = Form.create({name: "clientLanding"})(
-    SuccessfulRegistration
-);
-
-export default WrappedCSuccessfulRegistration;
+export default SuccessfulUpdate;

@@ -2,15 +2,13 @@ import React, {Component} from "react";
 import "antd/dist/antd.css";
 import {Button, Form, Layout, Result} from 'antd';
 import Header from "../Header";
-import SiderComponent from "./SiderComponent";
 import StreetCardFooter from "../StreetCardFooter";
 
 const {Content} = Layout;
 
-class SuccessfulRegistration extends Component {
+class TransactionComplete extends Component {
     constructor(props) {
         super(props);
-        this.setPagecomponent = this.setPagecomponent.bind(this);
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.handleButton = this.handleButton.bind(this);
     }
@@ -20,13 +18,8 @@ class SuccessfulRegistration extends Component {
         this.props.history.push('/login');
     }
 
-    setPagecomponent(pageComponentValue) {
-        this.props.updatePageComponent(pageComponentValue)
-        this.props.history.push('/socialWorkerRegister');
-    };
-
     handleButton(){
-        this.props.history.push('/socialWorkerRegister');
+        this.props.history.push('/greeter');
     }
 
     render() {
@@ -35,15 +28,11 @@ class SuccessfulRegistration extends Component {
                 <Header
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.props.loggedInStatus}/>
-                <Layout>
-                    <SiderComponent
-                        setPagecomponent={this.setPagecomponent}
-                    />
                     <Content className="content-login">
                         <div className="site-layout-content-login">
                             <Result
                                 status="success"
-                                title="Successfully Registered"
+                                title="Inventory Updated"
                                 subTitle=""
                                 extra={[
                                     <Button type="primary" key="console" onClick={this.handleButton}>
@@ -55,14 +44,7 @@ class SuccessfulRegistration extends Component {
                     </Content>
                     <StreetCardFooter/>
                 </Layout>
-            </Layout>
         )
     }
 }
-
-
-const WrappedCSuccessfulRegistration = Form.create({name: "clientLanding"})(
-    SuccessfulRegistration
-);
-
-export default WrappedCSuccessfulRegistration;
+export default TransactionComplete;

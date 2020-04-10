@@ -21,7 +21,8 @@ import Transaction from "./Transaction"
 import SuccessfulRegistration from "./component/SuccessfulRegistration";
 import LoginError from "./component/LoginError";
 import InventoryLog from './component/InventoryLog'
-
+import SuccessfulUpdate from "./component/SuccessfulUpdate";
+import TransactionComplete from "./component/TransactionComplete";
 
 const PrivateRoute = ({component: Component, loggedInStatus: loggedInStatus, ...rest}) => (
     <Route render={(props) => (
@@ -255,6 +256,8 @@ export default class App extends React.Component {
                             pageComponent={this.state.pageComponent}
                             handleHomelessPersonInventoryJson = {this.handleHomelessPersonInventoryJson}
                         />
+                        <PrivateRoute
+                            exact
                             path={"/transactionPage"}
                             component={Transaction}
                             homelessPersonId={this.state.homelessPersonId}
@@ -359,6 +362,24 @@ export default class App extends React.Component {
                             exact
                             path={"/success"}
                             component={SuccessfulRegistration}
+                            loggedInStatus={this.state.loggedInStatus}
+                            homelessPersonId={this.state.homelessPersonId}
+                            handleLogout={this.handleLogout}
+                            updatePageComponent={this.updatePageComponent}
+                        />
+                         <PrivateRoute
+                            exact
+                            path={"/successUpdate"}
+                            component={SuccessfulUpdate}
+                            loggedInStatus={this.state.loggedInStatus}
+                            homelessPersonId={this.state.homelessPersonId}
+                            handleLogout={this.handleLogout}
+                            updatePageComponent={this.updatePageComponent}
+                        />
+                        <PrivateRoute
+                            exact
+                            path={"/transactionComplete"}
+                            component={TransactionComplete}
                             loggedInStatus={this.state.loggedInStatus}
                             homelessPersonId={this.state.homelessPersonId}
                             handleLogout={this.handleLogout}

@@ -50,7 +50,7 @@ class GreeterView extends React.Component {
                     .then(json => {
                         // Need name to be used in the header for easy mapping of client name.
                         registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
-                        console.log("REG1 " + registerRequestObject.clientName)
+                        //console.log("REG1 " + registerRequestObject.clientName)
                         this.setState({
                             isLoaded: true,
                             name: registerRequestObject.clientName,

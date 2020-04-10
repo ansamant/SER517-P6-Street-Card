@@ -485,7 +485,7 @@ class RegistrationForm extends React.Component {
                     .then(res => res.json())
                     .then(json => {
                         this.props.handleHomelessPersonId(registerRequestObject.PersonalId);
-                        this.props.history.push('/socialWorkerRegister');
+                        this.props.history.push('/success');
                     });
             }
         });

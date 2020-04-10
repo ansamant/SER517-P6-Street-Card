@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Form, Layout, Descriptions, InputNumber} from "antd";
+import {Button, Form, InputNumber, Layout} from "antd";
 import Header from './Header'
 import './transaction.css'
 import StreetCardFooter from './StreetCardFooter'
@@ -38,10 +38,23 @@ class Transaction extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err) => {
             if (!err) {
-                var transactionPostObject = {};
-                transactionPostObject.totalAmount = this.state.totalAmount;
 
-                fetch('http://localhost:8000/homeless/vP184DLE6D6zSL97q1YydUfFXUVqnFK3/transaction/', {
+                var prodData = [];
+                this.state.productData.forEach((key, index) => {
+                    if(key.quantity > 0 ) {
+                        prodData.push( {
+                            productId : key.productId,
+                            unitPurchased :  key.quantity
+                        })
+                    }
+                })
+                console.log("Product details :",prodData);
+                var transactionPostObject = {
+                    totalAmount  : this.state.totalAmount,
+                    transaction_detail : prodData
+                };
+                console.log("Total Transaction details",transactionPostObject);
+                fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/transaction/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -50,8 +63,32 @@ class Transaction extends React.Component {
                     body: JSON.stringify(transactionPostObject)
                 })
                     .then(res => res.json())
-            }
 
+                this.state.productData.forEach((key, index) => {
+                if(key.quantity > 0 ) {
+                    var updateProductDetails = {
+                        productId : key.productId,
+                        costPerItem :  key.costPerItem,
+                        productName : key.productName,
+                        unitsAvailable : key.unitsAvailable - key.quantity,
+                        serviceProvider : key.serviceProvider
+                        };
+
+                    console.log("Update Product Json :", updateProductDetails);
+                    fetch('http://localhost:8000/product/' + key.productId + '/', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify(updateProductDetails)
+                    })
+                        .then(res => res.json()).then(json => {
+                        this.props.history.push('/transactionComplete');
+                    });
+                }
+                })
+            }
         });
     }
 
@@ -59,11 +96,13 @@ class Transaction extends React.Component {
 
         let prodData = JSON.parse(JSON.stringify(this.state.productData));
         prodData[index].quantity = e.target.value;
+        this.state.productData[index].quantity = prodData[index].quantity;
         prodData[index].amount = e.target.value * prodData[index].costPerItem;
-        this.setState({productData: prodData});
+        this.state.productData[index].amount = prodData[index].amount;
         this.state.totalAmount += prodData[index].amount;
+        this.setState({productData: prodData});
 
-        console.log("Input function" + JSON.parse(JSON.stringify(this.state.productData)));
+        console.log("Input function", JSON.parse(JSON.stringify(this.state.productData)));
 
     }
 
@@ -120,15 +159,16 @@ class Transaction extends React.Component {
       return this.state.productData.map((product, index) => {
          const { productId, productName, costPerItem, unitsAvailable, serviceProvider, amount, index1} = product //destructuring
          return (
-            <tr key={productId}>
-               <td align={"center"}>{productId}</td>
-               <td align={"center"}>{productName}</td>
-               <td align={"center"}>{costPerItem}</td>
-               <td align={"center"}>{unitsAvailable}</td>
-               <td align={"center"}>{serviceProvider}</td>
-               <td><InputNumber min={0} max={100} defaultValue={0} onBlur={(e) => this.takeIntput(e,index1)}/></td>
-               <td>{amount}</td>
-            </tr>
+             <tr key={productId}>
+                 <td align={"center"}>{productId}</td>
+                 <td align={"center"}>{productName}</td>
+                 <td align={"center"}>{costPerItem}</td>
+                 <td align={"center"}>{unitsAvailable}</td>
+                 <td align={"center"}>{serviceProvider}</td>
+                 <td><InputNumber min={0} max={unitsAvailable} defaultValue={0}
+                                  onBlur={(e) => this.takeIntput(e, index1)}/></td>
+                 <td>{amount}</td>
+             </tr>
          )
       })
    }
@@ -151,28 +191,28 @@ class Transaction extends React.Component {
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.props.loggedInStatus}/>
                 <Layout>
-                    <Content className="content-enroll">
-                        <div className="site-layout-content-homeless">
-                            <h1 align="center">Inventory Details</h1>
+                    <Content className="content-login">
+                        <div className="site-layout-content-login">
                             <table id='inventory'>
                                 <thead>
-                                    <tr>{this.renderTableHeader()}</tr>
+                                <tr>{this.renderTableHeader()}</tr>
                                 </thead>
-                                <tbody >
-                                    <tr>{this.renderTableHeader}</tr>
-                                    {this.renderTableData()}
+                                <tbody>
+                                <tr>{this.renderTableHeader}</tr>
+                                {this.renderTableData()}
                                 </tbody>
                             </table>
-                            <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-                                <Form.Item>
-                                <Descriptions >
-                                    <Descriptions.Item label="Total Amount ">{ this.state.totalAmount }</Descriptions.Item>
-                                </Descriptions>
-                                </Form.Item>
-                                <Form.Item>
-                                    <Button type="primary" block htmlType="submit"
-                                            className="registration-submit-button">Submit</Button>
-                                </Form.Item>
+                            <Form {...formItemLayout}>
+                                <table style={{ border: "2px solid lightgrey", width: "100%", textAlign: "right"}}>
+                                    <tr>
+                                        <td> <b>Total Amount: ${this.state.totalAmount}</b></td>
+                                         <td>
+                                            <Button type="primary" htmlType="submit" size="medium"
+                                                    className="registration-submit-button"
+                                                    onClick={this.handleSubmit}>Submit</Button>
+                                        </td>
+                                    </tr>
+                                </table>
                             </Form>
                         </div>
                     </Content>
