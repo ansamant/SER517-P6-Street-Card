@@ -255,6 +255,37 @@ class ServiceProviderView extends React.Component {
             </Layout>
                 </div>
             );
+        }else if(this.state.pageComponent == 'barChart'){
+            return(
+                <div>
+                <Layout className="layout">
+            <Header handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                    loggedInStatus={this.state.loggedInStatus}
+            />
+            <Layout>
+                <SiderComponentServiceProvider
+                    setPagecomponent={this.setPagecomponent}
+                />
+                <Content className="content-login">
+                        <Chart
+                          className = "site-layout-content-graphs"
+                          chartType="Bar"
+                          loader={<div>Loading Chart</div>}
+                          data={this.state.productData}
+                          options={{
+                            chart: {
+                              title: 'Product Data'
+                            },
+                          }}
+                          // For tests
+                          rootProps={{ 'data-testid': '2' }}
+                        />
+                </Content>
+            </Layout>
+            <StreetCardFooter/>
+            </Layout>
+                </div>
+            );
         }else {
             return(
             <Layout className="layout">
