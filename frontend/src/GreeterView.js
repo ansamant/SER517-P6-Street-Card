@@ -1,9 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-// import './login.css';
-// import { Form, Input, Button} from 'antd';
-import {Button, Form, Icon, Input, Layout} from "antd";
+import {Button, Col, Form, Icon, Input, Layout, Row} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
@@ -18,6 +16,7 @@ class GreeterView extends React.Component {
         this.state = {
             isLoaded: false,
             name: "",
+            id: "",
             clearanceLevel: this.props.clearanceLevel,
             serviceProvider: this.props.serviceProvider
         }
@@ -51,10 +50,11 @@ class GreeterView extends React.Component {
                     .then(json => {
                         // Need name to be used in the header for easy mapping of client name.
                         registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
-                        console.log("REG1 " + registerRequestObject.clientName)
+                        //console.log("REG1 " + registerRequestObject.clientName)
                         this.setState({
                             isLoaded: true,
                             name: registerRequestObject.clientName,
+                            id: values.personalId
                         })
 
                     }).then(json => {
@@ -82,6 +82,12 @@ class GreeterView extends React.Component {
     handleSuccessfulLogoutAction() {
         this.props.handleLogout();
         this.props.history.push('/login');
+    }
+
+    processTransaction(personalId) {
+        console.log(personalId)
+        this.props.inputPersonalId(personalId)
+        this.props.history.push('/transactionPage');
     }
 
     render() {
@@ -119,8 +125,12 @@ class GreeterView extends React.Component {
                 />
                 <Layout>
                     <Content className="content-login">
-                        <center><h2>Hello {this.state.name}</h2></center>
                         <div className="site-layout-content-login">
+                            <Row>
+                                <Col span={24}>
+                                    <h3>Hello {this.state.name}</h3>
+                                </Col>
+                                </Row>
                             <Form onSubmit={this.handleSubmit} className="login-form">
                                 <Form.Item>
                                     {getFieldDecorator('personalId', {
@@ -143,6 +153,16 @@ class GreeterView extends React.Component {
                                         Submit
                                     </Button>
                                 </Form.Item>
+
+                                <Row>
+
+                                <Col span={24}>
+                                    <Button type="link" htmlType="submit"
+                                            onClick={() => this.processTransaction(this.state.id)}>
+                                        Go to Inventory ->
+                                    </Button>
+                                </Col>
+                            </Row>
                             </Form>
                         </div>
                     </Content>
@@ -193,8 +213,6 @@ class GreeterView extends React.Component {
         }
     }
 }
-
-//ReactDOM.render(<Greeter/>, document.getElementById('greeter'));
 
 const WrappedGreeterForm = Form.create({name: "greeter"})(
     GreeterView

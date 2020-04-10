@@ -1,10 +1,10 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import './index.css';
+import '../index.css';
 import {Form, Layout, Table} from 'antd';
-import Header from './Header.js'
-import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
+import Header from '../Header.js'
+import StreetCardFooter from '../StreetCardFooter'
+import SiderComponentServiceProvider from './SiderComponentServiceProvider'
 
 /**
  * Creating a table for rendering the timestamp logo.
@@ -13,41 +13,44 @@ import SiderComponent from './component/SiderComponent'
 
 const {Content} = Layout;
 
-class LogView extends React.Component {
+class InventoryLog extends React.Component {
     constructor(props) {
         super(props);
-        console.log('Props')
-        console.log(this.props)
+        console.log(this.props.homelessInventoryData)
         this.state = {
             isLoaded: false,
             columns: [
                 {
-                    title: 'DateTime',
-                    dataIndex: 'datetime',
+                    title: 'Date',
+                    dataIndex: 'dateTime',
                 },
                 {
-                    title: 'Personal ID',
-                    dataIndex: 'personalId',
+                    title: 'Transaction ID',
+                    dataIndex: 'transactionId',
+                },
+                {
+                    title: 'Total Amount',
+                    dataIndex: 'totalAmount',
                 },
 
                 {
-                    title: 'Client Name',
-                    dataIndex: 'clientName',
+                    title: 'Unit Purchased',
+                    dataIndex: 'unitPurchased',
                 },
 
                 {
-                    title: 'Service Provider',
-                    dataIndex: 'serviceProvider',
+                    title: 'Product ID',
+                    dataIndex: 'productId',
                 },
 
             ],
             dataSource: [
                 {
-                    id: '',
-                    datetime: '',
-                    clientName: '',
-                    serviceProvider: '',
-                    personalId: '',
+                    transactionId: '',
+                    totalAmount: '',
+                    unitPurchased: '',
+                    productId: '',
+                    dateTIme:''
 
                 }
             ]
@@ -59,25 +62,9 @@ class LogView extends React.Component {
     }
 
     componentDidMount() {
-        console.log("HOMELESS ID", this.props.handleHomelessPersonId)
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.handleHomelessPersonId.toString() + '/logs/', {  
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            },
-        })
-            .then(res => res.json())
-            .then(json => {
-                console.log(json)
-                this.setState({
-                        isLoaded: true,
-                        dataSource: json,
-                    }
-                )
-            })
-        console.log(this.state.dataSource);
+        
     }
+
 
     handleSuccessfulLogoutAction() {
         this.props.handleLogout();
@@ -87,7 +74,7 @@ class LogView extends React.Component {
 
     setPagecomponent(pageComponentValue) {
         this.props.updatePageComponent(pageComponentValue)
-        this.props.history.push('/socialWorkerRegister');
+        this.props.history.push('/serviceProvider');
     };
 
     render() {
@@ -125,7 +112,7 @@ class LogView extends React.Component {
                 />
 
                 <Layout>
-                    <SiderComponent
+                    <SiderComponentServiceProvider
                         setPagecomponent={this.setPagecomponent}
                     />
                     <Content className="content-enroll">
@@ -143,7 +130,7 @@ class LogView extends React.Component {
 }
 
 const WrappedLogTable = Form.create({name: "log"})(
-    LogView
+    InventoryLog
 );
 
 export default WrappedLogTable;

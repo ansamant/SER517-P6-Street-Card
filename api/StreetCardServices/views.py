@@ -1,19 +1,21 @@
 import datetime
-import pytz
+from uuid import uuid4
 
+import pytz
 from django.conf import settings
 from django.contrib.auth.models import User, Group
+from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 from .models import SocialWorker, Homeless, Enrollment, NonCashBenefits, IncomeAndSources, UserNameAndIdMapping, Log, \
-    Appointments
+    Appointments, Product, Transactions
 from .serializers import UserSerializer, GroupSerializer, SocialWorkerSerializer, EnrollmentSerializer, \
     NonCashBenefitsSerializer, IncomeSerializer, HomelessSerializer, UserNameAndIdMappingSerializer, LogSerializer, \
-    AppointmentSerializer
-from .tasks import send_email_task
+    AppointmentSerializer, ProductSerializer, TransactionSerializer
+from .tasks import send_email_task, revoke_email_task
 from .utils import primary_key_generator
 
 
@@ -48,25 +50,37 @@ class SocialWorkerDetails(viewsets.ModelViewSet):
 class LogEntry(viewsets.ModelViewSet):
 
     def list(self, request, homeless_pk=None):
-        queryset = Log.objects.filter(personalId_id=homeless_pk)
-        serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'log'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Log.objects.filter(personalId_id=homeless_pk)
+            serializer = LogSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
-        queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
-        enroll = get_object_or_404(queryset, pk=pk)
-        serializer = LogSerializer(enroll)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'log' + pk
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
+            enroll = get_object_or_404(queryset, pk=pk)
+            serializer = LogSerializer(enroll)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
         # Test remove later
         # send_email_task.delay("Send Email Test", "Test", settings.EMAIL_HOST_USER, ['recipient@gmail.com'])
+        cache_key = 'log' + homeless_pk
         enroll = request.data
         enroll['personalId'] = homeless_pk
         serializer = LogSerializer(data=enroll)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -98,67 +112,87 @@ class NonCashDetails(viewsets.ModelViewSet):
 class HomelessViewSet(viewsets.ViewSet):
 
     def list(self, request):
-        queryset = Homeless.objects.filter()
-        serializer = HomelessSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = 'homeless'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Homeless.objects.filter()
+            serializer = HomelessSerializer(queryset, many=True)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
-        queryset = Homeless.objects.filter(pk=pk)
-        enroll = get_object_or_404(queryset, pk=pk)
-        serializer = HomelessSerializer(enroll)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = 'homeless' + pk
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Homeless.objects.filter(pk=pk)
+            homeless = get_object_or_404(queryset, pk=pk)
+            serializer = HomelessSerializer(homeless)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        cache_key = 'homeless'
         homeless = request.data
         homeless['PersonalId'] = primary_key_generator()
         serializer = HomelessSerializer(data=homeless)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
+        cache_key = 'homeless' + pk
         queryset = Homeless.objects.filter(pk=pk)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = HomelessSerializer(enroll, data=request.data)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk=None):
+        cache_key = 'homeless' + pk
         queryset = Homeless.objects.filter(pk=pk)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = HomelessSerializer(enroll, data=request.data, partial=True)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
         pass
 
-
-class EnrollmentViewSet(viewsets.ViewSet):
+class LogEntry(viewsets.ModelViewSet):
 
     def list(self, request, homeless_pk=None):
-        queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
-        serializer = EnrollmentSerializer(queryset, many=True)
+        queryset = Log.objects.filter(personalId_id=homeless_pk)
+        serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
-        queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
+        queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
+        
         enroll = get_object_or_404(queryset, pk=pk)
-        serializer = EnrollmentSerializer(enroll)
+        serializer = LogSerializer(enroll)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
+        # Test remove later
+        # send_email_task.delay("Send Email Test", "Test", settings.EMAIL_HOST_USER, ['recipient@gmail.com'])
         enroll = request.data
-        enroll['PersonalId'] = homeless_pk
-        enroll['EnrollmentID'] = primary_key_generator()
-        serializer = EnrollmentSerializer(data=enroll)
+        enroll['personalId'] = homeless_pk
+        serializer = LogSerializer(data=enroll)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -166,10 +200,59 @@ class EnrollmentViewSet(viewsets.ViewSet):
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+class EnrollmentViewSet(viewsets.ViewSet):
+
+    def list(self, request, homeless_pk=None):
+        cache_key = homeless_pk + 'enrollment'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
+            serializer = EnrollmentSerializer(queryset, many=True)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, homeless_pk=None):
+        cache_key = homeless_pk + 'enrollment' + pk
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
+            enroll = get_object_or_404(queryset, pk=pk)
+            serializer = EnrollmentSerializer(enroll)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
+
+    def create(self, request, homeless_pk=None):
+        cache_key = homeless_pk + 'enrollment'
+        enroll = request.data
+        enroll['PersonalId'] = homeless_pk
+        enroll['EnrollmentID'] = primary_key_generator()
+        serializer = EnrollmentSerializer(data=enroll)
+        if serializer.is_valid():
+            cache.delete(cache_key)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, homeless_pk=None):
+        cache_key = homeless_pk + 'enrollment' + pk
         queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = EnrollmentSerializer(enroll, data=request.data)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -185,58 +268,190 @@ class EnrollmentViewSet(viewsets.ViewSet):
 class AppointmentViewSet(viewsets.ViewSet):
 
     def list(self, request, homeless_pk=None):
-        queryset = Appointments.objects.filter(personalId_id=homeless_pk).order_by('Date')
-        serializer = AppointmentSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'appointment'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Appointments.objects.filter(personalId_id=homeless_pk).order_by('-Date')
+            serializer = AppointmentSerializer(queryset, many=True)
+            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
-        queryset = Appointments.objects.filter(pk=pk, personalId_id=homeless_pk)
-        enroll = get_object_or_404(queryset, pk=pk)
-        serializer = AppointmentSerializer(enroll)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = homeless_pk + 'appointment'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = Appointments.objects.filter(pk=pk, personalId_id=homeless_pk)
+            enroll = get_object_or_404(queryset, pk=pk)
+            serializer = AppointmentSerializer(enroll)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request, homeless_pk=None):
-
         enroll = request.data
-
         if (enroll["alert"] == True):
-            timeFormatted = enroll["Time"].format("%H:%M[:%S]")
-            print(timeFormatted)
+            # generate random id for Celery.
+            enroll["AlertTaskID"] = str(uuid4())
+            print(enroll)
+            timeFormatted = str(enroll["Time"])[:5]
+            print("TIME:", timeFormatted)
+
+            strAddr1 = "" if (enroll.get('streetAddress1') is None) else enroll['streetAddress1']
+            strAddr2 = "" if (enroll.get('streetAddress2') is None) else enroll['streetAddress2']
+
             message = (
-                f"Hello,\n We are writing this message to remind you of an appointment you have scheduled at {enroll['office']}, on {enroll['Date']} at {enroll['Time'].format('hh:mm')}.\n"
-                f"Please arrive at {enroll['streetAddress1']}, {enroll['streetAddress2']}, {enroll['city']}, {enroll['state']}, {enroll['zipCode']}.\n"
+                f"Hello,\n We are writing this message to remind you of an appointment you have scheduled at {enroll['office']}, on {enroll['Date']} at {timeFormatted}.\n"
+                f"Please arrive at {strAddr1}, {strAddr2}, {enroll['city']}, {enroll['state']}, {enroll['zipCode']}.\n"
                 f"Please arrive at least 15 minutes early.\n Sincerely,\n StreetCard.")
+
             receiver = enroll["Email"]
             sender = settings.EMAIL_HOST_USER
             title = "Appointment Reminder from StreetCard"
-            az_tz = pytz.timezone('US/Arizona')
+            us_tz = 'US/' + enroll["TimeZone"]
+            print('USTZ', us_tz)
+            az_tz = pytz.timezone(us_tz)
             dateTimeObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
             az_dt = az_tz.localize(dateTimeObj)
             etaObj = az_dt.astimezone(pytz.UTC)
-            # etaObj = datetime.datetime.strptime(enroll['Date'], '%Y-%m-%d')
             # print("ETA OBJ:", etaObj)
-            send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj)
-
+            send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj, task_id=enroll["AlertTaskID"],
+                                        time_limit=90, soft_time_limit=60)
+            # Test
+            # send_email_task.apply_async((message, title, sender, [receiver]), eta=datetime.datetime.now() +
+            #                                             datetime.timedelta(seconds=60), task_id=enroll["AlertTaskID"])
+            # revoke_email_task(str(enroll['AlertTaskID']))
         enroll['personalId'] = homeless_pk
         enroll['appointmentId'] = primary_key_generator()
         serializer = AppointmentSerializer(data=enroll)
+        cache_key = homeless_pk + 'appointment'
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None, homeless_pk=None):
+        cache_key = homeless_pk + 'appointment'
         queryset = Appointments.objects.filter(personalId_id=homeless_pk)
         enroll = get_object_or_404(queryset, pk=pk)
-        serializer = AppointmentSerializer(enroll, data=request.data)
+        # print("REQ", request.data)
+        requestData = request.data
+        if (requestData['Email'] != "" and requestData['alert'] == True):
+            requestData['AlertTaskID'] = str(uuid4())
+
+            strAddr1 = "" if (requestData.get('streetAddress1') is None) else requestData['streetAddress1']
+            strAddr2 = "" if (requestData.get('streetAddress2') is None) else requestData['streetAddress2']
+            print("StrAddr2", requestData['streetAddress2'])
+            message = (
+                f"Hello,\n We are writing this message to remind you of an appointment you have scheduled at {requestData['office']}, on {requestData['Date']} at {requestData['Time'].format('hh:mm')}.\n"
+                f"Please arrive at {strAddr1}, {strAddr2}, {requestData['city']}, {requestData['state']}, {requestData['zipCode']}.\n"
+                f"Please arrive at least 15 minutes early.\n Sincerely,\n StreetCard.")
+            receiver = requestData['Email']
+            sender = settings.EMAIL_HOST_USER
+            title = "Appointment Reminder from StreetCard"
+            us_tz = 'US/' + requestData["TimeZone"]
+            print('USTZ', us_tz)
+            az_tz = pytz.timezone(us_tz)
+            dateTimeObj = datetime.datetime.strptime(requestData['Date'], '%Y-%m-%d')
+            az_dt = az_tz.localize(dateTimeObj)
+            etaObj = az_dt.astimezone(pytz.UTC)
+            send_email_task.apply_async((message, title, sender, [receiver]), eta=etaObj,
+                                        task_id=requestData["AlertTaskID"], time_limit=90, soft_time_limit=60)
+            # Test
+            # send_email_task.apply_async((message, title, sender, [receiver]), eta=datetime.datetime.now() +
+            #                                            datetime.timedelta(seconds=60), task_id=requestData["AlertTaskID"])
+        elif (requestData['Email'] != "" and requestData['alert'] == False and requestData["AlertTaskID"] != ""):
+            print("ALERT", requestData['AlertTaskID'])
+            # app.control.revoke(str(requestData['AlertTaskID']), terminate=True)
+            revoke_email_task(str(requestData['AlertTaskID']))
+            requestData['AlertTaskID'] = ""
+
+        serializer = AppointmentSerializer(enroll, data=requestData)
         if serializer.is_valid():
+            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+class ProductViewSet(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = Product.objects.all()
+        serializer = ProductSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None):
+        queryset = Product.objects.filter(pk=pk)
+        product = get_object_or_404(queryset, pk=pk)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        product = request.data
+        product['productId'] = primary_key_generator()
+        serializer = ProductSerializer(data=product)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None):
+        queryset = Product.objects.filter(pk=pk)
+        enroll = get_object_or_404(queryset, pk=pk)
+        serializer = ProductSerializer(enroll, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def partial_update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+class TransactionViewSet(viewsets.ViewSet):
+
+    def list(self, request, homeless_pk=None):
+        queryset = Transactions.objects.filter(personalId_id=homeless_pk)
+        serializer = TransactionSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, homeless_pk=None):
+        queryset = Transactions.objects.filter(pk=pk, personalId_id=homeless_pk)
+        transaction = get_object_or_404(queryset, pk=pk)
+        serializer = TransactionSerializer(transaction)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, homeless_pk=None):
+        transaction = request.data
+        transaction['personalId'] = homeless_pk
+        transaction['transactionId'] = primary_key_generator()
+        serializer = TransactionSerializer(data=transaction)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, homeless_pk=None):
+        pass
+
+    def partial_update(self, request, pk=None, homeless_pk=None):
         pass
 
     def destroy(self, request, pk=None):
