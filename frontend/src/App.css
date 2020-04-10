@@ -261,6 +261,16 @@ body {
     border-radius: 8px;
 }
 
+
+.site-layout-content-graphs {
+    background-color: #0f4d92;
+    height: 60vh;
+    width: 120vh;
+    padding-left: 10%;
+    padding-top: 2%;
+    border-radius: 24px;
+}
+
 .site-layout-content-homeless {
 
 }
