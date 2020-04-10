@@ -14,7 +14,6 @@ export class CurrentLocation extends React.Component {
 
 	constructor(props) {
     super(props);
-
     const { lat, lng } = this.props.initialCenter;
     this.state = {
       currentLocation: {
@@ -22,6 +21,7 @@ export class CurrentLocation extends React.Component {
         lng: lng
       }
     };
+   // this.getCurrentLocation = this.getCurrentLocation.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -47,19 +47,33 @@ export class CurrentLocation extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.centerAroundCurrentLocation) {
+   /* if (this.props.centerAroundCurrentLocation) {
       if (navigator && navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          const coords = pos.coords;
-          this.setState({
-            currentLocation: {
-              lat: coords.latitude,
-              lng: coords.longitude
-            }
-          });
-        });
+        navigator.geolocation.getCurrentPosition(position => {
+
+          console.log("POS", position)
+          }, error => {
+          console.error(error)
+          })
+      
+      }else{
+        alert("Not able to get geolocation coordinates, check if browser version is compatible.")
       }
-    }
+    }*/
+    //Get geolocation info from API then render it in map markings.
+    fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.REACT_APP_KEY}`,{
+      method:'POST'
+    }) .then(res => res.json())
+    .then(json => {
+      //console.log("JSONRES", json.location.lat, json.location.lng);
+      this.setState({
+        currentLocation:{
+          lat: json.location.lat,
+          lng: json.location.lng
+        }
+    })
+    });
+
     this.loadMap();
   }
 
@@ -70,7 +84,7 @@ export class CurrentLocation extends React.Component {
       const maps = google.maps;
 
       const mapRef = this.refs.map;
-
+      //console.log('REF', mapRef)
       // reference to the actual DOM element
       const node = ReactDOM.findDOMNode(mapRef);
 
@@ -84,11 +98,11 @@ export class CurrentLocation extends React.Component {
           zoom: zoom
         }
       );
-
       // maps.Map() is constructor that instantiates the map
       this.map = new maps.Map(node, mapConfig);
     }
   }
+
 
    renderChildren() {
     const { children } = this.props;
@@ -121,6 +135,7 @@ export class CurrentLocation extends React.Component {
 }
 export default CurrentLocation;
 
+
 CurrentLocation.defaultProps = {
   zoom: 14,
   initialCenter: {
@@ -130,3 +145,4 @@ CurrentLocation.defaultProps = {
   centerAroundCurrentLocation: false,
   visible: true
 };
+

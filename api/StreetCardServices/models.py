@@ -106,18 +106,6 @@ class ServiceProvider(models.TextChoices):
     OTHERS = "OTH", _("Others")
 
 
-class SocialWorker(models.Model):
-    class ClearanceLevel(models.TextChoices):
-        GREETER = "greeter", _("Greeter")
-        CASEWORKER = "caseworker", _("CaseWorker")
-        SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
-        CLIENT = "client", _("Client")
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
-    address = models.CharField(max_length=500)
-    serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
 
 # Inventory Tables:
 
@@ -174,6 +162,24 @@ class Appointments(models.Model):
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
     alert = models.BooleanField(default=False, null=True)
     Email = models.EmailField(max_length=70, blank=True, null=True)
+    TimeZone = models.CharField(max_length=200, blank=True, null=True)
+    # is the way to determine what task id is being used, only > -1 if alert == True
+    AlertTaskID = models.CharField(max_length=36, default="", blank=True, null=True)
+
+
+class SocialWorker(models.Model):
+    
+    class ClearanceLevel(models.TextChoices):
+        GREETER = "greeter", _("Greeter")
+        CASEWORKER = "caseworker", _("CaseWorker")
+        SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
+        CLIENT = "client", _("Client")
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
+    address = models.CharField(max_length=500)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
 
 
 class ProjectCategory(models.TextChoices):
