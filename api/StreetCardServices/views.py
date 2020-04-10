@@ -387,47 +387,31 @@ class AppointmentViewSet(viewsets.ViewSet):
 class ProductViewSet(viewsets.ViewSet):
 
     def list(self, request):
-        cache_key = 'product'
-        data = cache.get(cache_key)
-        if data is None:
-            queryset = Product.objects.all()
-            serializer = ProductSerializer(queryset, many=True)
-            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(data, status=status.HTTP_200_OK)
+        queryset = Product.objects.all()
+        serializer = ProductSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
-        cache_key = 'product' + pk
-        data = cache.get(cache_key)
-        if data is None:
-            queryset = Product.objects.filter(pk=pk)
-            product = get_object_or_404(queryset, pk=pk)
-            serializer = ProductSerializer(product)
-            cache.set(cache_key, serializer.data, settings.CACHE_TIME)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(data, status=status.HTTP_200_OK)
+        queryset = Product.objects.filter(pk=pk)
+        product = get_object_or_404(queryset, pk=pk)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        cache_key = 'product'
         product = request.data
         product['productId'] = primary_key_generator()
         serializer = ProductSerializer(data=product)
         if serializer.is_valid():
-            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
-        cache_key = 'product' + pk
         queryset = Product.objects.filter(pk=pk)
         enroll = get_object_or_404(queryset, pk=pk)
         serializer = ProductSerializer(enroll, data=request.data)
         if serializer.is_valid():
-            cache.delete(cache_key)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:

@@ -21,6 +21,7 @@ import Transaction from "./Transaction"
 import SuccessfulRegistration from "./component/SuccessfulRegistration";
 import LoginError from "./component/LoginError";
 import SuccessfulUpdate from "./component/SuccessfulUpdate";
+import TransactionComplete from "./component/TransactionComplete";
 
 const PrivateRoute = ({component: Component, loggedInStatus: loggedInStatus, ...rest}) => (
     <Route render={(props) => (
@@ -360,6 +361,15 @@ export default class App extends React.Component {
                             exact
                             path={"/successUpdate"}
                             component={SuccessfulUpdate}
+                            loggedInStatus={this.state.loggedInStatus}
+                            homelessPersonId={this.state.homelessPersonId}
+                            handleLogout={this.handleLogout}
+                            updatePageComponent={this.updatePageComponent}
+                        />
+                        <PrivateRoute
+                            exact
+                            path={"/transactionComplete"}
+                            component={TransactionComplete}
                             loggedInStatus={this.state.loggedInStatus}
                             homelessPersonId={this.state.homelessPersonId}
                             handleLogout={this.handleLogout}
