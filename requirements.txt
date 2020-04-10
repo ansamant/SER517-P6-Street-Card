@@ -14,3 +14,4 @@ sqlparse==0.3.0
 django-cors-headers==3.2.1
 drf-nested-routers==0.91
 celery==4.4.2
+python-memcached==1.59

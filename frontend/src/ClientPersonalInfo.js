@@ -1,9 +1,10 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Collapse, Descriptions, Form, Layout ,Alert} from 'antd';
+import {Alert, Collapse, Descriptions, Form, Layout} from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
+import moment from "moment";
 
 const {Content} = Layout;
 
@@ -21,8 +22,8 @@ class ClientPersonalInfo extends React.Component {
     }
 
     test() {
-        let abc = this.props.homelessData.PersonalId;
-        fetch('http://127.0.0.1:8000/homeless/' + abc + '/appointment/', {
+        let homelessPersonId = this.props.homelessData.PersonalId;
+        fetch('http://127.0.0.1:8000/homeless/' + homelessPersonId + '/appointment/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -153,50 +154,66 @@ class ClientPersonalInfo extends React.Component {
                 sm: {span: 6}
             }
         };
-         console.log(this.state.appointment[0])
+        const alert = []
+        for (let appoint in this.state.appointment) {
+            if (this.state.isLoaded && moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY") > moment().format("MM/DD/YYYY")) {
+                let description = 'You have upcoming appointment on ' + moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY") + ' at ' + moment(this.state.appointment[appoint].Time, "LT").format("LT")
+                alert.push(<Alert message="Appointment Information"
+                                  description={description}
+                                  type="warning"
+                                  closeText="X"
+                                  showIcon
+                />)
+            } else if (this.state.isLoaded && moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY") === moment().format("MM/DD/YYYY") && moment(this.state.appointment[appoint].Time, "LT").format("LT") >= moment().format("LT")) {
+                let description = 'You have upcoming appointment on ' + moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY") + ' at ' + moment(this.state.appointment[appoint].Time, "LT").format("LT")
+                alert.push(<Alert message="Appointment Information"
+                                  description={description}
+                                  type="warning"
+                                  closeText="X"
+                                  showIcon
+                />)
+            } else if (!this.state.isLoaded) {
+                let description = 'Data Loading . . .'
+                alert.push(<Alert message="Appointment Information"
+                                  description={description}
+                                  type="warning"
+                                  showIcon
+                />)
+            } else {
+                alert.push()
+                console.log(this.state.isLoaded && moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY") > moment().format("MM/DD/YYYY"))
+                console.log(moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY"))
+                console.log(moment().format("MM/DD/YYYY"))
+            }
+        }
+        
         return (
             <Layout>
                 <Header
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.props.loggedInStatus}
                 />
+                {alert}
                 <Content className="content-login">
                     <div className="site-layout-content-login">
-                        {!this.state.isLoaded && <p> Data Loading</p>}
-                        {this.state.isLoaded && 
-                          <Alert
-                            message="Appointment Information"
-                            description=<p>You have upcoming appointment on {this.state.appointment[0].Date} at {this.state.appointment[0].Time}</p>
-                            type="warning"
-                            showIcon
-                          />
-                        }
-                        <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
-                        <Panel header="Your Personal Info" key="1">
-                        <Descriptions bordered>
-                            <Descriptions.Item
-                                label="First Name">{this.state.clientInfo.FirstName}</Descriptions.Item>
-                            <Descriptions.Item
-                                label="Middle Name">{this.state.clientInfo.MiddleName}</Descriptions.Item>
-                            <Descriptions.Item
-                                label="Last Name">{this.state.clientInfo.LastName}</Descriptions.Item>
-                            <Descriptions.Item
-                                label="Name Suffix">{this.state.clientInfo.NameSuffix}</Descriptions.Item>
-                            <Descriptions.Item
-                                label="Social Security Number">{this.state.clientInfo.SSN}</Descriptions.Item>
-                            <Descriptions.Item label="Date of Birth">{this.state.clientInfo.DOB}</Descriptions.Item>
-                            <Descriptions.Item label="Race">{race}</Descriptions.Item>
-                            <Descriptions.Item label="Ethnicity">{ethnicity}</Descriptions.Item>
-                            <Descriptions.Item label="Gender">{gender}</Descriptions.Item>
-                            <Descriptions.Item label="Veteran Status">{veteranStatus}</Descriptions.Item>
-                            <Descriptions.Item
-                                label="Phone Number Prefix">{this.state.clientInfo.PhoneNumberPrefix}</Descriptions.Item>
-                            <Descriptions.Item
-                                label="Phone Number">{this.state.clientInfo.PhoneNumber}</Descriptions.Item>
-                            <Descriptions.Item label="Email">{this.state.clientInfo.Email}</Descriptions.Item>
-                        </Descriptions>
-                        </Panel>
-                        </Collapse>
+                        <div style={{textAlign: "left"}}>
+                            <Descriptions title="Personal Information" bordered
+                                          column={{xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1}}>
+                                <Descriptions.Item
+                                    label="Full Name">{this.state.clientInfo.FirstName} {this.state.clientInfo.MiddleName} {this.state.clientInfo.LastName} {this.state.clientInfo.NameSuffix}</Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Social Security Number">{this.state.clientInfo.SSN}</Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Date of Birth">{moment(this.state.clientInfo.DOB).format("MM/DD/YYYY")}</Descriptions.Item>
+                                <Descriptions.Item label="Race">{race}</Descriptions.Item>
+                                <Descriptions.Item label="Ethnicity">{ethnicity}</Descriptions.Item>
+                                <Descriptions.Item label="Gender">{gender}</Descriptions.Item>
+                                <Descriptions.Item label="Veteran Status">{veteranStatus}</Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Phone Number">{this.state.clientInfo.PhoneNumberPrefix} {this.state.clientInfo.PhoneNumber}</Descriptions.Item>
+                                <Descriptions.Item label="Email">{this.state.clientInfo.Email}</Descriptions.Item>
+                            </Descriptions>
+                        </div>
                     </div>
                 </Content>
                 <StreetCardFooter/>
