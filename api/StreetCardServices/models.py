@@ -105,8 +105,6 @@ class ServiceProvider(models.TextChoices):
     NOT_AVAILABLE = "NA", _("Not Available")
     OTHERS = "OTH", _("Others")
 
-
-
 # Inventory Tables:
 
 class Product(models.Model):
@@ -115,7 +113,6 @@ class Product(models.Model):
     costPerItem = models.FloatField()
     unitsAvailable = models.IntegerField()
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
-
 
 class Transactions(models.Model):
     transactionId = models.CharField(primary_key=True, default=None, max_length=32)
@@ -179,6 +176,22 @@ class SocialWorker(models.Model):
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
     address = models.CharField(max_length=500)
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+
+class SocialWorker(models.Model):
+    
+    class ClearanceLevel(models.TextChoices):
+        GREETER = "greeter", _("Greeter")
+        CASEWORKER = "caseworker", _("CaseWorker")
+        SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
+        CLIENT = "client", _("Client")
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
+    address = models.CharField(max_length=500)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
 
 
 

@@ -111,7 +111,6 @@ class LogSerializer(ModelSerializer):
         fields = '__all__'
     # datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', )
 
-
 class HomelessSerializer(ModelSerializer):
     class Meta:
         model = Homeless
