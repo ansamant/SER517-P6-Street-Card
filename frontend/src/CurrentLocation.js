@@ -19,9 +19,11 @@ export class CurrentLocation extends React.Component {
       currentLocation: {
         lat: lat,
         lng: lng
-      }
+      },
+      places:[]
     };
-   // this.getCurrentLocation = this.getCurrentLocation.bind(this)
+    
+    this.searchNearby = this.searchNearby.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -47,7 +49,8 @@ export class CurrentLocation extends React.Component {
   }
 
   componentDidMount() {
-   /* if (this.props.centerAroundCurrentLocation) {
+   /* navigator wont work this way till protocol is https  
+   if (this.props.centerAroundCurrentLocation) {
       if (navigator && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
 
@@ -61,7 +64,8 @@ export class CurrentLocation extends React.Component {
       }
     }*/
     //Get geolocation info from API then render it in map markings.
-    fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.REACT_APP_KEY}`,{
+    if(this.props.centerAroundCurrentLocation){
+      fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.REACT_APP_KEY}`,{
       method:'POST'
     }) .then(res => res.json())
     .then(json => {
@@ -73,6 +77,8 @@ export class CurrentLocation extends React.Component {
         }
     })
     });
+  }
+    
 
     this.loadMap();
   }
@@ -95,15 +101,45 @@ export class CurrentLocation extends React.Component {
         {},
         {
           center: center,
-          zoom: zoom
+          zoom: zoom,
         }
       );
       // maps.Map() is constructor that instantiates the map
       this.map = new maps.Map(node, mapConfig);
+      //Add a listener to the map so that when it is ready we can add additional places
+    
+      this.map.addListener('tilesloaded', this.searchNearby(this.map, center));
+      
     }
   }
 
 
+  
+
+  searchNearby = (map, center) => {
+    alert("MAP MADE!")
+    console.log("MAP", map, "Center", center)
+    if (this.props && this.props.google) {
+          const { google } = this.props;
+
+         const service = new google.maps.places.PlacesService(map);
+
+        // Specify location, radius and place types for your Places API search.
+        const request = {
+          location: center,
+          radius: '5000',
+          name:'social service organization'
+        };
+
+        service.nearbySearch(request, (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK)
+            this.setState({ places: results });
+        });
+        console.log("PLACES", this.state.places)
+  }
+  };
+
+  
    renderChildren() {
     const { children } = this.props;
 
@@ -118,6 +154,7 @@ export class CurrentLocation extends React.Component {
       });
     });
   }
+
 
   render() {
      const style = Object.assign({}, mapStyles.map);
