@@ -117,7 +117,6 @@ export class CurrentLocation extends React.Component {
   
 
   searchNearby = (map, center) => {
-    alert("MAP MADE!")
     console.log("MAP", map, "Center", center)
     if (this.props && this.props.google) {
           const { google } = this.props;
