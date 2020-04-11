@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -107,17 +106,27 @@ class ServiceProvider(models.TextChoices):
     OTHERS = "OTH", _("Others")
 
 
-class SocialWorker(models.Model):
-    class ClearanceLevel(models.TextChoices):
-        GREETER = "greeter", _("Greeter")
-        CASEWORKER = "caseworker", _("CaseWorker")
-        SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
-        CLIENT = "client", _("Client")
+# Inventory Tables:
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
-    address = models.CharField(max_length=500)
+class Product(models.Model):
+    productName = models.CharField(max_length=100)
+    productId = models.CharField(primary_key=True, default=None, max_length=32, blank=True)
+    costPerItem = models.FloatField()
+    unitsAvailable = models.IntegerField()
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+
+
+class Transactions(models.Model):
+    transactionId = models.CharField(primary_key=True, default=None, max_length=32)
+    personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
+    totalAmount = models.IntegerField()
+
+
+class TransactionDetails(models.Model):
+    transactionDetailId = models.CharField(primary_key=True, default=None, max_length=32)
+    transactionId = models.ForeignKey(Transactions, on_delete=models.CASCADE, default=None)
+    productId = models.ForeignKey(Product, on_delete=models.CASCADE)
+    unitPurchased = models.IntegerField()
 
 
 # Log table, used to display information on Case Worker page
@@ -152,6 +161,22 @@ class Appointments(models.Model):
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
     alert = models.BooleanField(default=False, null=True)
     Email = models.EmailField(max_length=70, blank=True, null=True)
+    TimeZone = models.CharField(max_length=200, blank=True, null=True)
+    # is the way to determine what task id is being used, only > -1 if alert == True
+    AlertTaskID = models.CharField(max_length=36, default="", blank=True, null=True)
+
+
+class SocialWorker(models.Model):
+    class ClearanceLevel(models.TextChoices):
+        GREETER = "greeter", _("Greeter")
+        CASEWORKER = "caseworker", _("CaseWorker")
+        SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
+        CLIENT = "client", _("Client")
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    clearanceLevel = models.TextField(choices=ClearanceLevel.choices)
+    address = models.CharField(max_length=500)
+    serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
 
 class ProjectCategory(models.TextChoices):

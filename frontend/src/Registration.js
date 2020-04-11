@@ -2,6 +2,7 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
 import {
+    Alert,
     AutoComplete,
     Button,
     Cascader,
@@ -439,7 +440,6 @@ class RegistrationForm extends React.Component {
     }
 
     setPagecomponent(pageComponentValue) {
-        console.log(pageComponentValue)
         this.setState({
             pageComponent: pageComponentValue
         });
@@ -485,7 +485,7 @@ class RegistrationForm extends React.Component {
                     .then(res => res.json())
                     .then(json => {
                         this.props.handleHomelessPersonId(registerRequestObject.PersonalId);
-                        this.props.history.push('/socialWorkerRegister');
+                        this.props.history.push('/success');
                     });
             }
         });
@@ -1089,6 +1089,13 @@ class RegistrationForm extends React.Component {
                         handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                         loggedInStatus={this.state.loggedInStatus}
                     />
+                     <Alert
+                            message="Social Worker Registration"
+                            description="- Fill out all the details to register a social worker"
+                            type="info"
+                            closeText="X"
+                            showIcon
+                        />
                     <Content className="content-login">
                         <div className="site-layout-content-login">
                             <Form onSubmit={this.handleSocialWorkerRegistrationSubmit}>

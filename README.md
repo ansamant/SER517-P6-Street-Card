@@ -88,5 +88,46 @@ DATABASES = {
  If your account uses Two-Step Verification, it is better to use a specially generated password for the app 
  (see: https://support.google.com/mail/answer/185833)
  
+### Caching
 
+ To avoid redundant get call to the database, we have implemented caching.
+ We are using Django's cache framework (https://docs.djangoproject.com/en/3.0/topics/cache/)
+ The cache system we are using is **Memcached**.
  
+ **Installing Memcached :**
+ 
+ - Step 1: Install memcached
+ 
+     ````
+    $ brew install memcached
+     ````
+ - Step 2: Start the memcached service
+    ```
+   $ brew services start memcached
+    ```
+ - Step 3: Verify Installation
+    ```
+   $ memcached -V
+    ```
+  
+ **Installing Memcached Binding :**
+ - Use the following command to install python memcached client (python-memcached):
+ 
+     ```
+    $ pip install python-memcached
+    ```
+   
+ To use Memcached with Django:
+
+- Set **BACKEND** to **django.core.cache.backends.memcached.MemcachedCache**
+- Set **LOCATION** to **ip:port** values, where **ip** is the IP address of the Memcached daemon and **port** is the port on which Memcached is running.
+
+Add the below code snippet to **/api/settings.py**
+````
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+````

@@ -1,15 +1,16 @@
 from django.contrib.auth.models import User, Group
-from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .utils import check_and_assign
+
 from .models import SocialWorker, IncomeAndSources, NonCashBenefits, Enrollment, DisablingCondition, \
     DomesticViolence, HealthInsurance, W1ServicesProvidedHOPWA, FinancialAssistanceHOPWA, MedicalAssistanceHOPWA, \
     TCellCD4AndViralLoadHOPWA, HousingAssessmentAtExitHOPWA, Homeless, CurrentLivingSituation, DateOfEngagement, \
     BedNightDate, CoordinatedEntryAssessment, CoordinatedEntryEvent, SexualOrientation, UserNameAndIdMapping, Log, \
     VeteranInformation, ServicesProvidedSSVF, FinancialAssistanceSSVF, PercentOfAMI, LastPermanentAddress, \
     SSVFHPTargetingCriteria, HUDVASHVoucherTracking, HUDVASHExitInformation, ConnectionWithSOAR, LastGradeCompleted, \
-    EmploymentStatus, Appointments
+    EmploymentStatus, Appointments, TransactionDetails, Product, Transactions
+from .utils import check_and_assign
+from .utils import primary_key_generator
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -34,6 +35,46 @@ class HomelessSerializer(ModelSerializer):
     class Meta:
         model = Homeless
         fields = '__all__'
+
+
+class TransactionDetailSerializer(ModelSerializer):
+    class Meta:
+        model = TransactionDetails
+        fields = '__all__'
+
+
+class ProductSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    transaction_detail = TransactionDetailSerializer(required=False, many=True)
+
+    class Meta:
+        model = Transactions
+        fields = ['transactionId', 'personalId', 'totalAmount', 'transaction_detail']
+
+    def create(self, validated_data):
+        transaction_detail_list = validated_data.pop('transaction_detail')
+        transaction = Transactions.objects.create(**validated_data)
+        for item in transaction_detail_list:
+            transaction_detail_data = item
+            if transaction_detail_data is not None:
+                TransactionDetails.objects.create(transactionId_id=transaction.transactionId,
+                                                  transactionDetailId=primary_key_generator(),
+                                                  **transaction_detail_data)
+        return transaction
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        if TransactionDetails.objects.filter(transactionId_id=response['transactionId']).exists():
+            list_of_transactions = TransactionDetails.objects.filter(transactionId_id=response['transactionId'])
+            response['transaction_detail'] = []
+            for transaction in list_of_transactions:
+                response['transaction_detail'].append(TransactionDetailSerializer(transaction).data)
+        return response
 
 
 class UserSerializer(ModelSerializer):
@@ -68,16 +109,7 @@ class LogSerializer(ModelSerializer):
     class Meta:
         model = Log
         fields = '__all__'
-
     # datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', )
-
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        print(response)
-        response['socialWorker'] = SocialWorkerSerializer(
-            SocialWorker.objects.get(user_id=response['id'])).data
-        return response
-
 
 class HomelessSerializer(ModelSerializer):
     class Meta:

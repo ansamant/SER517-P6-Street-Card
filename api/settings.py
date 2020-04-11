@@ -11,12 +11,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-
-# For improperly configured os key 
-from django.core.exceptions import ImproperlyConfigured
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
+
+# For improperly configured os key
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -63,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
 
@@ -192,7 +191,7 @@ CORS_ORIGIN_REGEX_WHITELIST = [
 # Check Celery Documentation: http://docs.celeryproject.org/en/master/getting-started/first-steps-with-celery.html#rabbitmq
 # see: https://docs.celeryproject.org/en/stable/django/first-steps-with-django.html
 # make sure that all worker configs are 
-CELERY_BROKER_URL= 'amqp://localhost'
+CELERY_BROKER_URL = 'amqp://localhost'
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -206,4 +205,12 @@ EMAIL_HOST_USER = get_val_from_env('DJANGO_EMAIL_USR')
 EMAIL_HOST_PASSWORD = get_val_from_env('DJANGO_EMAIL_PWD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
- 
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
+CACHE_TIME: int = 60 * 60 * 24 * 30

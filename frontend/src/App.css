@@ -225,7 +225,7 @@ body {
 .content-login {
     background-color: #0f4d92;
     height: 84vh;
-    padding: 10%;
+    padding: 5%;
     text-align: center;
 }
 
@@ -261,6 +261,16 @@ body {
     border-radius: 8px;
 }
 
+
+.site-layout-content-graphs {
+    background-color: #0f4d92;
+    height: 60vh;
+    width: 120vh;
+    padding-left: 10%;
+    padding-top: 2%;
+    border-radius: 24px;
+}
+
 .site-layout-content-homeless {
 
 }
@@ -273,14 +283,6 @@ body {
     border-radius: 8px;
 }
 
-.site-layout-content-registration-client {
-    background: #3fb0ac;
-    margin-left: 24%;
-    max-width: 800px;
-    background-color: #fff;
-    border: 5px solid #fae596;
-
-}
 
 /*.site-layout-content-setappointment {*/
 /*    background: #3fb0ac;*/
@@ -321,3 +323,6 @@ input::placeholder {
     font-size: 14px;
 }
 
+td{
+    background-color: whitesmoke;
+}
