@@ -1,3 +1,20 @@
+/***
+ * 
+ * Renders current location on the map along with nearby location markers. 
+ * NOTE: This along with LocationMap.js needs severe code cleaning. 
+ * Intermediate proficiency with React library needed.
+ * Suggested Changes:
+ * Add routes
+ * Put place Names also in the marker 
+ * Display currentlocation marker (disappears when other locations populate).
+ * references used: https://developers.google.com/maps/documentation/javascript/examples/place-search
+ *                  https://dev.to/jessicabetts/how-to-use-google-maps-api-and-react-js-26c2
+ *                  https://github.com/fullstackreact/google-maps-react/blob/master/examples/components/places.js
+ *                  https://blog.vanila.io/writing-a-google-maps-react-component-fae411588a91
+ * @author: Akash Kadam, Aditya Samant
+ * @version: 1.0
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -20,10 +37,12 @@ export class CurrentLocation extends React.Component {
         lat: lat,
         lng: lng
       },
-      places:[]
+      places:[],
+      aMap: null
     };
     
     this.searchNearby = this.searchNearby.bind(this);
+    this.createMarker = this.createMarker.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -45,18 +64,35 @@ export class CurrentLocation extends React.Component {
     if (map) {
       let center = new maps.LatLng(current.lat, current.lng);
       map.panTo(center);
+      this.setState({aMap: this.map});
+      this.state.aMap.addListener('ready', this.searchNearby(map, center));
     }
   }
 
   componentDidMount() {
-   /* navigator wont work this way till protocol is https  
+    /** NOTE
+     * Currently all major modern browsers save for IE require valid https certificate 
+     * to be enabled before allowing site to use the inbuilt html5 navigator feature for getting
+     * as such an extra Google API call is made to the geolocation library.
+     * Once the site has valid certification and is deployed uncomment the following, code and debug. 
+     * Ideally the code should run as is, but if any modifications are made to this code beyond version 1.0 
+     * please verify 
+     */
+   /*   Current Location code using HTML5 inbuilt navigator
    if (this.props.centerAroundCurrentLocation) {
       if (navigator && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
-
+          //printing just to check we are getting something
           console.log("POS", position)
           }, error => {
           console.error(error)
+          })
+          const coords = pos.coords;
+          this.setState({
+            currentLocation: {
+              lat: coords.latitude,
+              lng: coords.longitude
+            }
           })
       
       }else{
@@ -78,8 +114,6 @@ export class CurrentLocation extends React.Component {
     })
     });
   }
-    
-
     this.loadMap();
   }
 
@@ -106,10 +140,7 @@ export class CurrentLocation extends React.Component {
       );
       // maps.Map() is constructor that instantiates the map
       this.map = new maps.Map(node, mapConfig);
-      //Add a listener to the map so that when it is ready we can add additional places
-    
-      this.map.addListener('tilesloaded', this.searchNearby(this.map, center));
-      
+      this.setState({aMap: this.map});
     }
   }
 
@@ -127,16 +158,46 @@ export class CurrentLocation extends React.Component {
         const request = {
           location: center,
           radius: '5000',
-          name:'social service organization'
+          name:'Homeless services'
         };
 
         service.nearbySearch(request, (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK)
             this.setState({ places: results });
+            //console.log("PLACES", this.state.places);
+            //this.handleDisplayMarkers(this.state.places);
+            var infoWindow = new google.maps.InfoWindow();
+            for (var i = 0; i < results.length; i++) {
+              this.createMarker(results[i], map, infoWindow);
+            }
         });
-        console.log("PLACES", this.state.places)
+        
   }
   };
+
+  createMarker = (aPlace, thisMap, infoWindow) =>{
+    const {google} = this.props;
+    var marker = new google.maps.Marker({
+      map: thisMap,
+      position: aPlace.geometry.location
+    });
+    
+    google.maps.event.addListener(marker, 'click', function() {
+      
+      infoWindow.setContent(aPlace.name);
+      infoWindow.open(thisMap, this);
+    });
+   
+  };
+  /*handleDisplayMarkers = (placeDict) =>{
+      if(placeDict == []){
+          console.log("Error placeDict doesnt have anything in it");
+      }
+      else{
+        this.props.displayPlaces(placeDict);
+      }
+      
+  }*/
 
   
    renderChildren() {
@@ -173,7 +234,7 @@ export default CurrentLocation;
 
 
 CurrentLocation.defaultProps = {
-  zoom: 14,
+  zoom: 12,
   initialCenter: {
     lat: -1.2884,
     lng: 36.8233
