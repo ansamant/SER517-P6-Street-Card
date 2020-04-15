@@ -20,7 +20,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from api.StreetCardServices import views
 from api.StreetCardServices.views import SocialWorkerRegistration, SocialWorkerDetails, \
-    NonCashDetails, IncomeDetails, EnrollmentViewSet, HomelessViewSet, UserViewSet, UserMapping, LogEntry, \
+    EnrollmentViewSet, HomelessViewSet, UserViewSet, UserMapping, LogEntry, \
     AppointmentViewSet, ProductViewSet, TransactionViewSet
 
 router = routers.DefaultRouter()
@@ -30,8 +30,6 @@ router.register('register', SocialWorkerRegistration)
 router.register('socialinfo', SocialWorkerDetails)
 router.register('product', ProductViewSet, basename='product')
 router.register('user', UserMapping)
-router.register('income', IncomeDetails)
-router.register('noncash', NonCashDetails)
 router.register('homeless', HomelessViewSet, basename='homeless')
 enroll_router = routers.NestedSimpleRouter(router, r'homeless', lookup='homeless')
 enroll_router.register(r'enrollment', EnrollmentViewSet, basename='enrollment')
