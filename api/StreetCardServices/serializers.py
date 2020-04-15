@@ -88,11 +88,14 @@ class UserSerializer(ModelSerializer):
     def create(self, validated_data):
         profile_data = validated_data.pop('socialWorker')
         password = validated_data.pop('password')
+        group_name = profile_data.get('clearanceLevel')
+        group = Group.objects.get(name=group_name)
         user = User(**validated_data)
         user.set_password(password)
         user.save()
         SocialWorker.objects.create(user=user, **profile_data)
         UserNameAndIdMapping.objects.create(user_id=user.id, user_name=user.username)
+        user.groups.add(group)
         return user
 
     def to_representation(self, instance):
