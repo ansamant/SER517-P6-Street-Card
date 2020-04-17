@@ -20,6 +20,7 @@ import ClientPersonalInfo from "./ClientPersonalInfo";
 import Transaction from "./Transaction"
 import SuccessfulRegistration from "./component/SuccessfulRegistration";
 import LoginError from "./component/LoginError";
+import ForgotPasswordForm from "./component/ForgotPassword";
 import InventoryLog from './component/InventoryLog'
 import SuccessfulUpdate from "./component/SuccessfulUpdate";
 import TransactionComplete from "./component/TransactionComplete";
@@ -389,6 +390,13 @@ export default class App extends React.Component {
                             exact
                             path={"/loginError"}
                             component={LoginError}
+                            loggedInStatus={this.state.loggedInStatus}
+                            handleLogout={this.handleLogout}
+                        />
+                        <Route
+                            exact
+                            path={"/forgotPassword"}
+                            component={ForgotPasswordForm}
                             loggedInStatus={this.state.loggedInStatus}
                             handleLogout={this.handleLogout}
                         />
