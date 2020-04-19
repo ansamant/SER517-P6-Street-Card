@@ -95,6 +95,14 @@ class UserSerializer(ModelSerializer):
         UserNameAndIdMapping.objects.create(user_id=user.id, user_name=user.username)
         return user
 
+    def update(self, instance, validated_data):
+        username = validated_data.pop('username')
+        password = validated_data.pop('password')
+        user = User.objects.get(username__exact=username)
+        user.set_password(password)
+        user.save()
+        return user
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         print(response)
