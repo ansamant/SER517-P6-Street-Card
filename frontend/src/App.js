@@ -24,6 +24,7 @@ import ForgotPasswordForm from "./component/ForgotPassword";
 import InventoryLog from './component/InventoryLog'
 import SuccessfulUpdate from "./component/SuccessfulUpdate";
 import TransactionComplete from "./component/TransactionComplete";
+import UpdateSocialWorkerInfoForm from "./component/UpdateSocialWorkerInfo";
 
 const PrivateRoute = ({component: Component, loggedInStatus: loggedInStatus, ...rest}) => (
     <Route render={(props) => (
@@ -64,6 +65,7 @@ export default class App extends React.Component {
         this.inputEnrollmentId = this.inputEnrollmentId.bind(this);
         this.inputPersonalId = this.inputPersonalId.bind(this);
         this.handleHomelessPersonInventoryJson = this.handleHomelessPersonInventoryJson.bind(this)
+        this.handleUpdateSocialWorkerInfoJSON = this.handleUpdateSocialWorkerInfoJSON.bind(this)
     }
 
 
@@ -169,6 +171,13 @@ export default class App extends React.Component {
         })
     }
 
+    handleUpdateSocialWorkerInfoJSON(json){
+        console.log(json);
+        this.setState({
+            socialWorkerInfoJSON: json
+        });
+    }
+
     render() {
         return (
             <div>
@@ -208,6 +217,22 @@ export default class App extends React.Component {
                             handleHomelessPersonId={this.handleHomelessPersonId}
                             handleHomelessPersonJson={this.handleHomelessPersonJson}
                             pageComponent={this.state.pageComponent}
+                            handleUpdateSocialWorkerInfoJSON = {this.handleUpdateSocialWorkerInfoJSON}
+                        />
+                        <PrivateRoute
+                            exact
+                            path={"/updateSocialWorkerInfo"}
+                            component={UpdateSocialWorkerInfoForm}
+                            handleLogout={this.handleLogout}
+                            loggedInStatus={this.state.loggedInStatus}
+                            username={this.state.username}
+                            handleHomelessPersonData={this.handleHomelessPersonData}
+                            handleLogin={this.handleLogin}
+                            clearanceLevel={this.state.clearanceLevel}
+                            handleHomelessPersonId={this.handleHomelessPersonId}
+                            handleHomelessPersonJson={this.handleHomelessPersonJson}
+                            pageComponent={this.state.pageComponent}
+                            socialWorkerInfoJSON = {this.state.socialWorkerInfoJSON}
                         />
                         <PrivateRoute
                             exact

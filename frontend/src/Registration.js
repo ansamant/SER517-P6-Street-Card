@@ -20,6 +20,7 @@ import {
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './component/SiderComponent'
+import SiderComponentSocialWorker from "./component/SiderComponentSocialWorker";
 
 const nameDataQuality = [
     {
@@ -264,6 +265,7 @@ class RegistrationForm extends React.Component {
         this.homelessRegistration = this.homelessRegistration.bind(this);
         this.handleHomelessPersonRegistrationSubmit = this.handleHomelessPersonRegistrationSubmit.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
+        this.handleUpdateSocialWorkerInfo = this.handleUpdateSocialWorkerInfo.bind(this);
 
     }
 
@@ -409,6 +411,49 @@ class RegistrationForm extends React.Component {
 
             }
         });
+    }
+
+    handleUpdateSocialWorkerInfo = e => {
+        e.preventDefault();
+        // fetch('http://127.0.0.1:8000/homeless/' + homelessPersonId + '/appointment/', {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         Authorization: `Bearer ${localStorage.getItem('token')}`
+        //     },
+        // })
+        //     .then(res => res.json())
+        //     .then(json => {
+        //         this.setState({
+        //                 isLoaded: true,
+        //                 appointment: json,
+        //             }
+        //         )
+        //     })
+
+        console.log("My name is naren");
+        this.props.form.validateFieldsAndScroll((err, values) => {
+
+            if (!err) {
+                console.log(values.username);
+                fetch('http://localhost:8000/user/' + values.username + '/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+                    .then(res => res.json())
+                    .then(json => {
+                        console.log(json);
+                        // this.props.handleHomelessPersonJson(json);
+                        this.props.handleUpdateSocialWorkerInfoJSON(json);
+                        this.props.history.push('/updateSocialWorkerInfo');
+                    });
+
+            }
+        });
+
     }
 
     handleConfirmBlur = e => {
@@ -827,7 +872,7 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent == 'updateInformation') {
+            } else if (this.state.pageComponent === 'updateInformation') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -1082,20 +1127,24 @@ class RegistrationForm extends React.Component {
                     </Layout>
                 );
             }
-        } else {
+        } else if (this.state.pageComponent === 'registerSocialWorker') {
             return (
                 <Layout className="layout">
                     <Header
                         handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                         loggedInStatus={this.state.loggedInStatus}
                     />
-                     <Alert
+                    <Layout>
+                            <SiderComponentSocialWorker
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                     {/* <Alert
                             message="Social Worker Registration"
                             description="- Fill out all the details to register a social worker"
                             type="info"
                             closeText="X"
                             showIcon
-                        />
+                        /> */}
                     <Content className="content-login">
                         <div className="site-layout-content-login">
                             <Form onSubmit={this.handleSocialWorkerRegistrationSubmit}>
@@ -1256,8 +1305,51 @@ class RegistrationForm extends React.Component {
                             </Form>
                         </div>
                     </Content>
+                    </Layout>
                     <StreetCardFooter/>
                 </Layout>
+            );
+        } else {
+            return (
+                <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.state.loggedInStatus}
+                        />
+                        <Layout>
+                            <SiderComponentSocialWorker
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleUpdateSocialWorkerInfo.bind(this)}>
+                                        <Form.Item>
+                                            {getFieldDecorator('username', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please enter the User Name !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="User Name"
+                                                />,
+                                            )}
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
+                    </Layout>
             );
         }
     }
