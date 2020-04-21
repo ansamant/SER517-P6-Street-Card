@@ -84,7 +84,7 @@ class Homeless(models.Model):
     # Update with proper regex to validate SSN
     # Remove MaxLengthValidator and MinLengthValidator as they will throw an error for integer fields.
     # Convert to CharField because this would also contain '-' (hyphens)
-    SSN = models.CharField(max_length=9, blank=True, null=True)
+    SSN = models.CharField(max_length=11, blank=True, null=True)
     SSNDataQuality = models.IntegerField(choices=SSNDataQuality.choices)
     DOB = models.DateField(blank=True, null=True)
     DOBDataQuality = models.IntegerField(choices=DOBDataQuality.choices)
@@ -95,7 +95,9 @@ class Homeless(models.Model):
     PhoneNumberPrefix = models.CharField(max_length=3, blank=True, null=True)
     PhoneNumber = models.CharField(max_length=128, blank=True, null=True)
     Email = models.EmailField(max_length=70, blank=True, null=True)
-
+    
+    def __str__(self):
+        return self.FirstName
 
 class ServiceProvider(models.TextChoices):
     FOOD_PANTRY = "FP", _("Food Pantry")
@@ -115,11 +117,16 @@ class Product(models.Model):
     unitsAvailable = models.IntegerField()
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
 
+    def __str__(self):
+        return self.productName
 
 class Transactions(models.Model):
     transactionId = models.CharField(primary_key=True, default=None, max_length=32)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
     totalAmount = models.IntegerField()
+    
+
+
 
 
 class TransactionDetails(models.Model):
@@ -127,6 +134,9 @@ class TransactionDetails(models.Model):
     transactionId = models.ForeignKey(Transactions, on_delete=models.CASCADE, default=None)
     productId = models.ForeignKey(Product, on_delete=models.CASCADE)
     unitPurchased = models.IntegerField()
+
+
+
 
 
 # Log table, used to display information on Case Worker page
