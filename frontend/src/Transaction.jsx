@@ -1,13 +1,40 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Form, InputNumber, Layout} from "antd";
+import {Button, Cascader, Form, InputNumber, Layout} from "antd";
 import Header from './Header'
 import './transaction.css'
 import StreetCardFooter from './StreetCardFooter'
 
 const {Content} = Layout;
-const header =["Product Id", "Product Name","Cost Per Item", "Units Available","Service Provider","Given Units", "Amount"];
+const header =["Product Id", "Product Name","Cost Per Item", "Units Available","Given Units", "Amount"];
+const category = [
+        {
+            value: "footware",
+            label: "Foot-ware"
+        },
+        {
+            value: "winterwear",
+            label: "Winter-ware"
+        },
+        {
+            value: "meal_pass",
+            label: "Meal Pass"
+        },
+        {
+            value: "transport_pass",
+            label: "Transport Pass"
+        },
+        {
+            value: "bags",
+            label: "Bags"
+        },
+        {
+            value: "quilt",
+            label: "Quilt"
+        }
+    ];
+
 
 class Transaction extends React.Component {
     constructor(props) {
@@ -15,6 +42,7 @@ class Transaction extends React.Component {
         this.state = {
             isLoaded: false,
             totalAmount: 0,
+            selectedCategory: "",
             productData: [
                 {
                     productId: '',
@@ -71,7 +99,8 @@ class Transaction extends React.Component {
                         costPerItem :  key.costPerItem,
                         productName : key.productName,
                         unitsAvailable : key.unitsAvailable - key.quantity,
-                        serviceProvider : key.serviceProvider
+                        serviceProvider : key.serviceProvider,
+                        category : key.category
                         };
 
                     console.log("Update Product Json :", updateProductDetails);
@@ -95,13 +124,12 @@ class Transaction extends React.Component {
     takeIntput = (e, index) => {
 
         let prodData = JSON.parse(JSON.stringify(this.state.productData));
+        var beforeTotal = (prodData[index].quantity && prodData[index].costPerItem) ?  prodData[index].quantity * prodData[index].costPerItem : 0;
         prodData[index].quantity = e.target.value;
-        this.state.productData[index].quantity = prodData[index].quantity;
-        prodData[index].amount = e.target.value * prodData[index].costPerItem;
-        this.state.productData[index].amount = prodData[index].amount;
-        this.state.totalAmount += prodData[index].amount;
+        prodData[index].amount = prodData[index].quantity * prodData[index].costPerItem;
+        var afterTotal = this.state.totalAmount - beforeTotal +  prodData[index].amount;
         this.setState({productData: prodData});
-
+        this.setState({totalAmount : afterTotal})
         console.log("Input function", JSON.parse(JSON.stringify(this.state.productData)));
 
     }
@@ -156,15 +184,28 @@ class Transaction extends React.Component {
     }
 
     renderTableData() {
-      return this.state.productData.map((product, index) => {
-         const { productId, productName, costPerItem, unitsAvailable, serviceProvider, amount, index1} = product //destructuring
+      console.log("selected ", this.state.selectedCategory);
+      console.log("Product catogery ", this.state.productData);
+        this.state.productData.filter(item => item.category === this.state.selectedCategory).map((item, index) => {
+              console.log(item);
+          })
+        var newData = this.state.productData.filter((item) => {
+            if(!this.state.selectedCategory) {
+                return true;
+            }
+            else if (this.state.selectedCategory && item.category === this.state.selectedCategory) {
+                return true;
+            }
+            return false;
+        })
+      return newData.map((product, index) => {
+         const { productId, productName, costPerItem, unitsAvailable, amount, index1} = product//destructuring
          return (
-             <tr key={productId}>
+             <tr key={productId} >
                  <td align={"center"}>{productId}</td>
                  <td align={"center"}>{productName}</td>
                  <td align={"center"}>{costPerItem}</td>
                  <td align={"center"}>{unitsAvailable}</td>
-                 <td align={"center"}>{serviceProvider}</td>
                  <td><InputNumber min={0} max={unitsAvailable} defaultValue={0}
                                   onBlur={(e) => this.takeIntput(e, index1)}/></td>
                  <td>{amount}</td>
@@ -173,8 +214,9 @@ class Transaction extends React.Component {
       })
    }
 
+
     render() {
-        console.log(this.props.homelessPersonId);
+        console.log("selected catogery ", this.state.selectedCategory);
         const formItemLayout = {
             labelCol: {
                 xs: {span: 24},
@@ -193,6 +235,8 @@ class Transaction extends React.Component {
                 <Layout>
                     <Content className="content-login">
                         <div className="site-layout-content-login">
+                            <Cascader style={{ width: 200 }} options={category} placeholder="Product Category"
+                                      onChange={(e) => {this.setState({selectedCategory: e[0]})}}/>,
                             <table id='inventory'>
                                 <thead>
                                 <tr>{this.renderTableHeader()}</tr>
