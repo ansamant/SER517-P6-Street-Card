@@ -9,6 +9,11 @@ import string
 from . import factories
 import datetime, re, pytz
 # Basic Check of HomelessTests
+
+
+# Some lists for the sake of convenience
+yesNo = [0,1]
+responseCategory = [0,1,8,9,99]
 class HomelessTest(TestCase):
     def setUp(self):
         self.client = factories.HomelessFactory()
@@ -19,9 +24,9 @@ class HomelessTest(TestCase):
         self.assertTrue(self.client.SSNDataQuality in dq_list) 
         self.assertTrue(self.client.DOBDataQuality in dq_list)
         self.assertTrue(self.client.Race in [1,2,3,4,5,8,9,99])
-        self.assertTrue(self.client.Ethnicity in [0,1,8,9,99])
+        self.assertTrue(self.client.Ethnicity in responseCategory)
         self.assertTrue(self.client.Gender in [0,1,3,4,5,8,9,99])
-        self.assertTrue(self.client.VeteranStatus in [0,1,8,9,99])
+        self.assertTrue(self.client.VeteranStatus in responseCategory)
         self.assertEquals(len(self.client.PersonalId), 32)
         self.assertEqual(str(self.client), self.client.FirstName)
 
@@ -174,17 +179,17 @@ class InsuranceTest(TestCase):
     def test_insurance_is_created(self):
         self.assertEqual(self.hi.EnrollmentID, self.enroll)
         self.assertTrue(re.match('\d{4}-\d{2}-\d{2}',self.hi.InformationDate))
-        self.assertTrue(self.hi.CoveredByHealthInsurance in [0,1,8,9,99])
-        self.assertTrue(self.hi.Medicaid in [0,1])
-        self.assertTrue(self.hi.Medicare in [0,1])
-        self.assertTrue(self.hi.SCHIP in [0,1])
-        self.assertTrue(self.hi.VAMedicalServices in [0,1])
-        self.assertTrue(self.hi.EmployerProvided in [0,1])       
-        self.assertTrue(self.hi.COBRA in [0,1])
-        self.assertTrue(self.hi.PrivatePay in [0,1])
-        self.assertTrue(self.hi.StateHealthInsuranceForAdults in [0,1])
-        self.assertTrue(self.hi.IndianHealthServices in [0,1])
-        self.assertTrue(self.hi.OtherInsurance in [0,1])
+        self.assertTrue(self.hi.CoveredByHealthInsurance in responseCategory)
+        self.assertTrue(self.hi.Medicaid in yesNo)
+        self.assertTrue(self.hi.Medicare in yesNo)
+        self.assertTrue(self.hi.SCHIP in yesNo)
+        self.assertTrue(self.hi.VAMedicalServices in yesNo)
+        self.assertTrue(self.hi.EmployerProvided in yesNo)       
+        self.assertTrue(self.hi.COBRA in yesNo)
+        self.assertTrue(self.hi.PrivatePay in yesNo)
+        self.assertTrue(self.hi.StateHealthInsuranceForAdults in yesNo)
+        self.assertTrue(self.hi.IndianHealthServices in yesNo)
+        self.assertTrue(self.hi.OtherInsurance in yesNo)
         self.assertTrue(self.hi.Reason in [1,2,3,4,8,9,99])
 
 
@@ -197,13 +202,13 @@ class NonCashTest(TestCase):
     def test_noncashbenefit_is_created(self):
         self.assertEqual(self.ncb.EnrollmentID, self.enroll)
         self.assertTrue(re.match('\d{4}-\d{2}-\d{2}',self.ncb.InformationDate))
-        self.assertTrue(self.ncb.SNAP in [0,1])
-        self.assertTrue(self.ncb.WIC in [0,1])
-        self.assertTrue(self.ncb.TANFChildCare in [0,1])
-        self.assertTrue(self.ncb.TANFTransportation in [0,1])
-        self.assertTrue(self.ncb.OtherTANF in [0,1])
-        self.assertTrue(self.ncb.OtherSource in [0,1])
-        self.assertTrue(self.ncb.BenefitsFromAnySource in [0,1,8,9,99])
+        self.assertTrue(self.ncb.SNAP in yesNo)
+        self.assertTrue(self.ncb.WIC in yesNo)
+        self.assertTrue(self.ncb.TANFChildCare in yesNo)
+        self.assertTrue(self.ncb.TANFTransportation in yesNo)
+        self.assertTrue(self.ncb.OtherTANF in yesNo)
+        self.assertTrue(self.ncb.OtherSource in yesNo)
+        self.assertTrue(self.ncb.BenefitsFromAnySource in responseCategory)
 
 class DisablingConditionTest(TestCase):
     def setUp(self):
@@ -215,17 +220,17 @@ class DisablingConditionTest(TestCase):
         self.assertEqual(self.enroll, self.dc.EnrollmentID)
         self.assertTrue(re.match('\d{4}-\d{2}-\d{2}',self.dc.InformationDate))
         self.assertTrue(self.dc.substance_abuse in [0,1,2,3,8,9,99])
-        self.assertTrue(self.dc.substance_abuse_impairing in [0,1,8,9,99])
-        self.assertTrue(self.dc.physical_disability in [0,1,8,9,99])
-        self.assertTrue(self.dc.substance_abuse_impairing in [0,1,8,9,99])
-        self.assertTrue(self.dc.chronic_health in [0,1,8,9,99])
-        self.assertTrue(self.dc.chronic_health_impairing in [0,1,8,9,99])
-        self.assertTrue(self.dc.developmental_disability in [0,1,8,9,99])
-        self.assertTrue(self.dc.developmental_disability_impairing in [0,1,8,9,99])
-        self.assertTrue(self.dc.hiv_aids in [0,1,8,9,99])
-        self.assertTrue(self.dc.hiv_aids_impairing in [0,1,8,9,99])
-        self.assertTrue(self.dc.mental_health in [0,1,8,9,99])
-        self.assertTrue(self.dc.mental_health_impairing in [0,1,8,9,99])
+        self.assertTrue(self.dc.substance_abuse_impairing in responseCategory)
+        self.assertTrue(self.dc.physical_disability in responseCategory)
+        self.assertTrue(self.dc.substance_abuse_impairing in responseCategory)
+        self.assertTrue(self.dc.chronic_health in responseCategory)
+        self.assertTrue(self.dc.chronic_health_impairing in responseCategory)
+        self.assertTrue(self.dc.developmental_disability in responseCategory)
+        self.assertTrue(self.dc.developmental_disability_impairing in responseCategory)
+        self.assertTrue(self.dc.hiv_aids in responseCategory)
+        self.assertTrue(self.dc.hiv_aids_impairing in responseCategory)
+        self.assertTrue(self.dc.mental_health in responseCategory)
+        self.assertTrue(self.dc.mental_health_impairing in responseCategory)
 
 class IncomeNSourcesTest(TestCase):
     def setUp(self):
@@ -236,22 +241,22 @@ class IncomeNSourcesTest(TestCase):
     def test_incomensrc_is_created(self):
         self.assertTrue(re.match('\d{4}-\d{2}-\d{2}',self.ins.InformationDate))
         self.assertEqual(self.enroll, self.ins.EnrollmentID) 
-        self.assertTrue(self.ins.IncomeFromAnySources in [0,1,8,9,99])
-        self.assertTrue(self.ins.Earned in [0,1])
-        self.assertTrue(self.ins.Unemployment in [0,1])
-        self.assertTrue(self.ins.SSI in [0,1])
-        self.assertTrue(self.ins.SSDI in [0,1])
-        self.assertTrue(self.ins.VADisabilityNonService in [0,1])
-        self.assertTrue(self.ins.VADisabilityService in [0,1])
-        self.assertTrue(self.ins.PrivateDisability in [0,1])
-        self.assertTrue(self.ins.WorkersComp in [0,1])
-        self.assertTrue(self.ins.TANF in [0,1])
-        self.assertTrue(self.ins.GA in [0,1])
-        self.assertTrue(self.ins.SocSecRetirement in [0,1])
-        self.assertTrue(self.ins.Pension in [0,1])
-        self.assertTrue(self.ins.ChildSupport in [0,1])
-        self.assertTrue(self.ins.Alimony in [0,1])
-        self.assertTrue(self.ins.OtherIncomeSources in [0,1])
+        self.assertTrue(self.ins.IncomeFromAnySources in responseCategory)
+        self.assertTrue(self.ins.Earned in yesNo)
+        self.assertTrue(self.ins.Unemployment in yesNo)
+        self.assertTrue(self.ins.SSI in yesNo)
+        self.assertTrue(self.ins.SSDI in yesNo)
+        self.assertTrue(self.ins.VADisabilityNonService in yesNo)
+        self.assertTrue(self.ins.VADisabilityService in yesNo)
+        self.assertTrue(self.ins.PrivateDisability in yesNo)
+        self.assertTrue(self.ins.WorkersComp in yesNo)
+        self.assertTrue(self.ins.TANF in yesNo)
+        self.assertTrue(self.ins.GA in yesNo)
+        self.assertTrue(self.ins.SocSecRetirement in yesNo)
+        self.assertTrue(self.ins.Pension in yesNo)
+        self.assertTrue(self.ins.ChildSupport in yesNo)
+        self.assertTrue(self.ins.Alimony in yesNo)
+        self.assertTrue(self.ins.OtherIncomeSources in yesNo)
         self.assertTrue(self.ins.EarnedIncome >= 0)
         self.assertTrue(self.ins.UnemploymentAmount >= 0)
         self.assertTrue(self.ins.SSIAmount >= 0)
@@ -303,8 +308,8 @@ class MedicalAssistanceTest(TestCase):
     
     def test_medicalAssistance_is_created(self):
        self.assertTrue(re.match('\d{4}-\d{2}-\d{2}',self.medical.InformationDate)) 
-       self.assertTrue(self.medical.ReceivingPublicHIVAIDSMedicalAssistance in [0,1,8,9,99]) 
-       self.assertTrue(self.medical.ReceivingAIDSDrugAssistanceProgram in [0,1,8,9,99])  
+       self.assertTrue(self.medical.ReceivingPublicHIVAIDSMedicalAssistance in responseCategory) 
+       self.assertTrue(self.medical.ReceivingAIDSDrugAssistanceProgram in responseCategory)  
        self.assertEquals(self.medical.EnrollmentID, self.enroll)
     
 class TCellTest(TestCase):
@@ -316,8 +321,8 @@ class TCellTest(TestCase):
    def test_tcell_is_created(self):
       self.assertEquals(self.tcell.EnrollmentID, self.enroll)
       self.assertTrue(re.match('\d{4}-\d{2}-\d{2}',self.tcell.InformationDate))
-      self.assertTrue(self.tcell.TCellCD4CountAvailable in [0,1,8,9,99])  
-      self.assertTrue(self.tcell.ViralLoadInformationAvailable in [0,1,8,9,99])
+      self.assertTrue(self.tcell.TCellCD4CountAvailable in responseCategory)  
+      self.assertTrue(self.tcell.ViralLoadInformationAvailable in responseCategory)
       self.assertTrue(self.tcell.ViralLoadCount >=0 and self.tcell.ViralLoadCount <= 999999)
       self.assertTrue(self.tcell.HowWasTheInformationObtained  in [1,2,3])
       self.assertTrue(self.tcell.IfYesTCellCount >=0 and self.tcell.IfYesTCellCount <=1500)
@@ -347,11 +352,11 @@ class CurrentLivingStatusTest(TestCase):
         self.assertTrue(re.match('\d{4}-\d{2}-\d{2}',self.cls.InformationDate))
         self.assertTrue(self.cls.VerifiedByProject in projectCategory)
         self.assertTrue(self.cls.CurrentLivingSituation in [1,2,3,4])
-        self.assertTrue(self.cls.HasToLeaveCurrentSituation in [0,1,8,9,99])
-        self.assertTrue(self.cls.HasASubsequentResidence in [0,1,8,9,99])
-        self.assertTrue(self.cls.HasResourcesToObtainPermanentHousing in [0,1,8,9,99])
-        self.assertTrue(self.cls.OwnershipInPermanentHousing in [0,1,8,9,99])
-        self.assertTrue(self.cls.HasClientMoved in [0,1,8,9,99])
+        self.assertTrue(self.cls.HasToLeaveCurrentSituation in responseCategory)
+        self.assertTrue(self.cls.HasASubsequentResidence in responseCategory)
+        self.assertTrue(self.cls.HasResourcesToObtainPermanentHousing in responseCategory)
+        self.assertTrue(self.cls.OwnershipInPermanentHousing in responseCategory)
+        self.assertTrue(self.cls.HasClientMoved in responseCategory)
 
 class DateOfEntryTest(TestCase):
    def setUp(self):
@@ -423,3 +428,163 @@ class SexualOrientationTest(TestCase):
         self.assertTrue(self.sex.SexualOrientation in [1,2,3,4,5,6,8,9,99])
 
 
+
+class VeteranInfoTest(TestCase):
+   def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.vi = factories.VeteranInfoFactory(EnrollmentID=self.enroll)
+    
+   def test_veteranInfo_is_created(self):
+        self.assertEquals(self.vi.EnrollmentID, self.enroll) 
+        self.assertTrue(re.match('\d{4}',self.vi.YearEnteredMilitaryService)) 
+        self.assertTrue(re.match('\d{4}', self.vi.YearSeparatedFromMilitaryService))
+        self.assertTrue(self.vi.TheatreOfOperations_Afghanistan in responseCategory)
+        self.assertTrue(self.vi.TheatreOfOperations_Iraq_IraqiFreedom in responseCategory)
+        self.assertTrue(self.vi.TheatreOfOperations_Iraq_NewDawn in responseCategory)
+        self.assertTrue(self.vi.TheatreOfOperations_KoreanWar in responseCategory)
+        self.assertTrue(self.vi.TheatreOfOperations_OtherPeacekeepingOperations in responseCategory)
+        self.assertTrue(self.vi.TheatreOfOperations_PersianGulfWar in responseCategory)
+        self.assertTrue(self.vi.TheatreOfOperations_VietnamWar in responseCategory)
+        self.assertTrue(self.vi.TheatreOfOperations_WorldWar2 in responseCategory)
+        self.assertTrue(self.vi.BranchOfMilitary in [1,2,3,4,6,8,9,99])
+        self.assertTrue(self.vi.DischargeStatus in [1,2,4,5,6,7,8,9,99])
+
+
+class ServicesProvidedSSVFTest(TestCase):
+    
+    def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.sp = factories.ServicesProvidedSSVFFactory(EnrollmentID=self.enroll)
+    
+    def test_serviceProvided_is_created(self):
+        self.assertEquals(self.sp.EnrollmentID, self.enroll) 
+        self.assertTrue(re.match('\d{4}-\d{2}-\d{2}', self.sp.DateOfService))
+        self.assertTrue(self.sp.TypeOfService in list(range(1,10)))
+        self.assertTrue(self.sp.IfAssistanceObtainingOrCoordinatingOtherPublicBenefits in list(range(1,14))) 
+        self.assertTrue(self.sp.IfDirectProvisionOfOtherPublicBenefits in list(range(1,12)))
+        self.assertTrue(self.sp.IfAssistanceObtainingVABenefits in [1,2,3,4]) 
+
+
+
+class FASSVFTest(TestCase):
+   def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.fassvf = factories.FinancialAssisstanceSSVFFactory(EnrollmentID=self.enroll)
+    
+   def test_faSSVF_is_created(self):
+        self.assertEquals(self.fassvf.EnrollmentID, self.enroll)
+        self.assertTrue(re.match('\d{4}-\d{2}-\d{2}', self.fassvf.DateOfFinancialAssistance))
+        self.assertTrue(self.fassvf.FinancialAssistanceType in [1,2,3,4,5,8,9,10,11,12,14,15])
+        self.assertTrue(self.fassvf.FinancialAssistanceAmount > 0)
+
+
+class PercentAMITest(TestCase):
+   
+   def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.ami = factories.PercentAMIFactory(EnrollmentID=self.enroll)
+    
+   def test_percentAMI_is_created(self):
+        self.assertEquals(self.ami.EnrollmentID, self.enroll)
+        self.assertTrue(self.ami.HouseholdIncomeAsAPercentageOfAMI in [1,2,3])
+
+
+class LastPermanentAddressTest(TestCase):
+    def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.lpa = factories.LastPermanentAddressFactory(EnrollmentID=self.enroll)
+    
+    def test_address_is_created(self):
+        self.assertEquals(self.lpa.EnrollmentID, self.enroll) 
+        self.assertTrue(self.lpa.AddressDataQuality in [1,2,8,9,99])
+
+
+class SSVFHPTargetCriteriaTest(TestCase):
+   
+   def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.target = factories.SSVFHPTargetingCriteriaFactory(EnrollmentID=self.enroll)
+    
+   def test_targetCriteria_is_created(self):
+        self.assertEquals(self.target.EnrollmentID, self.enroll) 
+        self.assertTrue(self.target.ReferredByCoordinatedEntry in yesNo)
+        self.assertTrue(self.target.CurrentHouseholdIncomeIsZeroDollars in yesNo)
+        self.assertTrue(self.target.SuddenAndSignificantDecreaseIncashIncome in yesNo)
+        self.assertTrue(self.target.MajorChangeInHouseholdCompositionInPastTwelveMonths in yesNo)
+        self.assertTrue(self.target.CurrentlyAtRiskOfLosingATenantBasedHousingSubsidy in yesNo)
+        self.assertTrue(self.target.HeadOfHouseholdWithDisablingCondition in yesNo)
+        self.assertTrue(self.target.CriminalRecordForArsonDrugDealing in yesNo)
+        self.assertTrue(self.target.RegisteredSexOffender in yesNo)
+        self.assertTrue(self.target.AtLeastOneDependentChildUnderAgeSix in yesNo)
+        self.assertTrue(self.target.SingleParentWithMinorChild in yesNo)
+        self.assertTrue(self.target.HouseholdSizeOfFiveOrMore in yesNo)
+        self.assertTrue(self.target.AnyVeteranInHouseholdServedInIraqOrAfghanistan in yesNo)
+        self.assertTrue(self.target.FemaleVeteran in yesNo) 
+        self.assertTrue(self.target.CurrentHouseholdIncomeIsZeroDollars in [0,1,2,3])
+        self.assertTrue(self.target.AnnualHouseholdGrossIncomeAmount in [0,1,2])
+        self.assertTrue(self.target.RentalEvictionsWithinThePastSevenYears in [0,1,2,3])
+        self.assertTrue(self.target.HistoryOfLiteralHomelessness in [0,1,2,3])
+
+class HUDVASHVoucherTest(TestCase):
+    def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.vouch = factories.HUDVASHVoucherTrackFactory(EnrollmentID=self.enroll)
+    
+    def test_voucherTest_is_created(self):
+        self.assertEquals(self.vouch.EnrollmentID, self.enroll)
+        self.assertTrue(re.match('\d{4}-\d{2}-\d{2}', str(self.vouch.InformationDate)))
+        self.assertTrue(self.vouch.VoucherChange in list(range(1,13)))
+
+
+
+class HUDVASHExitTest(TestCase):
+    def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.exit = factories.HUDVASHExitInformationFactory(EnrollmentID=self.enroll)
+    
+    def test_exitTest_is_created(self):
+        self.assertEquals(self.exit.EnrollmentID, self.enroll)
+        self.assertTrue(self.exit.CaseManagementExitReason in list(range(1,14)))
+
+class ConnectionSOARTest(TestCase):
+    def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.conn = factories.ConnectionWithSOARFatory(EnrollmentID=self.enroll)
+    
+    def test_connection_is_created(self):
+        self.assertEquals(self.conn.EnrollmentID, self.enroll)
+        self.assertTrue(self.conn.ConnectionWithSOAR in responseCategory)
+
+class LastGradeCompletedTest(TestCase):
+    def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.grade = factories.LastGradeCompletedFactory(EnrollmentID=self.enroll)
+    
+    def test_gradeCompleted_is_created(self):
+        self.assertEquals(self.grade.EnrollmentID, self.enroll)
+        self.assertTrue(self.grade.LastGradeCompleted in list(range(1,15)) +[99])
+
+
+
+class EmploymentStatusTest(TestCase):
+   def setUp(self):
+        self.client = factories.HomelessFactory()
+        self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
+        self.status = factories.EmploymentStatusFactory(EnrollmentID=self.enroll)
+    
+   def test_status_is_created(self):
+        self.assertEquals(self.status.EnrollmentID, self.enroll) 
+        self.assertTrue(re.match('\d{4}-\d{2}-\d{2}', str(self.status.InformationDate)))
+        self.assertTrue(self.status.WhyNotEmployed in [1,2,3])
+        self.assertTrue(self.status.TypeOfEmployment in [1,2])
+        self.assertTrue(self.status.Employed in yesNo)

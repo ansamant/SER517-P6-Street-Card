@@ -637,8 +637,8 @@ class VeteranInformation(models.Model):
 
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='VeteranInformation_EnrollmentID', default=None)
-    YearEnteredMilitaryService = models.IntegerField()
-    YearSeparatedFromMilitaryService = models.IntegerField()
+    YearEnteredMilitaryService = models.PositiveIntegerField()
+    YearSeparatedFromMilitaryService = models.PositiveIntegerField()
     TheatreOfOperations_WorldWar2 = models.IntegerField(choices=ResponseCategory.choices)
     TheatreOfOperations_KoreanWar = models.IntegerField(choices=ResponseCategory.choices)
     TheatreOfOperations_VietnamWar = models.IntegerField(choices=ResponseCategory.choices)
@@ -731,7 +731,7 @@ class FinancialAssistanceSSVF(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='FinancialAssistanceSSVF_EnrollmentID', default=None)
     DateOfFinancialAssistance = models.DateField()
-    FinancialAssistanceAmount = models.DateField()
+    FinancialAssistanceAmount = models.DecimalField(max_digits=8, decimal_places=2)
     FinancialAssistanceType = models.IntegerField(choices=FinancialAssistanceTypeCategory.choices)
 
 

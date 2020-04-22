@@ -33,7 +33,7 @@ class HomelessFactory(DjangoModelFactory):
     Ethnicity = random.choice([0,1,8,9,99])
     Gender = random.choice([0,1,3,4,5,8,9,99]) 
     VeteranStatus =random.choice([0,1,8,9,99]) 
-    PhoneNumberPrefix = fake.random_int(0, 999)
+    PhoneNumberPrefix = str(fake.random_int(0, 999)) # as this is a char field
     PhoneNumber = fake.phone_number()
     Email = fake.ascii_email() 
 
@@ -114,13 +114,15 @@ class AppointmentsFactory(DjangoModelFactory):
         AlertTaskID = str(fake.uuid4())
   
 
+    
 
 #Made to showcase 1-1 rel with SocialWorker
 class UserFactory(DjangoModelFactory):
     class Meta:
        model  = User
-    
+
     username = fake.first_name()+'.' + fake.last_name()
+  
 
 
 class SocialWorkerFactory(DjangoModelFactory):
@@ -402,3 +404,138 @@ class SexualOrientationFactory(DjangoModelFactory):
     EnrollmentID = SubFactory(EnrollmentFactory)
     SexualOrientation = random.choice([1,2,3,4,5,6,8,9,99])
     Description = fake.text()
+
+
+class VeteranInfoFactory(DjangoModelFactory):
+    class Meta:
+        model = models.VeteranInformation
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    YearEnteredMilitaryService = fake.year()
+    YearSeparatedFromMilitaryService = fake.year()
+    TheatreOfOperations_WorldWar2 = random.choice([0,1,8,9,99])
+    TheatreOfOperations_KoreanWar =random.choice([0,1,8,9,99]) 
+    TheatreOfOperations_VietnamWar =random.choice([0,1,8,9,99]) 
+    TheatreOfOperations_PersianGulfWar =random.choice([0,1,8,9,99]) 
+    TheatreOfOperations_Afghanistan =random.choice([0,1,8,9,99]) 
+    TheatreOfOperations_Iraq_IraqiFreedom =random.choice([0,1,8,9,99]) 
+    TheatreOfOperations_Iraq_NewDawn =random.choice([0,1,8,9,99]) 
+    TheatreOfOperations_OtherPeacekeepingOperations =random.choice([0,1,8,9,99]) 
+    BranchOfMilitary = random.choice([1,2,3,4,6,8,9,99])
+    DischargeStatus = random.choice([1,2,4,5,6,7,8,9,99])
+
+
+class ServicesProvidedSSVFFactory(DjangoModelFactory):
+    class Meta:
+        model = models.ServicesProvidedSSVF
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    DateOfService = fake.date()
+    TypeOfService = random.choice(list(range(1,10)))
+    IfAssistanceObtainingVABenefits = random.choice([1,2,3,4])
+    IfAssistanceObtainingOrCoordinatingOtherPublicBenefits = random.choice(list(range(1,14)))
+    IfDirectProvisionOfOtherPublicBenefits = random.choice(list(range(1,12)))
+    IfOtherSupportiveServiceApprovedByVA = fake.text()
+
+
+class FinancialAssisstanceSSVFFactory(DjangoModelFactory):
+    class Meta:
+        model = models.FinancialAssistanceSSVF
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    DateOfFinancialAssistance = fake.date()
+    FinancialAssistanceAmount = round(random.uniform(0, 5000), ndigits=2) 
+    FinancialAssistanceType = random.choice([1,2,3,4,5,8,9,10,11,12,14,15])
+
+
+class PercentAMIFactory(DjangoModelFactory):
+    class Meta:
+        model = models.PercentOfAMI
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    HouseholdIncomeAsAPercentageOfAMI = random.choice([1,2,3])
+
+
+class LastPermanentAddressFactory(DjangoModelFactory):
+    class Meta:
+        model = models.LastPermanentAddress
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    StreetAddress = fake.street_address()
+    City = fake.city()
+    State = fake.country_code()
+    ZipCode =fake.postcode()
+    AddressDataQuality = random.choice([1,2,8,9,99])
+
+
+class SSVFHPTargetingCriteriaFactory(DjangoModelFactory):
+    class Meta:
+        model = models.SSVFHPTargetingCriteria
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    ReferredByCoordinatedEntry = random.choice([0,1])
+    CurrentHousingLossExpectedWithin =random.choice([0,1,2,3])
+    CurrentHouseholdIncomeIsZeroDollars =random.choice([0,1]) 
+    AnnualHouseholdGrossIncomeAmount = random.choice([0,1,2])
+    SuddenAndSignificantDecreaseIncashIncome =random.choice([0,1]) 
+    MajorChangeInHouseholdCompositionInPastTwelveMonths =random.choice([0,1]) 
+    RentalEvictionsWithinThePastSevenYears = random.choice([0,1,2,3])
+    CurrentlyAtRiskOfLosingATenantBasedHousingSubsidy =random.choice([0,1]) 
+    HistoryOfLiteralHomelessness = random.choice([0,1,2,3])
+    HeadOfHouseholdWithDisablingCondition =random.choice([0,1]) 
+    CriminalRecordForArsonDrugDealing =random.choice([0,1]) 
+    RegisteredSexOffender =random.choice([0,1]) 
+    AtLeastOneDependentChildUnderAgeSix =random.choice([0,1]) 
+    SingleParentWithMinorChild =random.choice([0,1]) 
+    HouseholdSizeOfFiveOrMore =random.choice([0,1]) 
+    AnyVeteranInHouseholdServedInIraqOrAfghanistan =random.choice([0,1]) 
+    FemaleVeteran =random.choice([0,1]) 
+    HPApplicantTotalPoints = fake.random_int()
+    GranteeTargetingThresholdScore = fake.random_int()
+
+
+class HUDVASHVoucherTrackFactory(DjangoModelFactory):
+    class Meta:
+        model = models.HUDVASHVoucherTracking
+
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    InformationDate = fake.date()
+    VoucherChange = random.choice(list(range(1,13)))
+    IfOther = fake.text()
+
+
+class HUDVASHExitInformationFactory(DjangoModelFactory):
+    class Meta:
+        model = models.HUDVASHExitInformation
+
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    CaseManagementExitReason = random.choice(list(range(1,14)))
+    IfOther = fake.text()
+
+
+class ConnectionWithSOARFatory(DjangoModelFactory):
+    class Meta:
+        model = models.ConnectionWithSOAR
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    ConnectionWithSOAR = random.choice([0,1,8,9,99])
+
+
+class LastGradeCompletedFactory(DjangoModelFactory):
+    class Meta:
+        model = models.LastGradeCompleted
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    LastGradeCompleted = random.choice(list(range(1,15)) + [99])
+
+
+
+class EmploymentStatusFactory(DjangoModelFactory):
+    class Meta:
+        model = models.EmploymentStatus
+    
+    EnrollmentID = SubFactory(EnrollmentFactory)
+    InformationDate = fake.date()
+    Employed = random.choice([0,1])
+    TypeOfEmployment = random.choice([1,2])
+    WhyNotEmployed = random.choice([1,2,3])
