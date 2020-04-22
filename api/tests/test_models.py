@@ -4,8 +4,6 @@
 from django.test import TestCase
 import api.StreetCardServices.models
 import string
-#from .factories import HomelessFactory, ProductFactory, TransactionDetailFactory, TransactionFactory, LogFactory, UserIdMapFactory, \
-# AppointmentsFactory, SocialWorkerFactory, UserFactory, EnrollmentFactory
 from . import factories
 import datetime, re, pytz
 # Basic Check of HomelessTests
@@ -286,7 +284,7 @@ class W1ServicesTest(TestCase):
        self.assertEqual(self.w1.EnrollmentID, self.enroll) 
     
 
-class FinancialAssiatanceTest(TestCase):
+class FinancialAssistanceTest(TestCase):
    
    def setUp(self):
        self.client = factories.HomelessFactory()
@@ -421,11 +419,11 @@ class SexualOrientationTest(TestCase):
     def setUp(self):
         self.client = factories.HomelessFactory()
         self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
-        self.sex = factories.SexualOrientationFactory(EnrollmentID=self.enroll)
+        self.so = factories.SexualOrientationFactory(EnrollmentID=self.enroll)
     
     def test_sexualOrientation_is_created(self):
-        self.assertEquals(self.sex.EnrollmentID, self.enroll)
-        self.assertTrue(self.sex.SexualOrientation in [1,2,3,4,5,6,8,9,99])
+        self.assertEquals(self.so.EnrollmentID, self.enroll)
+        self.assertTrue(self.so.SexualOrientation in [1,2,3,4,5,6,8,9,99])
 
 
 
@@ -472,7 +470,7 @@ class FASSVFTest(TestCase):
    def setUp(self):
         self.client = factories.HomelessFactory()
         self.enroll = factories.EnrollmentFactory(PersonalId=self.client)
-        self.fassvf = factories.FinancialAssisstanceSSVFFactory(EnrollmentID=self.enroll)
+        self.fassvf = factories.FinancialAssistanceSSVFFactory(EnrollmentID=self.enroll)
     
    def test_faSSVF_is_created(self):
         self.assertEquals(self.fassvf.EnrollmentID, self.enroll)

@@ -86,7 +86,7 @@ class UserIdMapFactory(DjangoModelFactory):
         model= models.UserNameAndIdMapping
     user_name = primary_key_generator()
     user_id = fake.random_int(min=0)
-
+    
 
 # Factory for Appointments Table
 class AppointmentsFactory(DjangoModelFactory):
@@ -438,7 +438,7 @@ class ServicesProvidedSSVFFactory(DjangoModelFactory):
     IfOtherSupportiveServiceApprovedByVA = fake.text()
 
 
-class FinancialAssisstanceSSVFFactory(DjangoModelFactory):
+class FinancialAssistanceSSVFFactory(DjangoModelFactory):
     class Meta:
         model = models.FinancialAssistanceSSVF
     
