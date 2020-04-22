@@ -415,23 +415,7 @@ class RegistrationForm extends React.Component {
 
     handleUpdateSocialWorkerInfo = e => {
         e.preventDefault();
-        // fetch('http://127.0.0.1:8000/homeless/' + homelessPersonId + '/appointment/', {
-        //     method: 'GET',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         Authorization: `Bearer ${localStorage.getItem('token')}`
-        //     },
-        // })
-        //     .then(res => res.json())
-        //     .then(json => {
-        //         this.setState({
-        //                 isLoaded: true,
-        //                 appointment: json,
-        //             }
-        //         )
-        //     })
-
-        console.log("My name is naren");
+    
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
@@ -1138,13 +1122,6 @@ class RegistrationForm extends React.Component {
                             <SiderComponentSocialWorker
                                 setPagecomponent={this.setPagecomponent}
                             />
-                     {/* <Alert
-                            message="Social Worker Registration"
-                            description="- Fill out all the details to register a social worker"
-                            type="info"
-                            closeText="X"
-                            showIcon
-                        /> */}
                     <Content className="content-login">
                         <div className="site-layout-content-login">
                             <Form onSubmit={this.handleSocialWorkerRegistrationSubmit}>
