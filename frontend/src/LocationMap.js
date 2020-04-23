@@ -1,3 +1,20 @@
+/***
+ * 
+ * Renders current location on the map along with nearby location markers. 
+ * NOTE: This along with LocationMap.js needs severe code cleaning. 
+ * Intermediate proficiency with React library needed.
+ * Suggested Changes:
+ * Add routes
+ * Put place Names also in the marker 
+ * Display currentlocation marker (disappears when other locations populate).
+ * references used: https://developers.google.com/maps/documentation/javascript/examples/place-search
+ *                  https://dev.to/jessicabetts/how-to-use-google-maps-api-and-react-js-26c2
+ *                  https://github.com/fullstackreact/google-maps-react/blob/master/examples/components/places.js
+ *                  https://blog.vanila.io/writing-a-google-maps-react-component-fae411588a91
+ * @author: Akash Kadam, Aditya Samant
+ * @version: 1.0
+ */
+
 import React, { Component } from 'react';
 import {GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import CurrentLocation from './CurrentLocation.js'
@@ -12,10 +29,9 @@ export class LocationMap extends Component {
     showingInfoWindow: false,
     activeMarker: {},
     selectedPlace: {},
-    //places: []
+    
   };
 
-  
 
   onMarkerClick = (props, marker, e) =>
     this.setState({
@@ -32,16 +48,26 @@ export class LocationMap extends Component {
       });
     }
   };
-
-  render() {
+  
+ /*displayPlaces = (places) =>{
+    console.log("OH YES!")
+    return places.map(p => {
+       <Marker key={p.id} name={p.name} position={p.geometry.location }
+     onClick={this.onMarkerClick} />
+    })
+  }
+  */
+ 
+ render() {
     return (
       <CurrentLocation
         centerAroundCurrentLocation
         className="map"
         google={this.props.google}
+        //displayPlaces={this.displayPlaces}
       >
         <Marker onClick={this.onMarkerClick} name={'current location'} />
-        
+
         <InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
