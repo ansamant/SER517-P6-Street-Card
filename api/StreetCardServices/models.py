@@ -84,7 +84,7 @@ class Homeless(models.Model):
     # Update with proper regex to validate SSN
     # Remove MaxLengthValidator and MinLengthValidator as they will throw an error for integer fields.
     # Convert to CharField because this would also contain '-' (hyphens)
-    SSN = models.CharField(max_length=9, blank=True, null=True)
+    SSN = models.CharField(max_length=11, blank=True, null=True)
     SSNDataQuality = models.IntegerField(choices=SSNDataQuality.choices)
     DOB = models.DateField(blank=True, null=True)
     DOBDataQuality = models.IntegerField(choices=DOBDataQuality.choices)
@@ -96,6 +96,8 @@ class Homeless(models.Model):
     PhoneNumber = models.CharField(max_length=128, blank=True, null=True)
     Email = models.EmailField(max_length=70, blank=True, null=True)
 
+    def __str__(self):
+        return self.FirstName
 
 class ServiceProvider(models.TextChoices):
     FOOD_PANTRY = "FP", _("Food Pantry")
@@ -125,11 +127,13 @@ class Product(models.Model):
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
     category = models.TextField(choices=Category.choices, default=None, null=False)
 
+    def __str__(self):
+        return self.productName
 
 class Transactions(models.Model):
     transactionId = models.CharField(primary_key=True, default=None, max_length=32)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    totalAmount = models.FloatField()
+    totalAmount = models.DecimalField(default=0.0, decimal_places=2, max_digits=8)
 
 
 class TransactionDetails(models.Model):
@@ -137,7 +141,6 @@ class TransactionDetails(models.Model):
     transactionId = models.ForeignKey(Transactions, on_delete=models.CASCADE, default=None)
     productId = models.ForeignKey(Product, on_delete=models.CASCADE)
     unitPurchased = models.IntegerField()
-
 
 # Log table, used to display information on Case Worker page
 # Log should be recorded whenever greeter swipes card
@@ -448,10 +451,10 @@ class TCellCD4AndViralLoadHOPWA(models.Model):
                                      related_name='TCellCD4AndViralLoadHOPWA_EnrollmentID',
                                      default=None)
     TCellCD4CountAvailable = models.IntegerField(choices=ResponseCategory.choices)
-    IfYesTCellCount = models.IntegerField(validators=[MaxValueValidator(0), MinValueValidator(1500)])
+    IfYesTCellCount = models.IntegerField(validators=[MaxValueValidator(1500), MinValueValidator(0)])
     HowWasTheInformationObtained = models.IntegerField(choices=InformationObtainedResponseCategory.choices)
     ViralLoadInformationAvailable = models.IntegerField(choices=ResponseCategory.choices)
-    ViralLoadCount = models.IntegerField(validators=[MaxValueValidator(0), MinValueValidator(999999)])
+    ViralLoadCount = models.IntegerField(validators=[MaxValueValidator(999999), MinValueValidator(0)])
 
 
 class HousingAssessmentAtExitHOPWA(models.Model):
@@ -637,8 +640,8 @@ class VeteranInformation(models.Model):
 
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='VeteranInformation_EnrollmentID', default=None)
-    YearEnteredMilitaryService = models.IntegerField()
-    YearSeparatedFromMilitaryService = models.IntegerField()
+    YearEnteredMilitaryService = models.PositiveIntegerField()
+    YearSeparatedFromMilitaryService = models.PositiveIntegerField()
     TheatreOfOperations_WorldWar2 = models.IntegerField(choices=ResponseCategory.choices)
     TheatreOfOperations_KoreanWar = models.IntegerField(choices=ResponseCategory.choices)
     TheatreOfOperations_VietnamWar = models.IntegerField(choices=ResponseCategory.choices)
@@ -731,7 +734,7 @@ class FinancialAssistanceSSVF(models.Model):
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='FinancialAssistanceSSVF_EnrollmentID', default=None)
     DateOfFinancialAssistance = models.DateField()
-    FinancialAssistanceAmount = models.DateField()
+    FinancialAssistanceAmount = models.DecimalField(max_digits=8, decimal_places=2)
     FinancialAssistanceType = models.IntegerField(choices=FinancialAssistanceTypeCategory.choices)
 
 

@@ -126,7 +126,7 @@ class SetAppointments extends React.Component {
                 )
             })
             
-       // console.log(this.items);
+        console.log("ITEMS", this.items);
 
     }
 
