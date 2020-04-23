@@ -51,6 +51,12 @@ class NormalLoginForm extends React.Component {
         });
     };
 
+
+    handleAlternate = e => {
+       console.log("Fogot password clicked");
+       this.props.history.push('/forgotPassword');
+    };
+
     render() {
         const {getFieldDecorator} = this.props.form;
         let form;
@@ -83,6 +89,11 @@ class NormalLoginForm extends React.Component {
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit" className="login-form-button">
                                         Log in
+                                    </Button>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button onClick={this.handleAlternate.bind(this)} type="primary"  className="login-form-button">
+                                        Forgot Password
                                     </Button>
                                 </Form.Item>
                             </Form>

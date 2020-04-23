@@ -127,7 +127,7 @@ class Transaction extends React.Component {
         var beforeTotal = (prodData[index].quantity && prodData[index].costPerItem) ?  prodData[index].quantity * prodData[index].costPerItem : 0;
         prodData[index].quantity = e.target.value;
         prodData[index].amount = prodData[index].quantity * prodData[index].costPerItem;
-        var afterTotal = this.state.totalAmount - beforeTotal +  prodData[index].amount;
+        var afterTotal = (this.state.totalAmount - beforeTotal +  prodData[index].amount) < 0.01 ? 0 : (this.state.totalAmount - beforeTotal +  prodData[index].amount);
         this.setState({productData: prodData});
         this.setState({totalAmount : afterTotal})
         console.log("Input function", JSON.parse(JSON.stringify(this.state.productData)));
@@ -190,8 +190,9 @@ class Transaction extends React.Component {
               console.log(item);
           })
         var newData = this.state.productData.filter((item) => {
-            if(!this.state.selectedCategory) {
-                return true;
+             if(!this.state.selectedCategory) {
+                 this.setState({selectedCategory: category[0]})
+                 return true;
             }
             else if (this.state.selectedCategory && item.category === this.state.selectedCategory) {
                 return true;
@@ -236,7 +237,7 @@ class Transaction extends React.Component {
                     <Content className="content-login">
                         <div className="site-layout-content-login">
                             <Cascader style={{ width: 200 }} options={category} placeholder="Product Category"
-                                      onChange={(e) => {this.setState({selectedCategory: e[0]})}}/>,
+                                      onChange={(e) => {this.setState({selectedCategory: e[0]})}}/>
                             <table id='inventory'>
                                 <thead>
                                 <tr>{this.renderTableHeader()}</tr>
