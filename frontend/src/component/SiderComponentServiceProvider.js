@@ -1,6 +1,6 @@
 import React from 'react'
 import {Layout, Menu} from "antd";
-import {FormOutlined, UserOutlined} from "@ant-design/icons";
+import {FormOutlined, UserOutlined, SettingOutlined} from "@ant-design/icons";
 import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
 import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
 
@@ -52,7 +52,13 @@ export default class SiderComponentServiceProvider extends React.Component {
             case '6':
                 this.props.setPagecomponent('combinedChart')
                 this.setState({
-                    selectedKey: 5
+                    selectedKey: 6
+                })
+                break;
+             case '7':
+                this.props.setPagecomponent('addProduct')
+                this.setState({
+                    selectedKey: 7
                 })
                 break;
         }
@@ -102,6 +108,11 @@ export default class SiderComponentServiceProvider extends React.Component {
                                     <span className="nav-text">
                                         <ClockCircleOutlined/>
                                         Combined Chart</span>
+                        </Menu.Item>
+                        <Menu.Item className="menuKey" key="7">
+                                    <span className="nav-text">
+                                        <SettingOutlined/>
+                                        Add Product</span>
                         </Menu.Item>
                     </Menu>
                 </div>

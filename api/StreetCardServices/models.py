@@ -109,17 +109,27 @@ class ServiceProvider(models.TextChoices):
 # Inventory Tables:
 
 class Product(models.Model):
+
+    class Category(models.TextChoices):
+        FOOTWARE = "footware", _("Footware")
+        WINTERWEAR = "winterwear", _("Winterwear")
+        MEAL_PASS = "meal_pass", _("Meal Pass")
+        TRANSPORT_PASS = "transport_pass", _("Transport Pass")
+        BAGS = "bags", _("Bags")
+        QUILT = "quilt", _("Quilt")
+
     productName = models.CharField(max_length=100)
     productId = models.CharField(primary_key=True, default=None, max_length=32, blank=True)
     costPerItem = models.FloatField()
     unitsAvailable = models.IntegerField()
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
+    category = models.TextField(choices=Category.choices, default=None, null=False)
 
 
 class Transactions(models.Model):
     transactionId = models.CharField(primary_key=True, default=None, max_length=32)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    totalAmount = models.IntegerField()
+    totalAmount = models.FloatField()
 
 
 class TransactionDetails(models.Model):

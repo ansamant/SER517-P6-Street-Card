@@ -6,6 +6,7 @@ import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponentServiceProvider from './component/SiderComponentServiceProvider'
 import { Chart } from "react-google-charts";
+import WrappedAddProduct from './AddProduct';
 
 const {Content} = Layout;
 
@@ -379,6 +380,28 @@ class ServiceProviderView extends React.Component {
                           }}
                           rootProps={{ 'data-testid': '1' }}
                         />
+                </Content>
+            </Layout>
+            <StreetCardFooter/>
+            </Layout>
+                </div>
+            );
+        }else if(this.state.pageComponent == 'addProduct'){
+            return(
+                <div>
+                <Layout className="layout">
+            <Header handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                    loggedInStatus={this.state.loggedInStatus}
+            />
+            <Layout>
+                <SiderComponentServiceProvider
+                    setPagecomponent={this.setPagecomponent}
+                />
+                <Content className="content-login">
+                    <div className="site-layout-content-login">
+                        <WrappedAddProduct history={this.props.history}
+                        />
+                    </div>
                 </Content>
             </Layout>
             <StreetCardFooter/>
