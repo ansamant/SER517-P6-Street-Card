@@ -84,7 +84,9 @@ class AddProduct extends React.Component {
                     },
                     body: JSON.stringify(newProduct)
                 })
-                    .then(res => res.json())
+                    .then(res => res.json()).then(json => {
+                        this.props.history.push('/productAdditionComplete');
+                    });
             }
 
         });

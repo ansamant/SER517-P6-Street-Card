@@ -399,7 +399,8 @@ class ServiceProviderView extends React.Component {
                 />
                 <Content className="content-login">
                     <div className="site-layout-content-login">
-                        <WrappedAddProduct/>
+                        <WrappedAddProduct history={this.props.history}
+                        />
                     </div>
                 </Content>
             </Layout>
