@@ -72,13 +72,13 @@ class Transaction extends React.Component {
                     if(key.quantity > 0 ) {
                         prodData.push( {
                             productId : key.productId,
-                            unitPurchased :  key.quantity
+                            unitPurchased :  Number(key.quantity)
                         })
                     }
                 })
                 console.log("Product details :",prodData);
                 var transactionPostObject = {
-                    totalAmount  : this.state.totalAmount,
+                    totalAmount  : Number(this.state.totalAmount),
                     transaction_detail : prodData
                 };
                 console.log("Total Transaction details",transactionPostObject);

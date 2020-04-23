@@ -123,13 +123,13 @@ class Product(models.Model):
     costPerItem = models.FloatField()
     unitsAvailable = models.IntegerField()
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
-    category = models.TextField(choices=Category.choices, default=None, null=True)
+    category = models.TextField(choices=Category.choices, default=None, null=False)
 
 
 class Transactions(models.Model):
     transactionId = models.CharField(primary_key=True, default=None, max_length=32)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
-    totalAmount = models.IntegerField()
+    totalAmount = models.FloatField()
 
 
 class TransactionDetails(models.Model):
