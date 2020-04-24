@@ -160,13 +160,25 @@ export class CurrentLocation extends React.Component {
           radius: '5000',
           name:'Homeless services'
         };
-
+        //Add Current Location
+        var infoWindow = new google.maps.InfoWindow()
+        var currLoc= new google.maps.Marker({
+          map:map,
+          position: center
+        })
+        //when map opens first show the info
+        infoWindow.setContent('you are here')
+        infoWindow.open(map,currLoc)
+        //when clicked also show marker info
+        google.maps.event.addListener(currLoc, 'click',function(){
+          infoWindow.setContent('you are here');
+          infoWindow.open(map, this);
+        })
         service.nearbySearch(request, (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK)
             this.setState({ places: results });
             //console.log("PLACES", this.state.places);
             //this.handleDisplayMarkers(this.state.places);
-            var infoWindow = new google.maps.InfoWindow();
             for (var i = 0; i < results.length; i++) {
               this.createMarker(results[i], map, infoWindow);
             }
