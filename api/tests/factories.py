@@ -49,7 +49,11 @@ class ProductFactory(DjangoModelFactory):
     costPerItem = round(random.uniform(0, 5000), ndigits=2) # Faker doesn't provide a means to get decimals
     unitsAvailable = fake.random_int(min=0)
     serviceProvider = random.choice(["FP", "DIC", "SH", "SK", "NA", "OTH"])
-
+    category = random.choice(["footware", 
+                              "winterwear", 
+                              "meal_pass", 
+                              "transport_pass",
+                              "bags", "quilt" ])
    
 
 

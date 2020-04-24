@@ -41,6 +41,7 @@ class ProductTest(TestCase):
         self.assertTrue(self.product.costPerItem >= 0)
         self.assertEquals(len(self.product.productId), 32)
         self.assertTrue(self.product.unitsAvailable >= 0)
+        self.assertTrue(self.product.category in ["footware", "winterwear", "meal_pass", "transport_pass", "bags", "quilt" ])
 
 
 

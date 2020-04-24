@@ -409,8 +409,10 @@ class TestFinancialAssistanceSSVFSerializer(TestCase):
         for field_name in self.serializer.data.keys():
             if (field_name == 'EnrollmentID'):
                 self.assertEqual(self.serializer.data[field_name], self.enroll.EnrollmentID)
-            elif ('Date' in field_name or 'Amount' in field_name):
-                self.assertEqual(float(self.serializer.data[field_name]), float(getattr(self.fassvf, field_name)))
+            elif ('Date' in field_name):
+                self.assertEqual(str(self.serializer.data[field_name]), str(getattr(self.fassvf, field_name)))
+            elif('Amount in field_name'):
+                self.assertEqual(float(self.serializer.data[field_name]), float(getattr(self.fassvf, field_name))) 
             else:
                 self.assertEqual(self.serializer.data[field_name], getattr(self.fassvf, field_name))
 
