@@ -53,7 +53,7 @@ class NormalLoginForm extends React.Component {
 
 
     handleAlternate = e => {
-       console.log("Fogot password clicked");
+
        this.props.history.push('/forgotPassword');
     };
 

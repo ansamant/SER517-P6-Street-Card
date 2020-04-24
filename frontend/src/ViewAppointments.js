@@ -46,7 +46,7 @@ class ViewAppointments extends React.Component {
                  }
              )
          })
-      console.log(this.items);
+
 
   }
 

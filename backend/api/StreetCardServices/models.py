@@ -113,12 +113,13 @@ class ServiceProvider(models.TextChoices):
 class Product(models.Model):
 
     class Category(models.TextChoices):
-        FOOTWARE = "footware", _("Footware")
-        WINTERWEAR = "winterwear", _("Winterwear")
-        MEAL_PASS = "meal_pass", _("Meal Pass")
-        TRANSPORT_PASS = "transport_pass", _("Transport Pass")
-        BAGS = "bags", _("Bags")
-        QUILT = "quilt", _("Quilt")
+        Shoes = "Shoes", _("Shoes")
+        Clothing = "Clothing", _("Clothing")
+        MealPass = "MealPass", _("Meal Pass")
+        TransportPass = "TransportPass", _("Transport Pass")
+        PetFoods = "PetFood", _("Pet Food")
+        PersonalHygieneItems = "PersonalHygieneItems", _("Personal Hygiene Items")
+        RainGear = "RainGear", _("Rain Gear")
 
     productName = models.CharField(max_length=100)
     productId = models.CharField(primary_key=True, default=None, max_length=32, blank=True)

@@ -5,7 +5,7 @@ import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layo
 import Header from './Header'
 import moment from 'moment';
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
+import SiderComponent from './SiderComponent'
 
 const {Panel} = Collapse;
 
@@ -139,7 +139,7 @@ class EditAppointment extends React.Component {
     }
 
     onChange = e => {
-        console.log('checked = ', e.target.checked);
+
         this.setState({
             checked: e.target.checked,
         });

@@ -4,7 +4,7 @@ import './index.css';
 import {Form, Layout, Table} from 'antd';
 import Header from './Header.js'
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
+import SiderComponent from './SiderComponent'
 
 /**
  * Creating a table for rendering the timestamp logo.
@@ -76,7 +76,7 @@ class LogView extends React.Component {
                     }
                 )
             })
-        console.log(this.state.dataSource);
+
     }
 
     handleSuccessfulLogoutAction() {

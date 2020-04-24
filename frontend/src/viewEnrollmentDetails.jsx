@@ -1,9 +1,9 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import '../index.css';
+import './index.css';
 import {Collapse, Form, Layout} from "antd";
-import Header from '../Header'
-import StreetCardFooter from '../StreetCardFooter'
+import Header from './Header'
+import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './SiderComponent';
 
 const {Content} = Layout;

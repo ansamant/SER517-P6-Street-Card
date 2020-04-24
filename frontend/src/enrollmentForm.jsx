@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import "antd/dist/antd.css";
 import {Cascader, Col, Collapse, Form, Layout, Row} from "antd";
-import Header from "../Header";
-import StreetCardFooter from "../StreetCardFooter";
+import Header from "./Header";
+import StreetCardFooter from "./StreetCardFooter";
 import SiderComponent from './SiderComponent'
 import HomelessPreventionHUD from "./HomelessPreventionHUD";
 import RapidReHousingVA from "./RapidReHousingVA";
@@ -25,7 +25,7 @@ const changingPanel = []
 class EnrollmentForm extends Component {
     constructor(props) {
         super(props);
-        console.log("Hi " + this.props.homelessPersonId);
+
         this.state = {
             items: {},
             isLoaded: false,

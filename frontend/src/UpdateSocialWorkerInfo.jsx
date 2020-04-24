@@ -1,6 +1,6 @@
 import React from "react";
 import "antd/dist/antd.css";
-import "../index.css";
+import "./index.css";
 import {
     Alert,
     AutoComplete,
@@ -18,9 +18,9 @@ import {
     Select,
     Result
 } from "antd";
-import Header from "../Header";
-import StreetCardFooter from '../StreetCardFooter'
-import SiderComponentSocialWorker from "../component/SiderComponentSocialWorker";
+import Header from "./Header";
+import StreetCardFooter from './StreetCardFooter'
+import SiderComponentSocialWorker from "./SiderComponentSocialWorker";
 
 const AutoCompleteOption = AutoComplete.Option;
 
@@ -111,7 +111,7 @@ class UpdateSocialWorkerInfo extends React.Component {
 
                 registerRequestObject.socialWorker = socialWorker;
 
-                console.log(registerRequestObject);
+
 
                 fetch('http://localhost:8000/register/' + this.props.socialWorkerInfoJSON.user_id + '/' , {
                     method: 'PUT',
@@ -123,7 +123,7 @@ class UpdateSocialWorkerInfo extends React.Component {
                 })
                     .then(res => {
                         if (res.status == 200) {
-                            console.log(res);
+
                             this.setState({
                             isLoaded: true,
                         })
@@ -164,7 +164,7 @@ class UpdateSocialWorkerInfo extends React.Component {
     render() {
         
         const {autoCompleteResult} = this.state;
-        console.log(this.state.pageComponent);
+
         const formItemLayout = {
             labelCol: {
                 xs: {span: 24},

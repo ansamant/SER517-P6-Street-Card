@@ -4,7 +4,7 @@ import './index.css';
 import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Row, TimePicker} from 'antd';
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
+import SiderComponent from './SiderComponent'
 import { OneToOneOutlined } from '@ant-design/icons';
 
 
@@ -55,7 +55,7 @@ class SetAppointments extends React.Component {
     
     constructor(props) {
         super(props);
-        //console.log(this.props.homelessPersonId);
+        //
         this.state = {
             items: {},
             checked: false,
@@ -126,7 +126,7 @@ class SetAppointments extends React.Component {
                 )
             })
             
-        console.log("ITEMS", this.items);
+
 
     }
 
@@ -143,7 +143,7 @@ class SetAppointments extends React.Component {
 
 
     onChange = e => {
-        console.log('checked = ', e.target.checked);
+
         this.setState({
             checked: e.target.checked,
         });

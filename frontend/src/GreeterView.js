@@ -11,8 +11,8 @@ class GreeterView extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props.clearanceLevel);
-        console.log(this.props.serviceProvider);
+
+
         this.state = {
             isLoaded: false,
             name: "",
@@ -37,7 +37,7 @@ class GreeterView extends React.Component {
                 var registerRequestObject = {};
                 registerRequestObject.serviceProvider = this.state.serviceProvider;
                 registerRequestObject.clientName = "";
-                console.log(registerRequestObject);
+
                 fetch('http://localhost:8000/homeless/' + values.personalId + '/', {
                     method: 'GET',
                     headers: {
@@ -71,7 +71,7 @@ class GreeterView extends React.Component {
                         .then(res => res.json())
                         .then(
                             json => {
-                                console.log("register response:", json);
+
                             });
                 });
             }

@@ -1,9 +1,9 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import '../index.css';
+import './index.css';
 import {Button, Form, Layout, Menu, Table} from 'antd';
-import Header from '../Header'
-import StreetCardFooter from '../StreetCardFooter'
+import Header from './Header'
+import StreetCardFooter from './StreetCardFooter'
 import {FormOutlined, UserOutlined} from "@ant-design/icons";
 import CalendarOutlined from "@ant-design/icons/lib/icons/CalendarOutlined";
 import ClockCircleOutlined from "@ant-design/icons/lib/icons/ClockCircleOutlined";
@@ -62,7 +62,7 @@ class ViewAllEnrollment extends React.Component {
     }
 
     viewEnrollmentDetails(record) {
-        console.log(record.EnrollmentID);
+
         this.props.inputEnrollmentId(record.EnrollmentID);
         this.props.history.push('/viewEnrollmentDetails');
     }

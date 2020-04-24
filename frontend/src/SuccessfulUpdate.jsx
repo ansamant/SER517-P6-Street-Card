@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import "antd/dist/antd.css";
 import {Button, Form, Layout, Result} from 'antd';
-import Header from "../Header";
-import StreetCardFooter from "../StreetCardFooter";
+import Header from "./Header";
+import SiderComponent from "./SiderComponent";
+import StreetCardFooter from "./StreetCardFooter";
+import SmileOutlined from "@ant-design/icons/lib/icons/SmileOutlined";
 
 const {Content} = Layout;
 
-class LoginError extends Component {
+class SuccessfulUpdate extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            loginPageStatus: "LOGIN_HEADER"
-        };
+        this.setPagecomponent = this.setPagecomponent.bind(this);
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.handleButton = this.handleButton.bind(this);
     }
@@ -21,23 +21,34 @@ class LoginError extends Component {
         this.props.history.push('/login');
     }
 
+    setPagecomponent(pageComponentValue) {
+        this.props.updatePageComponent(pageComponentValue)
+        this.props.history.push('/socialWorkerRegister');
+    };
+
     handleButton(){
-        this.props.history.push('/login');
+        this.props.history.push('/socialWorkerRegister');
     }
 
     render() {
         return (
             <Layout>
-                <Header loginPageStatus={this.state.loginPageStatus}/>
+                <Header
+                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                    loggedInStatus={this.props.loggedInStatus}/>
+                <Layout>
+                    <SiderComponent
+                        setPagecomponent={this.setPagecomponent}
+                    />
                     <Content className="content-login">
                         <div className="site-layout-content-login">
                             <Result
-                                status="error"
-                                title="Login Error"
-                                subTitle="Wrong Username/Password Combination"
+                                status="success"
+                                title="Update Successful"
+                                subTitle=""
                                 extra={[
                                     <Button type="primary" key="console" onClick={this.handleButton}>
-                                        Login Again
+                                        Go Back
                                     </Button>,
                                 ]}
                             />
@@ -45,8 +56,10 @@ class LoginError extends Component {
                     </Content>
                     <StreetCardFooter/>
                 </Layout>
+            </Layout>
         )
     }
 }
 
-export default LoginError;
+
+export default SuccessfulUpdate;

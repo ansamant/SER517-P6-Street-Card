@@ -4,7 +4,7 @@ import './index.css';
 import {Button, Form, Layout, Table} from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
+import SiderComponent from './SiderComponent'
 
 const {Content, Sider} = Layout;
 
@@ -144,7 +144,7 @@ class ViewAppointmentsTable extends React.Component {
                     }
                 )
             })
-        console.log(this.appointmentData);
+
     }
 
 

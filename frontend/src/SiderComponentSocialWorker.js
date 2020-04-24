@@ -41,10 +41,10 @@ export default class SiderComponentSocialWorker extends React.Component {
             <Sider className="site-layout-sider" breakpoint="lg"
                    collapsedWidth="0"
                    onBreakpoint={broken => {
-                       console.log(broken);
+
                    }}
                    onCollapse={(collapsed, type) => {
-                       console.log(collapsed, type);
+
                    }}>
                 <div className="menu">s
                     <Menu mode="inline" theme="dark"

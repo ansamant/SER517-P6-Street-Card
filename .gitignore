@@ -116,8 +116,29 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-<<<<<<< HEAD
 .DS_Store
-=======
-api/StreetCardServices/migrations/
->>>>>>> 152ec9ef5e1f30aa995d851e504e13bdf29a4ba1
+/backend/api/StreetCardServices/migrations/
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/frontend/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

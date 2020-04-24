@@ -4,7 +4,7 @@ import './index.css';
 import {Button, Form, Icon, Input, Layout, Row, Col, Table} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponentServiceProvider from './component/SiderComponentServiceProvider'
+import SiderComponentServiceProvider from './SiderComponentServiceProvider'
 import { Chart } from "react-google-charts";
 import WrappedAddProduct from './AddProduct';
 

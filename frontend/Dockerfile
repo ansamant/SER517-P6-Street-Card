@@ -1,0 +1,12 @@
+FROM ubuntu:18.04
+RUN apt-get update \
+  && apt-get install -y vim \
+  && apt-get install -y nodejs \
+  && apt-get install -y npm
+WORKDIR /src/frontend
+COPY package.json /src/frontend
+RUN npm install -g npm
+RUN npm install --silent
+COPY . /src/frontend
+EXPOSE 3000
+CMD ["npm", "start"]

@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import "antd/dist/antd.css";
-import {Button, Form, Layout, Result} from 'antd';
-import Header from "../Header";
-import StreetCardFooter from "../StreetCardFooter";
+import {Button, Layout, Result} from 'antd';
+import Header from "./Header";
+import StreetCardFooter from "./StreetCardFooter";
 
 const {Content} = Layout;
 

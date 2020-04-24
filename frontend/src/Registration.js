@@ -19,8 +19,8 @@ import {
 } from "antd";
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
-import SiderComponentSocialWorker from "./component/SiderComponentSocialWorker";
+import SiderComponent from './SiderComponent'
+import SiderComponentSocialWorker from "./SiderComponentSocialWorker";
 
 const nameDataQuality = [
     {
@@ -301,7 +301,7 @@ class RegistrationForm extends React.Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
-                console.log(values.personId);
+
                 this.props.handleHomelessPersonData(values.personId);
                 this.props.history.push('/createAppointment');
             }
@@ -313,7 +313,7 @@ class RegistrationForm extends React.Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
-                console.log(values.personId);
+
                 this.props.handleHomelessPersonData(values.personId);
                 this.props.history.push('/viewAppointment');
             }
@@ -393,7 +393,7 @@ class RegistrationForm extends React.Component {
 
                 registerRequestObject.socialWorker = socialWorker;
 
-                console.log(registerRequestObject);
+
 
                 fetch('http://localhost:8000/register/', {
                     method: 'POST',
@@ -419,7 +419,7 @@ class RegistrationForm extends React.Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
-                console.log(values.username);
+
                 fetch('http://localhost:8000/user/' + values.username + '/', {
                     method: 'GET',
                     headers: {
@@ -429,7 +429,7 @@ class RegistrationForm extends React.Component {
                 })
                     .then(res => res.json())
                     .then(json => {
-                        console.log(json);
+
                         // this.props.handleHomelessPersonJson(json);
                         this.props.handleUpdateSocialWorkerInfoJSON(json);
                         this.props.history.push('/updateSocialWorkerInfo');
@@ -481,8 +481,8 @@ class RegistrationForm extends React.Component {
 
             if (!err) {
                 var registerRequestObject = {};
-                console.log(values.PhoneNumberPrefix);
-                console.log(values.PhoneNumber);
+
+
                 //registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? this.state.homelessData.PersonalId : Math.floor(100000 + Math.random() * 900000);
                 registerRequestObject.FirstName = values.FirstName ? values.FirstName : null;
                 registerRequestObject.MiddleName = values.MiddleName ? values.MiddleName : null;
@@ -501,7 +501,7 @@ class RegistrationForm extends React.Component {
                 registerRequestObject.PhoneNumber = values.PhoneNumber;
                 registerRequestObject.Email = values.email;
 
-                console.log(registerRequestObject);
+
 
                 fetch('http://localhost:8000/homeless/', {
                     method: 'POST',
@@ -523,7 +523,7 @@ class RegistrationForm extends React.Component {
     render() {
         const {getFieldDecorator} = this.props.form;
         const {autoCompleteResult} = this.state;
-        console.log(this.state.pageComponent);
+
         const formItemLayout = {
             labelCol: {
                 xs: {span: 24},

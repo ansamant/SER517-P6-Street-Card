@@ -1,9 +1,9 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import '../index.css';
+import './index.css';
 import {Alert, Button, Form, Icon, Input, Layout, Result} from 'antd';
-import Header from '../Header'
-import StreetCardFooter from '../StreetCardFooter'
+import Header from './Header'
+import StreetCardFooter from './StreetCardFooter'
 
 const {Content} = Layout;
 class ForgotPassword extends React.Component {
@@ -19,7 +19,7 @@ class ForgotPassword extends React.Component {
 
 
     handleAlternate() {
-       console.log("Forgot password clicked");
+
        this.props.history.push('/login');
     };
 

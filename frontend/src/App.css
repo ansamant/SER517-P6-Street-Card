@@ -231,6 +231,7 @@ body {
 
 .content-transaction {
     background-color: #0f4d92;
+     height: 84vh;
     padding: 5%;
     text-align: center;
 }

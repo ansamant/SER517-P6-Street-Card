@@ -1,9 +1,9 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import '../index.css';
+import './index.css';
 import {Form, Layout, Table} from 'antd';
-import Header from '../Header.js'
-import StreetCardFooter from '../StreetCardFooter'
+import Header from './Header.js'
+import StreetCardFooter from './StreetCardFooter'
 import SiderComponentServiceProvider from './SiderComponentServiceProvider'
 
 /**

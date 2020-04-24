@@ -37,7 +37,7 @@ SECRET_KEY = get_val_from_env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -178,10 +178,10 @@ SIMPLE_JWT = {
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
+    'http://frontend:3000',
 ]
 CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:3000',
+    'http://frontend:3000',
 ]
 
 # Celery Config Options:
@@ -191,7 +191,7 @@ CORS_ORIGIN_REGEX_WHITELIST = [
 # Check Celery Documentation: http://docs.celeryproject.org/en/master/getting-started/first-steps-with-celery.html#rabbitmq
 # see: https://docs.celeryproject.org/en/stable/django/first-steps-with-django.html
 # make sure that all worker configs are 
-CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbit:5672'
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -209,7 +209,7 @@ EMAIL_USE_SSL = False
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': 'cache:11211',
     }
 }
 

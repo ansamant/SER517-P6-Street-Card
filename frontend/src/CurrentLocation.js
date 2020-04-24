@@ -105,7 +105,7 @@ export class CurrentLocation extends React.Component {
       method:'POST'
     }) .then(res => res.json())
     .then(json => {
-      //console.log("JSONRES", json.location.lat, json.location.lng);
+
       this.setState({
         currentLocation:{
           lat: json.location.lat,
@@ -177,8 +177,6 @@ export class CurrentLocation extends React.Component {
         service.nearbySearch(request, (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK)
             this.setState({ places: results });
-            //console.log("PLACES", this.state.places);
-            //this.handleDisplayMarkers(this.state.places);
             for (var i = 0; i < results.length; i++) {
               this.createMarker(results[i], map, infoWindow);
             }

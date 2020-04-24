@@ -9,31 +9,35 @@ import StreetCardFooter from './StreetCardFooter'
 const {Content} = Layout;
 const header =["Product Id", "Product Name","Cost Per Item", "Units Available","Given Units", "Amount"];
 const category = [
-        {
-            value: "footware",
-            label: "Foot-ware"
-        },
-        {
-            value: "winterwear",
-            label: "Winter-ware"
-        },
-        {
-            value: "meal_pass",
-            label: "Meal Pass"
-        },
-        {
-            value: "transport_pass",
-            label: "Transport Pass"
-        },
-        {
-            value: "bags",
-            label: "Bags"
-        },
-        {
-            value: "quilt",
-            label: "Quilt"
-        }
-    ];
+    {
+        value: "Shoes",
+        label: "Shoes"
+    },
+    {
+        value: "PersonalHygieneItems",
+        label: "Personal Hygiene Items"
+    },
+    {
+        value: "MealPass",
+        label: "Meal Pass"
+    },
+    {
+        value: "TransportPass",
+        label: "Transport Pass"
+    },
+    {
+        value: "Clothing",
+        label: "Clothing"
+    },
+    {
+        value: "RainGear",
+        label: "Rain Gear"
+    },
+    {
+        value: "PetFood",
+        label: "Pet Food"
+    }
+];
 
 
 class Transaction extends React.Component {
@@ -76,12 +80,12 @@ class Transaction extends React.Component {
                         })
                     }
                 })
-                console.log("Product details :",prodData);
+
                 var transactionPostObject = {
                     totalAmount  : Number(this.state.totalAmount),
                     transaction_detail : prodData
                 };
-                console.log("Total Transaction details",transactionPostObject);
+
                 fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/transaction/', {
                     method: 'POST',
                     headers: {
@@ -103,7 +107,7 @@ class Transaction extends React.Component {
                         category : key.category
                         };
 
-                    console.log("Update Product Json :", updateProductDetails);
+
                     fetch('http://localhost:8000/product/' + key.productId + '/', {
                         method: 'PUT',
                         headers: {
@@ -162,7 +166,7 @@ class Transaction extends React.Component {
                         productData: prod,
                     }
                 )
-                console.log(this.state.productData);
+
             })
 
     }
@@ -186,10 +190,10 @@ class Transaction extends React.Component {
     }
 
     renderTableData() {
-      console.log("selected ", this.state.selectedCategory);
-      console.log("Product catogery ", this.state.productData);
+
+
         this.state.productData.filter(item => item.category === this.state.selectedCategory).map((item, index) => {
-              console.log(item);
+
           })
         var newData = this.state.productData.filter((item) => {
              if(!this.state.selectedCategory) {
@@ -218,7 +222,7 @@ class Transaction extends React.Component {
 
 
     render() {
-        console.log("selected catogery ", this.state.selectedCategory);
+
         const formItemLayout = {
             labelCol: {
                 xs: {span: 24},
@@ -237,8 +241,13 @@ class Transaction extends React.Component {
                 <Layout>
                     <Content className="content-transaction">
                         <div className="transaction-layout-content-login">
-                            <Cascader style={{ width: 200 }} options={category} placeholder="Product Category"
-                                      onChange={(e) => {this.setState({selectedCategory: e[0]})}}/>
+                            <Cascader style={{width: "100%", border: "2px solid lightgrey"}} options={category}
+                                      placeholder="Product Category"
+                                      onChange={(e) => {
+                                          this.setState({selectedCategory: e[0]})
+                                      }}/>
+                            <br/>
+                            <br/>
                             <table id='inventory'>
                                 <thead>
                                 <tr>{this.renderTableHeader()}</tr>

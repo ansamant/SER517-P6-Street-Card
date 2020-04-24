@@ -9,7 +9,7 @@ class SocialWorker extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.username);
+
         if (this.props.loggedInStatus === "LOGGED_IN" && this.props.username !== "shivamverma") {
             var localClearanceLevel = '';
             var localserviceProvider = '';

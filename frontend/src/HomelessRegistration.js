@@ -19,7 +19,7 @@ import {
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
 import moment from 'moment';
-import SiderComponent from './component/SiderComponent'
+import SiderComponent from './SiderComponent'
 
 const {Option} = Select;
 const AutoCompleteOption = AutoComplete.Option;
@@ -306,7 +306,7 @@ class homelessRegistration extends React.Component {
                 registerRequestObject.PhoneNumber = values.PhoneNumber;
                 registerRequestObject.Email = values.email;
 
-                console.log(registerRequestObject);
+
 
                 fetch('http://localhost:8000/homeless/' + this.state.homelessData.PersonalId + '/', {
                     method: 'PUT',

@@ -4,7 +4,7 @@
   export const PrivateRoute = ({ component: Component,...rest }) => (
 
   <Route {...rest} render={(props) => (
-  	console.log("naren")
+
     localStorage.getItem('token') === true
       ? <Component 
       		{...props}

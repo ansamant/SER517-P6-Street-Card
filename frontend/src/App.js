@@ -12,20 +12,20 @@ import SocialWorker from './SocialWorker';
 import SetAppointments from './SetAppointments'
 import EditAppointment from './EditAppointment'
 import ViewAppointmentsTable from './ViewAppointmentTable'
-import enrollmentForm from './component/enrollmentForm'
-import viewAllEnrollment from './component/viewAllEnrollment'
-import viewEnrollmentDetails from './component/viewEnrollmentDetails'
+import enrollmentForm from './enrollmentForm'
+import viewAllEnrollment from './viewAllEnrollment'
+import viewEnrollmentDetails from './viewEnrollmentDetails'
 import ClientLanding from './ClientLanding'
 import ClientPersonalInfo from "./ClientPersonalInfo";
 import Transaction from "./Transaction"
-import SuccessfulRegistration from "./component/SuccessfulRegistration";
-import LoginError from "./component/LoginError";
-import ForgotPasswordForm from "./component/ForgotPassword";
-import InventoryLog from './component/InventoryLog'
-import SuccessfulUpdate from "./component/SuccessfulUpdate";
-import TransactionComplete from "./component/TransactionComplete";
-import AddProductSuccess from "./component/AddProductSuccess";
-import UpdateSocialWorkerInfoForm from "./component/UpdateSocialWorkerInfo";
+import SuccessfulRegistration from "./SuccessfulRegistration";
+import LoginError from "./LoginError";
+import ForgotPasswordForm from "./ForgotPassword";
+import InventoryLog from './InventoryLog'
+import SuccessfulUpdate from "./SuccessfulUpdate";
+import TransactionComplete from "./TransactionComplete";
+import AddProductSuccess from "./AddProductSuccess";
+import UpdateSocialWorkerInfoForm from "./UpdateSocialWorkerInfo";
 
 const PrivateRoute = ({component: Component, loggedInStatus: loggedInStatus, ...rest}) => (
     <Route render={(props) => (
@@ -85,22 +85,20 @@ export default class App extends React.Component {
     }
 
     method(clearanceLevel, serviceProvider) {
-        console.log("method");
-        console.log(clearanceLevel);
-        console.log(serviceProvider);
+
         this.setState({
             clearanceLevel: clearanceLevel,
             serviceProvider: serviceProvider
         });
-        console.log(this.state.clearanceLevel);
-        console.log(this.state.serviceProvider);
+
+
     }
 
 
     handleLogin(json, user_name) {
         localStorage.setItem('token', json.access);
         localStorage.setItem('refresh_token', json.refresh);
-        console.log(user_name);
+
         this.setState({
             username: user_name,
             loggedInStatus: "LOGGED_IN"
@@ -125,7 +123,7 @@ export default class App extends React.Component {
 
     handleHomelessPersonData(personId) {
         if (personId) {
-            console.log("data kadam", personId);
+
             this.setState({
                 homelessPersonId: personId
             });
@@ -173,7 +171,7 @@ export default class App extends React.Component {
     }
 
     handleUpdateSocialWorkerInfoJSON(json){
-        console.log(json);
+
         this.setState({
             socialWorkerInfoJSON: json
         });
