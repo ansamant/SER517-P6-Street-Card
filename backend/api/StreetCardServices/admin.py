@@ -1,3 +1,7 @@
+"""
+This is for different user registration
+@author:Shivam 
+"""
 from django.contrib import admin
 from .models import Enrollment, Homeless, UserNameAndIdMapping
 

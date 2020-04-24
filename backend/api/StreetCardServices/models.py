@@ -1,3 +1,7 @@
+"""
+This is for object information generating database table
+@author:Shivam/Naren/Aditya/Prashana/Akash 
+"""
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -6,6 +10,9 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ResponseCategory(models.IntegerChoices):
+    """
+    This class is for different response type of client information
+    """
     NO = 0, _('No')
     YES = 1, _('Yes')
     CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -14,12 +21,21 @@ class ResponseCategory(models.IntegerChoices):
 
 
 class YesNoResponse(models.IntegerChoices):
+    """
+    This class is for positive or negetive response type
+    """
     NO = 0, _('No')
     YES = 1, _('Yes')
 
 
 class Homeless(models.Model):
+    """
+    This class is for homeless person information
+    """
     class NameDataQuality(models.IntegerChoices):
+        """
+        This class is for data gathered quality for homeless person name
+        """
         FULL_NAME_REPORTED = 1, _('Full Name Reported')
         PARTIAL_NAME_REPORTED = 2, _('Partial Name Reported')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -27,6 +43,9 @@ class Homeless(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     class SSNDataQuality(models.IntegerChoices):
+        """
+        This class is for data gathered quality for homeless person SSN
+        """
         FULL_SSN_REPORTED = 1, _('Full SSN Reported')
         PARTIAL_SSN_REPORTED = 2, _('Partial SSN Reported')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -34,6 +53,9 @@ class Homeless(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     class DOBDataQuality(models.IntegerChoices):
+        """
+        This class is for data gathered quality for date of birth of homeless person
+        """
         FULL_DOB_REPORTED = 1, _('Full DOB Reported')
         PARTIAL_DOB_REPORTED = 2, _('Partial DOB Reported')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -41,7 +63,10 @@ class Homeless(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     class Race(models.IntegerChoices):
-        AMERICAN_INDIAN_OR_ALASKAN_NATIVE = 1, _('American India or Alaskan Native')
+        """
+        This class is for homeless person race information
+        """
+        AMERICAN_INDIAN_OR_ALASKAN_NATIVE = 1, _('American Indian or Alaskan Native')
         ASIAN = 2, _('Asian')
         BLACK_OR_AFRICAN_AMERICAN = 3, _('Black or African American')
         NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER = 4, _('Native Hawaiian or Pacific Islander')
@@ -51,6 +76,9 @@ class Homeless(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     class Ethnicity(models.IntegerChoices):
+        """
+        This class is for homeless person ethnicity information 
+        """
         NON_HISPANIC_NON_LATINO = 0, _('Non Hispanic/Non Latino')
         HISPANIC_LATINO = 1, _('Hispanic/Latino')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -58,6 +86,9 @@ class Homeless(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     class Gender(models.IntegerChoices):
+        """
+        This class is for homeless person gender information
+        """
         FEMALE = 0, _('Female')
         MALE = 1, _('Male')
         TRANS_FEMALE = 3, _('Trans Female')
@@ -68,6 +99,9 @@ class Homeless(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     class VeteranStatus(models.IntegerChoices):
+        """
+        This class is for homeless person veteran status information
+        """
         NO = 0, _('No')
         YES = 1, _('Yes')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -100,6 +134,9 @@ class Homeless(models.Model):
         return self.FirstName
 
 class ServiceProvider(models.TextChoices):
+    """
+    This class is for service provider information
+    """
     FOOD_PANTRY = "FP", _("Food Pantry")
     DROP_IN_CENTRE = "DIC", _("Drop-in Centre")
     SHELTER_HOMES = "SH", _("Shelter Home")
@@ -111,8 +148,13 @@ class ServiceProvider(models.TextChoices):
 # Inventory Tables:
 
 class Product(models.Model):
-
+    """
+    This class is for available product information
+    """
     class Category(models.TextChoices):
+        """
+        This class is for available product category information
+        """
         Shoes = "Shoes", _("Shoes")
         Clothing = "Clothing", _("Clothing")
         MealPass = "MealPass", _("Meal Pass")
@@ -132,12 +174,18 @@ class Product(models.Model):
         return self.productName
 
 class Transactions(models.Model):
+    """
+    This class is for inventory transaction type
+    """
     transactionId = models.CharField(primary_key=True, default=None, max_length=32)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
     totalAmount = models.DecimalField(default=0.0, decimal_places=2, max_digits=8)
 
 
 class TransactionDetails(models.Model):
+    """
+    This class is for inventory transaction details
+    """
     transactionDetailId = models.CharField(primary_key=True, default=None, max_length=32)
     transactionId = models.ForeignKey(Transactions, on_delete=models.CASCADE, default=None)
     productId = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -150,6 +198,9 @@ class TransactionDetails(models.Model):
 # datetime field can be retrieved relative to timezone and converted later.
 
 class Log(models.Model):
+    """
+    This class is for client logs maintaining client transactions
+    """
     datetime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None, related_name='Log_PersonalId')
     serviceProvider = models.TextField(choices=ServiceProvider.choices)
@@ -157,11 +208,17 @@ class Log(models.Model):
 
 
 class UserNameAndIdMapping(models.Model):
+    """
+    This class is for mapping user name to database identification number
+    """
     user_name = models.CharField(max_length=32, primary_key=True, unique=True)
     user_id = models.IntegerField()
 
 
 class Appointments(models.Model):
+    """
+    This class is for client appointment details
+    """
     personalId = models.ForeignKey(Homeless, on_delete=models.CASCADE)
     appointmentId = models.CharField(primary_key=True, default=None, max_length=32)
     office = models.CharField(max_length=500, blank=True, null=False)
@@ -181,7 +238,13 @@ class Appointments(models.Model):
 
 
 class SocialWorker(models.Model):
+    """
+    This class is for social worker information
+    """
     class ClearanceLevel(models.TextChoices):
+        """
+        This class is for social worker clearance level
+        """
         GREETER = "greeter", _("Greeter")
         CASEWORKER = "caseworker", _("CaseWorker")
         SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
@@ -194,6 +257,9 @@ class SocialWorker(models.Model):
 
 
 class ProjectCategory(models.TextChoices):
+    """
+    This class is for HUD COC project categories
+    """
     HUD_COC_HOMELESS_PREVENTION = 'HUD:CoC-HomelessPrevention', _('HUD:CoC-HomelessPrevention')
     HUD_COC_PERMANENT_SUPPORTIVE_HOUSING = 'HUD:COC-Permanent Supportive Housing', _(
         'HUD:COC-Permanent Supportive Housing')
@@ -236,6 +302,9 @@ class ProjectCategory(models.TextChoices):
 
 
 class SubstanceAbuseCategory(models.IntegerChoices):
+    """
+    This class is for substance abuse category
+    """
     NO = 0, _('No')
     ALCOHOL = 1, _('Alcohol')
     DRUG = 2, _('Drug')
@@ -246,6 +315,9 @@ class SubstanceAbuseCategory(models.IntegerChoices):
 
 
 class DomesticViolenceOccurrence(models.IntegerChoices):
+    """
+    This class is for domestic violence occurrence duration options
+    """
     PAST_THREE_MONTHS = 1, _('Past 3 Months')
     THREE_TO_SIX_MONTHS = 2, _('Three to six months ago')
     SIX_MONTHS_TO_ONE_YEAR = 3, _('Six Months to One year')
@@ -256,6 +328,9 @@ class DomesticViolenceOccurrence(models.IntegerChoices):
 
 
 class Enrollment(models.Model):
+    """
+    This class is for enrollment information
+    """
     DisablingCondition = models.IntegerField(choices=YesNoResponse.choices, default=YesNoResponse.NO)
     EnrollmentID = models.CharField(max_length=32, primary_key=True, default=None)
     PersonalId = models.ForeignKey(Homeless, on_delete=models.CASCADE, default=None,
@@ -266,6 +341,9 @@ class Enrollment(models.Model):
 
 
 class HealthInsurance(models.Model):
+    """
+    This class is for health insurance information
+    """
     class InsuranceReasonCategory(models.IntegerChoices):
         APPLIED_DECISION_PENDING = 1, _('Applied;decision pending')
         APPLIED_CLIENT_NOT_ELIGIBLE = 2, _('Applied;client not eligible')
@@ -294,6 +372,9 @@ class HealthInsurance(models.Model):
 
 
 class NonCashBenefits(models.Model):
+    """
+    This class is for non cash benefits information
+    """
     InformationDate = models.DateField()
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='NonCashBenefits_EnrollmentID',
                                      default=None)
@@ -311,6 +392,9 @@ class NonCashBenefits(models.Model):
 
 
 class DomesticViolence(models.Model):
+    """
+    This class is for domestic violence victim information
+    """
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='DomesticViolence_EnrollmentID')
     InformationDate = models.DateField()
@@ -320,6 +404,9 @@ class DomesticViolence(models.Model):
 
 
 class DisablingCondition(models.Model):
+    """
+    This class is for client disability condition
+    """
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='DisablingCondition_EnrollmentID')
     InformationDate = models.DateField()
@@ -342,6 +429,9 @@ class DisablingCondition(models.Model):
 
 
 class IncomeAndSources(models.Model):
+    """
+    This class is for domestic violence occurrence duration options
+    """
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='IncomeAndSources_EnrollmentID',
                                      default=None)
     InformationDate = models.DateField()
@@ -383,6 +473,9 @@ class IncomeAndSources(models.Model):
 # HOPWA Specific Project Elements
 
 class W1ServicesProvidedHOPWA(models.Model):
+    """
+    This class is for HOPWA information
+    """
     class HOPWAServiceType(models.IntegerChoices):
         ADULT_DAYCARE_AND_PERSONAL_ASSISTANCE = 1, _('Adult day care and personal assistance')
         CASE_MANAGEMENT = 2, _('Case management')
@@ -407,7 +500,13 @@ class W1ServicesProvidedHOPWA(models.Model):
 
 
 class FinancialAssistanceHOPWA(models.Model):
+    """
+    This class is for financial assistance HOPWA
+    """
     class FinancialAssistanceTypeCategory(models.IntegerChoices):
+        """
+        This class is for financial assistance category type
+        """
         RENTAL_ASSISTANCE = 1, _('Rental assistance')
         SECURITY_DEPOSITS = 2, _('Security deposits')
         UTILITY_DEPOSITS = 3, _('Utility deposits')
@@ -423,7 +522,13 @@ class FinancialAssistanceHOPWA(models.Model):
 
 
 class MedicalAssistanceHOPWA(models.Model):
+    """
+    This class is for medical assistance HOPWA
+    """
     class IfNoReasonTypeCategory(models.IntegerChoices):
+        """
+        This class is for medical assistance HOPWA applied status
+        """
         APPLIED_DECISION_PENDING = 1, _('Applied; decision pending')
         APPLIED_CLIENT_NOT_ELIGIBLE = 2, _('Applied; client not eligible')
         CLIENT_DIDNOT_APPLY = 3, _('Client did not apply ')
@@ -442,7 +547,13 @@ class MedicalAssistanceHOPWA(models.Model):
 
 
 class TCellCD4AndViralLoadHOPWA(models.Model):
+    """
+    This class is for financial assistance HOPWA
+    """
     class InformationObtainedResponseCategory(models.IntegerChoices):
+        """
+        This class is for reprt type
+        """
         MEDICAL_REPORT = 1, _('Medical Report')
         CLIENT_REPORT = 2, _('Client Report')
         OTHER = 3, _('Other')
@@ -459,7 +570,13 @@ class TCellCD4AndViralLoadHOPWA(models.Model):
 
 
 class HousingAssessmentAtExitHOPWA(models.Model):
+    """
+    This class is for housing assessment at exit HOPWA information
+    """
     class HousingAssessmentAtExitResponseCategory(models.IntegerChoices):
+        """
+        This class is for housing assessment at exit HOPWA response category
+        """
         ABLE_TO_MAINTAIN_THE_HOUSING_THEY_HAD_AT_PROJECT_ENTRY = 1, _(
             "Able to maintain the housing they had at project entry")
         MOVED_TO_NEW_HOUSING_UNIT = 2, _('Moved to new housing unit')
@@ -476,6 +593,9 @@ class HousingAssessmentAtExitHOPWA(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     class SubsidyInformationResponseCategory(models.IntegerChoices):
+        """
+        This class is for housing assessment at exit HOPWA subsidy response information
+        """
         WITHOUT_A_SUBSIDY = 1, _('Without_a_subsidy')
         WITH_THE_SUBSIDY_THEY_HAD_AT_PROJECT_ENTRY = 2, _('With the subsidy they had at project entry')
         WITH_AN_ONGOING_SUBSIDY_ACQUIRED_SINCE_PROJECT_ENTRY = 3, _(
@@ -484,6 +604,9 @@ class HousingAssessmentAtExitHOPWA(models.Model):
             'Only with financial assistance other than a subsidy')
 
     class AnotherSubsidyInformationResponseCategory(models.IntegerChoices):
+        """
+        This class is for housing assessment at exit HOPWA subsidy response information
+        """
         WITH_ONGOING_SUBSIDY = 1, _('With ongoing subsidy')
         WITHOUT_AN_ONGOING_SUBSIDY = 2, _('Without an ongoing subsidy')
 
@@ -495,6 +618,9 @@ class HousingAssessmentAtExitHOPWA(models.Model):
 
 
 class LivingSituationResponse(models.IntegerChoices):
+    """
+    This class is for client living situation type
+    """
     HOMELESS_SITUATION = 1, _("Homeless")
     INSTITUTIONAL_SITUATION = 2, _("Institutional Housing")
     TEMPORARY_AND_PERMANENT_HOUSING_SITUATION = 3, _("Temporary or Permanent Housing")
@@ -502,6 +628,9 @@ class LivingSituationResponse(models.IntegerChoices):
 
 
 class CurrentLivingSituation(models.Model):
+    """
+    This class is for client living situation information
+    """
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='CurrentLivingSituation_EnrollmentID',
                                      default=None)
@@ -517,6 +646,9 @@ class CurrentLivingSituation(models.Model):
 
 
 class DateOfEngagement(models.Model):
+    """
+    This class is for Date 
+    """
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='DateOfEngagement_EnrollmentID',
                                      default=None)
@@ -524,6 +656,9 @@ class DateOfEngagement(models.Model):
 
 
 class BedNightDate(models.Model):
+    """
+    This class is for Date 
+    """
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='BedNightDate_EnrollmentID',
                                      default=None)
@@ -531,22 +666,34 @@ class BedNightDate(models.Model):
 
 
 class AssessmentTypeCategory(models.IntegerChoices):
+    """
+    This class is for appointment assessment category type 
+    """
     PHONE = 1, _("Phone")
     VIRTUAL = 2, _("Virtual")
     IN_PERSON = 3, _("In Person")
 
 
 class AssessmentLevelCategory(models.IntegerChoices):
+    """
+    This class is for appointment assessment level 
+    """
     CRISIS_NEED_ASSESSMENT = 1, _("Crisis Need Assessment")
     HOUSING_NEED_ASSESSMENT = 2, _("Housing Need Assessment")
 
 
 class PrioritizationStatusCategory(models.IntegerChoices):
+    """
+    This class is for appointment priority type 
+    """
     ON_PRIORITY_LIST = 1, _("On Priority List")
     NOT_ON_PRIORITY_LIST = 2, _("Not on Priority List")
 
 
 class CoordinatedEntryAssessment(models.Model):
+    """
+    This class is for appointment coordinated assessment entry
+    """
     DateOfAssessment = models.DateField()
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='CoordinatedEntryAssessment_EnrollmentID', default=None)
@@ -561,6 +708,9 @@ class CoordinatedEntryAssessment(models.Model):
 
 
 class EventCategoryType(models.IntegerChoices):
+    """
+    This class is for event category
+    """
     PREVENTION_ASSISTANCE = 1, _("Referral to a Prevention Assistance project")
     DIVERSION_OR_RAPID_RESOLUTION = 2, _("Problem Solving/Diversion/Rapid Resolution intervention or service")
     COORDINATED_ENTRY_CRISIS_ASSESSMENT = 3, _("Scheduled Coordinated Entry Crisis Assessment")
@@ -579,12 +729,18 @@ class EventCategoryType(models.IntegerChoices):
 
 
 class ReferralResultCategory(models.IntegerChoices):
+    """
+    This class is for referral result type 
+    """
     CLIENT_ACCEPTED = 1, _("Successful Referral: Client Accepted")
     CLIENT_REJECTED = 2, _("Unsuccessful Referral: Client Rejected")
     PROVIDER_REJECTED = 3, _("Unsuccessful Referral: Provider Rejected")
 
 
 class CoordinatedEntryEvent(models.Model):
+    """
+    This class is for coordinate entry event information 
+    """
     DateOfEvent = models.DateField()
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='CoordinatedEntryEvent_EnrollmentID', default=None)
@@ -597,6 +753,9 @@ class CoordinatedEntryEvent(models.Model):
 
 
 class SexualOrientationCategory(models.IntegerChoices):
+    """
+    This class is for sexual orientation type 
+    """
     HETEROSEXUAL = 1, _("Heterosexual")
     GAY = 2, _("Gay")
     LESBIAN = 3, _("Lesbian")
@@ -609,6 +768,9 @@ class SexualOrientationCategory(models.IntegerChoices):
 
 
 class SexualOrientation(models.Model):
+    """
+    This class is for coordinate entry event information 
+    """
     EnrollmentID = models.ForeignKey(Enrollment, on_delete=models.CASCADE,
                                      related_name='SexualOrientation_EnrollmentID', default=None)
     SexualOrientation = models.IntegerField(choices=SexualOrientationCategory.choices)
@@ -618,7 +780,13 @@ class SexualOrientation(models.Model):
 # VETERAN PROJECT MODELS
 
 class VeteranInformation(models.Model):
+    """
+    This class is for veteran project information 
+    """
     class MilitaryBranchCategory(models.IntegerChoices):
+        """
+        This class is for veteran military branch information 
+        """
         ARMY = 1, _('Army')
         AIRFORCE = 2, _('Air Force')
         NAVY = 3, _('Navy')
@@ -629,6 +797,9 @@ class VeteranInformation(models.Model):
         DATA_NOT_COLLECTED = 99, _('Data Not Collected')
 
     class DischargeStatusCategory(models.IntegerChoices):
+        """
+        This class is for veteran discharge icategory nformation 
+        """
         HONORABLE = 1, _('Honorable')
         GENERAL_UNDER_HONORABLE_CONDITIONS = 2, _('General under honorable conditions')
         UNDER_OTHER_THAN_HONORABLE_CONDITIONS = 6, _('Under other than honorable conditions (OTH)')
@@ -657,7 +828,13 @@ class VeteranInformation(models.Model):
 
 
 class ServicesProvidedSSVF(models.Model):
+    """
+    This class is for service provider SSVF information 
+    """
     class TypeOfServiceCategory(models.IntegerChoices):
+        """
+        This class is for service category
+        """
         OUTREACH_SERVICES = 1, _('Outreach services')
         CASE_MANAGEMENT_SERVICES = 2, _('Case management services')
         ASSISTANCE_OBTAINING_VA_BENEFITS = 3, _('Assistance obtaining VA benefits')
@@ -670,12 +847,18 @@ class ServicesProvidedSSVF(models.Model):
         RAPID_RESOLUTION = 9, _('Rapid Resolution')
 
     class IfAssistanceObtainingVABenefitsCategory(models.IntegerChoices):
+        """
+        this class is for VA benefits category information 
+        """
         VA_VOCATIONAL_AND_REHABILITATION_COUNSELING = 1, _('VA vocational and rehabilitation counseling')
         EMPLOYMENT_AND_TRAINING_SERVICES = 2, _('Employment and training services')
         EDUCATIONAL_ASSISTANCE = 3, _('Educational assistance')
         HEALTH_CARE_SERVICES = 4, _('Health care services')
 
     class IfAssistanceObtainingOrCoordinatingOtherPublicBenefitsCategory(models.IntegerChoices):
+        """
+        this class is for public benefits category information 
+        """
         HEALTH_CARE_SERVICES = 1, _('Health care services')
         DAILY_LIVING_SERVICES = 2, _('Daily living services')
         PERSONAL_FINANCIAL_PLANNING_SERVICES = 3, _('Personal financial planning services')
@@ -691,6 +874,9 @@ class ServicesProvidedSSVF(models.Model):
         HOUSING_COUNSELING = 13, _('Housing counseling')
 
     class IfDirectProvisionOfOtherPublicBenefitsCategory(models.IntegerChoices):
+        """
+        this class is for public benefits category information 
+        """
         PERSONAL_FINANCIAL_PLANNING_SERVICES = 1, _('Personal financial planning services')
         TRANSPORTATION_SERVICES = 2, _('Transportation services')
         INCOME_SUPPORT_SERVICES = 3, _('Income support services')
@@ -716,7 +902,13 @@ class ServicesProvidedSSVF(models.Model):
 
 
 class FinancialAssistanceSSVF(models.Model):
+    """
+    this class is for financial assistance SSVF information 
+    """
     class FinancialAssistanceTypeCategory(models.IntegerChoices):
+        """
+        This class is for financial assistance SSVF category type 
+        """
         RENTAL_ASSISTANCE = 1, _('Rental assistance')
         SECURITY_DEPOSITS = 2, _('Security deposit')
         UTILITY_DEPOSITS = 3, _('Utility deposit')
@@ -740,7 +932,13 @@ class FinancialAssistanceSSVF(models.Model):
 
 
 class PercentOfAMI(models.Model):
+    """
+    This class is for amount income percentage
+    """
     class HouseholdIncomeAsAPercentageOfAMICategory(models.IntegerChoices):
+        """
+        This class is for household amount income percentage
+        """
         LESS_THAN_THIRTY_PERCENTAGE = 1, _('Less than 30%')
         THIRTY_PERCENTAGE_TO_FIFTY_PERCENTAGE = 2, _('30% to 50%')
         GREATER_THAN_FIFTY_PERCENTAGE = 3, _('Greater than 50%')
@@ -751,7 +949,13 @@ class PercentOfAMI(models.Model):
 
 
 class LastPermanentAddress(models.Model):
+    """
+    This class is for last permanent address information
+    """
     class AddressDataQualityCategory(models.IntegerChoices):
+        """
+        This class is for address data quality category
+        """
         FULL_ADDRESS_REPORTED = 1, _('Full address reported')
         INCOMPLETE_OR_ESTIMATED_ADDRESS_REPORTED = 2, _('Incomplete or estimated address reported')
         CLIENT_DOESNOT_KNOW = 8, _('Client Doesn\'t Know')
@@ -770,24 +974,39 @@ class LastPermanentAddress(models.Model):
 # class VAMCStationNumber(models.Model):
 
 class SSVFHPTargetingCriteria(models.Model):
+    """
+    This class is for SSVFHPT criteria
+    """
     class CurrentHousingLossExpectedWithinCategory(models.IntegerChoices):
+        """
+        This class is for housing loss days information
+        """
         ZERO_TO_SIX_DAYS = 0, _('0-6 days')
         SEVEN_TO_THIRTEEN_DAYS = 1, _('7-13 days')
         FOURTEEN_TO_TWENTYONE_DAYS = 2, _('14-21 days')
         MORE_THAN_TWENTYONE_DAYS = 3, _('More than 21 days (0 points)')
 
     class AnnualHouseholdGrossIncomeAmountCategory(models.IntegerChoices):
+        """
+        This class is for annual household gross income amount category information
+        """
         ZERO_TO_FOURTEEN_PERC_OF_AREA_MEDIAN_INCOME = 0, _('0-14% of Area Median Income (AMI) for household size')
         FIFTEEN_TO_THIRTY_PERC_OF_AMI = 1, _('15-30% of AMI for household size')
         MORE_THAN_THIRTY_PERC_OF_AMI = 2, _('More than 30% of AMI for household size (0 points)')
 
     class RentalEvictionsWithinThePastSevenYearsCategory(models.IntegerChoices):
+        """
+        This class is for rental evictions with in the past seven years category information
+        """
         FOUR_OR_MORE_PRIOR_RENTAL_EVICTIONS = 0, _('4 or more prior rental evictions')
         TWO_TO_THREE_PRIOR_RENTAL_EVICTIONS = 1, _('2-3 prior rental evictions')
         ONE_PRIOR_RENTAL_EVICTION = 2, _('1 prior rental eviction')
         NO_PRIOR_RENTAL_EVICTION = 3, _('No prior rental eviction (0 points)')
 
     class HistoryOfLiteralHomelessnessCategory(models.IntegerChoices):
+        """
+        This class is for history of literal homelessness category information
+        """
         FOUR_OR_MORE_TIMES = 0, _('4 or more times or total of at least 12 months in past three years')
         TWO_OR_THREE_TIMES = 1, _('2-3 times in past three years')
         ONE_TIME_IN_PAST_THREE_YEARS = 2, _('1 time in past three years')
@@ -818,7 +1037,13 @@ class SSVFHPTargetingCriteria(models.Model):
 
 
 class HUDVASHVoucherTracking(models.Model):
+    """
+    This class is for HUDVASHV voucher information
+    """
     class VoucherChangeCategory(models.IntegerChoices):
+        """
+        This class is for voucher change category information
+        """
         REFERRAL_PACKAGE_FORWARDED_TO_PHA = 1, _('Referral package forwarded to PHA')
         VOUCHER_DENIED_BY_PHA = 2, _('Voucher denied by PHA')
         VOUCHER_ISSUED_BY_PHA = 3, _('Voucher issued by PHA')

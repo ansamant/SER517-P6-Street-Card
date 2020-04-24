@@ -6,6 +6,12 @@
 # link:https://pypi.org/project/PyQRCode/
 ##
 
+"""
+This file is to generate QR code to redirect from StreetCard to the landing page 
+after scanning
+@author:Aditya 
+"""
+
 import pyqrcode
 
 

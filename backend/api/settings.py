@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
+@author: Shivam/Naren/Aditya/Prashansa/Akash
 """
 
 import os
@@ -22,6 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get value from environment raise improperly configured exception
 def get_val_from_env(django_var):
+    """
+    This method si to get the information from environment variables
+    @author:Aditya 
+    """
     try:
         return os.environ[django_var]
     except KeyError:
