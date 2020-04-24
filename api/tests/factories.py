@@ -59,7 +59,7 @@ class TransactionFactory(DjangoModelFactory):
         model = models.Transactions    
 
     transactionId = primary_key_generator()
-    totalAmount = fake.random_int(min=0)
+    totalAmount = round(random.uniform(0, 5000), ndigits=2)
     personalId = SubFactory(HomelessFactory)
 
 # Factory for Transaction Details
