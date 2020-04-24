@@ -127,9 +127,11 @@ class Transaction extends React.Component {
         var beforeTotal = (prodData[index].quantity && prodData[index].costPerItem) ?  prodData[index].quantity * prodData[index].costPerItem : 0;
         prodData[index].quantity = e.target.value;
         prodData[index].amount = prodData[index].quantity * prodData[index].costPerItem;
-        var afterTotal = (this.state.totalAmount - beforeTotal +  prodData[index].amount) < 0.01 ? 0 : (this.state.totalAmount - beforeTotal +  prodData[index].amount);
+        //var afterTotal = (this.state.totalAmount - beforeTotal +  prodData[index].amount) < 0.01 ? 0 : (this.state.totalAmount - beforeTotal +  prodData[index].amount);
+        var afterTotal = this.state.totalAmount - beforeTotal +  prodData[index].amount;
+        afterTotal = afterTotal.toFixed(2);
         this.setState({productData: prodData});
-        this.setState({totalAmount : afterTotal})
+        this.setState({totalAmount : afterTotal});
         console.log("Input function", JSON.parse(JSON.stringify(this.state.productData)));
 
     }
@@ -191,7 +193,6 @@ class Transaction extends React.Component {
           })
         var newData = this.state.productData.filter((item) => {
              if(!this.state.selectedCategory) {
-                 this.setState({selectedCategory: category[0]})
                  return true;
             }
             else if (this.state.selectedCategory && item.category === this.state.selectedCategory) {
@@ -234,8 +235,8 @@ class Transaction extends React.Component {
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.props.loggedInStatus}/>
                 <Layout>
-                    <Content className="content-login">
-                        <div className="site-layout-content-login">
+                    <Content className="content-transaction">
+                        <div className="transaction-layout-content-login">
                             <Cascader style={{ width: 200 }} options={category} placeholder="Product Category"
                                       onChange={(e) => {this.setState({selectedCategory: e[0]})}}/>
                             <table id='inventory'>

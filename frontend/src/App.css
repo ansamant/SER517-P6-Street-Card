@@ -229,6 +229,11 @@ body {
     text-align: center;
 }
 
+.content-transaction {
+    background-color: #0f4d92;
+    padding: 5%;
+    text-align: center;
+}
 
 .content-enroll {
     background-color: #0f4d92;
@@ -257,6 +262,16 @@ body {
     background: #f0f9ff;
     padding: 2% 5%;
     display: inline-block;
+    min-width: 30vw;
+    border-radius: 8px;
+}
+
+.transaction-layout-content-login {
+    background: #f0f9ff;
+    padding: 2% 5%;
+    /*display: inline-block;*/
+    margin-bottom: 10%;
+  /* margin-top: 10%; */
     min-width: 30vw;
     border-radius: 8px;
 }
