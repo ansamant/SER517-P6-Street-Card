@@ -29,4 +29,4 @@ def debug_task(self):
 	This method to print the celery request
 	@author:Aditya 
 	"""
-    print('Request: {0!r}'.format(self.request))
+	print('Request: {0!r}'.format(self.request))
