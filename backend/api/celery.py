@@ -1,3 +1,7 @@
+"""
+This is for celery settings
+@author:Aditya 
+"""
 from __future__ import absolute_import, unicode_literals
 
 import os
@@ -21,4 +25,8 @@ app.autodiscover_tasks()
 
 @app.task(bind=True)
 def debug_task(self):
-    print('Request: {0!r}'.format(self.request))
+	"""
+	This method to print the celery request
+	@author:Aditya 
+	"""
+	print('Request: {0!r}'.format(self.request))
