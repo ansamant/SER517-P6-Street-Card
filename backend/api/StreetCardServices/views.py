@@ -258,7 +258,7 @@ class AppointmentViewSet(viewsets.ViewSet):
         if is_caseworker(request.user) or is_client(request.user):
             cache_key = homeless_pk + 'appointment'
             data = cache.get(cache_key)
-            if data is None and is_client(request.user):
+            if data is None:
                 queryset = Appointments.objects.filter(personalId_id=homeless_pk).order_by('-Date')
                 serializer = AppointmentSerializer(queryset, many=True)
                 cache.set(cache_key, serializer.data, settings.CACHE_TIME)
