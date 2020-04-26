@@ -5,7 +5,8 @@ import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layo
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './SiderComponent'
-import { OneToOneOutlined } from '@ant-design/icons';
+import { OneToOneOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { relativeTimeRounding } from 'moment';
 
 
 const serviceProvider = [
@@ -64,9 +65,9 @@ class SetAppointments extends React.Component {
         }
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
+        
     }
-
-
+    
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -115,19 +116,40 @@ class SetAppointments extends React.Component {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
         })
-            .then(res => res.json())
-            .then(json => {
-                //console.log(json)
+        .then(res => {
+            if (res.status == 200) {
+                
                 this.setState({
+                    isLoaded: true,
+                    alert: false,
+                    items: res.json()
+                })
+            }
+            else if(Math.round(res.status/100) == 4){
+                if(window.confirm("Error, invalid id: "+(res.status).toString())){
+                    this.props.history.push('/socialWorkerRegister');
+                }else{
+                    this.setState({
                         isLoaded: true,
                         alert: false,
-                        items: json
-                    }
-                )
-            })
+                        items: res.json()
+                    })
+                }
+            }
+            else if(Math.round(res.status/100) == 5){
+                if(window.confirm("Server Error: "+(res.status).toString())){
+                    this.props.history.push('/socialWorkerRegister');
+                }else{
+                    this.setState({
+                        isLoaded: true,
+                        alert: false,
+                        items: res.json()
+                    })
+                }
+            }
             
-
-
+        });
+    
     }
 
     handleSuccessfulLogoutAction() {

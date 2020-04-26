@@ -38,14 +38,39 @@ class ViewAppointments extends React.Component {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           },
         })
-         .then(res => res.json())
-         .then(json => {
-             this.setState({
-                 isLoaded: true,
-                 items:json,
-                 }
-             )
-         })
+        .then(res => {
+          if (res.status == 200) {
+              
+              this.setState({
+                  isLoaded: true,
+                  
+                  items: res.json()
+              })
+          }
+          else if(Math.round(res.status/100) == 4){
+              if(window.confirm("Error, invalid id: "+(res.status).toString())){
+                  this.props.history.push('/socialWorkerRegister');
+              }else{
+                  this.setState({
+                      isLoaded: true,
+                      
+                      items: res.json()
+                  })
+              }
+          }
+          else if(Math.round(res.status/100) == 5){
+              if(window.confirm("Server Error: "+(res.status).toString())){
+                  this.props.history.push('/socialWorkerRegister');
+              }else{
+                  this.setState({
+                      isLoaded: true,
+                      
+                      items: res.json()
+                  })
+              }
+          }
+          
+      });
 
 
   }
