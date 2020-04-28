@@ -20,7 +20,7 @@ export default class SiderComponentSocialWorker extends React.Component {
 
         switch (e.key) {
             case '1':
-                this.props.setPagecomponent('registerSocialWorker')
+                this.props.setPagecomponent('registerClient')
                 this.setState({
                     selectedKey: 1
                 })

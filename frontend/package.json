@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^7.2.1",
     "antd": "^3.26.15",
     "bootstrap": "^4.4.1",
+    "dotenv": "^8.2.0",
     "google-maps-react": "^2.0.6",
     "moment": "latest",
     "react": "^16.13.1",

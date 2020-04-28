@@ -335,7 +335,7 @@ class HomelessPreventionHUD extends Component {
                 this.handleEmptyObject(enrollmentRequestObject);
 
 
-                fetch('http://localhost:8000/homeless/' + this.props.personalId + '/enrollment/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.personalId + '/enrollment/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -379,7 +379,7 @@ class HomelessPreventionHUD extends Component {
         return (
             <Form {...formItemLayout} name="enrollment"
                   onSubmit={this.handleOnSubmit}>
-                <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                <Collapse style={{backgroundColor: "#f0f9ff"}}>
                     <Panel header="Enrollment Details" key="1">
                         <Row gutter={8}>
                             <Col span={8}>
@@ -1729,7 +1729,7 @@ class HomelessPreventionHUD extends Component {
                                 <Form.Item>
                                     <Button type="primary" block htmlType="submit"
                                             className="registration-submit-button" disabled={this.state.isEnabled}>
-                                        Submit {console.log(this.state.isEnabled)}
+                                        Submit
                                     </Button>
                                 </Form.Item>
                             </Col>

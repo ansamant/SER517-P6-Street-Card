@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import "antd/dist/antd.css";
-import {Button, Form, Layout, Result} from 'antd';
+import {Button, Layout, Result} from 'antd';
 import Header from "./Header";
 import StreetCardFooter from "./StreetCardFooter";
 
@@ -21,7 +21,7 @@ class LoginError extends Component {
         this.props.history.push('/login');
     }
 
-    handleButton(){
+    handleButton() {
         this.props.history.push('/login');
     }
 
@@ -29,22 +29,22 @@ class LoginError extends Component {
         return (
             <Layout>
                 <Header loginPageStatus={this.state.loginPageStatus}/>
-                    <Content className="content-login">
-                        <div className="site-layout-content-login">
-                            <Result
-                                status="error"
-                                title="Login Error"
-                                subTitle="Wrong Username/Password Combination"
-                                extra={[
-                                    <Button type="primary" key="console" onClick={this.handleButton}>
-                                        Login Again
-                                    </Button>,
-                                ]}
-                            />
-                        </div>
-                    </Content>
-                    <StreetCardFooter/>
-                </Layout>
+                <Content className="content-login">
+                    <div className="site-layout-content-login">
+                        <Result
+                            status="error"
+                            title="Login Error"
+                            subTitle="Wrong Username/Password Combination"
+                            extra={[
+                                <Button type="primary" key="console" onClick={this.handleButton}>
+                                    Login Again
+                                </Button>,
+                            ]}
+                        />
+                    </div>
+                </Content>
+                <StreetCardFooter/>
+            </Layout>
         )
     }
 }

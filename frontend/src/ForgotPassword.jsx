@@ -1,11 +1,12 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Alert, Button, Form, Icon, Input, Layout, Result} from 'antd';
+import {Button, Form, Layout, Result} from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
 const {Content} = Layout;
+
 class ForgotPassword extends React.Component {
 
     constructor(props) {
@@ -20,29 +21,29 @@ class ForgotPassword extends React.Component {
 
     handleAlternate() {
 
-       this.props.history.push('/login');
+        this.props.history.push('/login');
     };
 
     render() {
-         return (
+        return (
             <Layout>
                 <Header loginPageStatus={this.state.loginPageStatus}/>
-                    <Content className="content-login">
-                        <div className="site-layout-content-login">
-                            <Result
-                                status="warning"
-                                title="Forgot Password"
-                                subTitle="Please Contact the Admin for resetting password"
-                                extra={[
-                                    <Button type="primary" key="console" onClick={this.handleAlternate}>
-                                        Back to Login
-                                    </Button>,
-                                ]}
-                            />
-                        </div>
-                    </Content>
-                    <StreetCardFooter/>
-                </Layout>
+                <Content className="content-login">
+                    <div className="site-layout-content-login">
+                        <Result
+                            status="warning"
+                            title="Forgot Password"
+                            subTitle="Please Contact the Admin for resetting password"
+                            extra={[
+                                <Button type="primary" key="console" onClick={this.handleAlternate}>
+                                    Back to Login
+                                </Button>,
+                            ]}
+                        />
+                    </div>
+                </Content>
+                <StreetCardFooter/>
+            </Layout>
         )
     }
 }

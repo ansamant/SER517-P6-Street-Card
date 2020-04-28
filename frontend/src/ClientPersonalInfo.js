@@ -11,7 +11,6 @@ const {Content} = Layout;
 class ClientPersonalInfo extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.appointmentData)
         this.state = {
             clientInfo: this.props.homelessData,
             isLoaded: false,
@@ -23,7 +22,7 @@ class ClientPersonalInfo extends React.Component {
 
     test() {
         let homelessPersonId = this.props.homelessData.PersonalId;
-        fetch('http://127.0.0.1:8000/homeless/' + homelessPersonId + '/appointment/', {
+        fetch(process.env.REACT_APP_IP + 'homeless/' + homelessPersonId + '/appointment/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -156,7 +155,8 @@ class ClientPersonalInfo extends React.Component {
         };
         const alert = []
         for (let appoint in this.state.appointment) {
-            if (this.state.isLoaded && moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY") > moment().format("MM/DD/YYYY")) {
+            if (this.state.isLoaded &&
+                moment(this.state.appointment[appoint].Date)> moment()) {
                 let description = 'You have upcoming appointment on ' + moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY") + ' at ' + moment(this.state.appointment[appoint].Time, "LT").format("LT")
                 alert.push(<Alert message="Appointment Information"
                                   description={description}
@@ -181,9 +181,6 @@ class ClientPersonalInfo extends React.Component {
                 />)
             } else {
                 alert.push()
-                console.log(this.state.isLoaded && moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY") > moment().format("MM/DD/YYYY"))
-                console.log(moment(this.state.appointment[appoint].Date).format("MM/DD/YYYY"))
-                console.log(moment().format("MM/DD/YYYY"))
             }
         }
         

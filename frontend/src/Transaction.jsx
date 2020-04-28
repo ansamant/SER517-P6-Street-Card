@@ -7,7 +7,7 @@ import './transaction.css'
 import StreetCardFooter from './StreetCardFooter'
 
 const {Content} = Layout;
-const header =["Product Id", "Product Name","Cost Per Item", "Units Available","Given Units", "Amount"];
+const header = ["Product Id", "Product Name", "Cost Per Item", "Units Available", "Given Units", "Amount"];
 const category = [
     {
         value: "Shoes",
@@ -73,20 +73,20 @@ class Transaction extends React.Component {
 
                 var prodData = [];
                 this.state.productData.forEach((key, index) => {
-                    if(key.quantity > 0 ) {
-                        prodData.push( {
-                            productId : key.productId,
-                            unitPurchased :  Number(key.quantity)
+                    if (key.quantity > 0) {
+                        prodData.push({
+                            productId: key.productId,
+                            unitPurchased: Number(key.quantity)
                         })
                     }
                 })
 
                 var transactionPostObject = {
-                    totalAmount  : Number(this.state.totalAmount),
-                    transaction_detail : prodData
+                    totalAmount: Number(this.state.totalAmount),
+                    transaction_detail: prodData
                 };
 
-                fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/transaction/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/transaction/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -97,29 +97,29 @@ class Transaction extends React.Component {
                     .then(res => res.json())
 
                 this.state.productData.forEach((key, index) => {
-                if(key.quantity > 0 ) {
-                    var updateProductDetails = {
-                        productId : key.productId,
-                        costPerItem :  key.costPerItem,
-                        productName : key.productName,
-                        unitsAvailable : key.unitsAvailable - key.quantity,
-                        serviceProvider : key.serviceProvider,
-                        category : key.category
+                    if (key.quantity > 0) {
+                        var updateProductDetails = {
+                            productId: key.productId,
+                            costPerItem: key.costPerItem,
+                            productName: key.productName,
+                            unitsAvailable: key.unitsAvailable - key.quantity,
+                            serviceProvider: key.serviceProvider,
+                            category: key.category
                         };
 
 
-                    fetch('http://localhost:8000/product/' + key.productId + '/', {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${localStorage.getItem('token')}`
-                        },
-                        body: JSON.stringify(updateProductDetails)
-                    })
-                        .then(res => res.json()).then(json => {
-                        this.props.history.push('/transactionComplete');
-                    });
-                }
+                        fetch(process.env.REACT_APP_IP + 'product/' + key.productId + '/', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify(updateProductDetails)
+                        })
+                            .then(res => res.json()).then(json => {
+                            this.props.history.push('/transactionComplete');
+                        });
+                    }
                 })
             }
         });
@@ -128,21 +128,19 @@ class Transaction extends React.Component {
     takeIntput = (e, index) => {
 
         let prodData = JSON.parse(JSON.stringify(this.state.productData));
-        var beforeTotal = (prodData[index].quantity && prodData[index].costPerItem) ?  prodData[index].quantity * prodData[index].costPerItem : 0;
+        var beforeTotal = (prodData[index].quantity && prodData[index].costPerItem) ? prodData[index].quantity * prodData[index].costPerItem : 0;
         prodData[index].quantity = e.target.value;
         prodData[index].amount = prodData[index].quantity * prodData[index].costPerItem;
         //var afterTotal = (this.state.totalAmount - beforeTotal +  prodData[index].amount) < 0.01 ? 0 : (this.state.totalAmount - beforeTotal +  prodData[index].amount);
-        var afterTotal = this.state.totalAmount - beforeTotal +  prodData[index].amount;
+        var afterTotal = this.state.totalAmount - beforeTotal + prodData[index].amount;
         afterTotal = afterTotal.toFixed(2);
         this.setState({productData: prodData});
-        this.setState({totalAmount : afterTotal});
-        console.log("Input function", JSON.parse(JSON.stringify(this.state.productData)));
-
+        this.setState({totalAmount: afterTotal});
     }
 
 
     componentDidMount() {
-        fetch('http://localhost:8000/product/', {
+        fetch(process.env.REACT_APP_IP + 'product/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -160,7 +158,6 @@ class Transaction extends React.Component {
                     prod.push(key)
 
                 })
-                console.log(prod)
                 this.setState({
                         isLoaded: true,
                         productData: prod,
@@ -186,7 +183,7 @@ class Transaction extends React.Component {
         for (let i = 0; i < header.length; i++) {
             res.push(<th key={header[i]}>{header[i]}</th>)
         }
-            return res;
+        return res;
     }
 
     renderTableData() {
@@ -194,31 +191,30 @@ class Transaction extends React.Component {
 
         this.state.productData.filter(item => item.category === this.state.selectedCategory).map((item, index) => {
 
-          })
+        })
         var newData = this.state.productData.filter((item) => {
-             if(!this.state.selectedCategory) {
-                 return true;
-            }
-            else if (this.state.selectedCategory && item.category === this.state.selectedCategory) {
+            if (!this.state.selectedCategory) {
+                return true;
+            } else if (this.state.selectedCategory && item.category === this.state.selectedCategory) {
                 return true;
             }
             return false;
         })
-      return newData.map((product, index) => {
-         const { productId, productName, costPerItem, unitsAvailable, amount, index1} = product//destructuring
-         return (
-             <tr key={productId} >
-                 <td align={"center"}>{productId}</td>
-                 <td align={"center"}>{productName}</td>
-                 <td align={"center"}>{costPerItem}</td>
-                 <td align={"center"}>{unitsAvailable}</td>
-                 <td><InputNumber min={0} max={unitsAvailable} defaultValue={0}
-                                  onBlur={(e) => this.takeIntput(e, index1)}/></td>
-                 <td>{amount}</td>
-             </tr>
-         )
-      })
-   }
+        return newData.map((product, index) => {
+            const {productId, productName, costPerItem, unitsAvailable, amount, index1} = product//destructuring
+            return (
+                <tr key={productId}>
+                    <td align={"center"}>{productId}</td>
+                    <td align={"center"}>{productName}</td>
+                    <td align={"center"}>{costPerItem}</td>
+                    <td align={"center"}>{unitsAvailable}</td>
+                    <td><InputNumber min={0} max={unitsAvailable} defaultValue={0}
+                                     onBlur={(e) => this.takeIntput(e, index1)}/></td>
+                    <td>{amount}</td>
+                </tr>
+            )
+        })
+    }
 
 
     render() {
@@ -258,10 +254,10 @@ class Transaction extends React.Component {
                                 </tbody>
                             </table>
                             <Form {...formItemLayout}>
-                                <table style={{ border: "2px solid lightgrey", width: "100%", textAlign: "right"}}>
+                                <table style={{border: "2px solid lightgrey", width: "100%", textAlign: "right"}}>
                                     <tr>
-                                        <td> <b>Total Amount: ${this.state.totalAmount}</b></td>
-                                         <td>
+                                        <td><b>Total Amount: ${this.state.totalAmount}</b></td>
+                                        <td>
                                             <Button type="primary" htmlType="submit" size="medium"
                                                     className="registration-submit-button"
                                                     onClick={this.handleSubmit}>Submit</Button>

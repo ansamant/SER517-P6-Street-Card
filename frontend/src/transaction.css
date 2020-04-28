@@ -1,29 +1,33 @@
 #title {
-  text-align: center;
-  font-family: arial, sans-serif;
+    text-align: center;
+    font-family: arial, sans-serif;
 }
 
 #inventory {
-  text-align: center;
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  border: 3px solid #ddd;
-  width: 100%;
+    text-align: center;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border: 3px solid #ddd;
+    width: 100%;
 }
 
 #inventory td, #inventory th {
-  border: 1px solid #ddd;
-  padding: 8px;
+    border: 1px solid #ddd;
+    padding: 8px;
 }
 
-#inventory tr:nth-child(even){background-color: #6495ED;}
+#inventory tr:nth-child(even) {
+    background-color: #6495ED;
+}
 
-#inventory tr:hover {background-color: #6495ED;}
+#inventory tr:hover {
+    background-color: #6495ED;
+}
 
 #inventory th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: center;
-  background-color: #0f4d92;
-  color: white;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #0f4d92;
+    color: white;
 }

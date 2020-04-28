@@ -16,8 +16,6 @@ const {Content} = Layout;
 class LogView extends React.Component {
     constructor(props) {
         super(props);
-        console.log('Props')
-        console.log(this.props)
         this.state = {
             isLoaded: false,
             columns: [
@@ -59,8 +57,7 @@ class LogView extends React.Component {
     }
 
     componentDidMount() {
-        console.log("HOMELESS ID", this.props.handleHomelessPersonId)
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.handleHomelessPersonId.toString() + '/logs/', {  
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.handleHomelessPersonId.toString() + '/logs/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,7 +100,6 @@ class LogView extends React.Component {
     
            .then(res => res.json())
             .then(json => {
-                console.log(json)
                 this.setState({
                         isLoaded: true,
                         dataSource: json,

@@ -129,7 +129,7 @@ class ViewAppointmentsTable extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/', {
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/appointment/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -194,7 +194,6 @@ class ViewAppointmentsTable extends React.Component {
 
 
     editAppointment(record) {
-        console.log(record.appointmentId)
         this.props.updateAppointmentId(record.appointmentId);
         this.props.history.push('/editAppointment');
     }

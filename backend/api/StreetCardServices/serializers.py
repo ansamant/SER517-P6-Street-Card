@@ -82,7 +82,8 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'password', 'socialWorker')
+        fields = (
+        'id', 'username', 'email', 'first_name', 'last_name', 'password', 'socialWorker')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -92,6 +93,9 @@ class UserSerializer(ModelSerializer):
         group = Group.objects.get(name=group_name)
         user = User(**validated_data)
         user.set_password(password)
+        if group_name == 'admin':
+            user.is_staff = True
+            user.is_superuser = True
         user.save()
         SocialWorker.objects.create(user=user, **profile_data)
         UserNameAndIdMapping.objects.create(user_id=user.id, user_name=user.username)
@@ -121,6 +125,7 @@ class LogSerializer(ModelSerializer):
         model = Log
         fields = '__all__'
     # datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', )
+
 
 class HomelessSerializer(ModelSerializer):
     class Meta:

@@ -79,8 +79,8 @@ class AddProduct extends React.Component {
                 newProduct.unitsAvailable = values.unitsAvailable;
                 newProduct.costPerItem = values.costPerItem;
                 newProduct.serviceProvider = values.serviceProvider[0];
-                ;
-                fetch('http://localhost:8000/product/', {
+
+                fetch(process.env.REACT_APP_IP + 'product/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

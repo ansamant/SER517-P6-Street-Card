@@ -116,7 +116,6 @@ class Homeless(models.Model):
     NameDataQuality = models.IntegerField(choices=NameDataQuality.choices)
     # TODO
     # Update with proper regex to validate SSN
-    # Remove MaxLengthValidator and MinLengthValidator as they will throw an error for integer fields.
     # Convert to CharField because this would also contain '-' (hyphens)
     SSN = models.CharField(max_length=11, blank=True, null=True)
     SSNDataQuality = models.IntegerField(choices=SSNDataQuality.choices)
@@ -249,6 +248,7 @@ class SocialWorker(models.Model):
         CASEWORKER = "caseworker", _("CaseWorker")
         SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
         CLIENT = "client", _("Client")
+        ADMIN = "admin", _("Admin")
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clearanceLevel = models.TextField(choices=ClearanceLevel.choices)

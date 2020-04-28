@@ -42,6 +42,10 @@ const clearanceLevel = [
     {
         value: "client",
         label: "Client"
+    },
+    {
+        value: "admin",
+        label: "Admin"
     }
 ];
 
@@ -62,6 +66,14 @@ const serviceProvider = [
     {
         value: "SK",
         label: "Soup Kitchen"
+    },
+    {
+        value: "NA",
+        label: "Not Available"
+    },
+    {
+        value: "OTH",
+        label: "Others"
     }
 ];
 
@@ -74,7 +86,6 @@ class UpdateSocialWorkerInfo extends React.Component {
         this.state = {
             isLoaded: false,
         }
-        console.log(this.props.socialWorkerInfoJSON)
         this.setState({username: this.props.username ? this.props.username : ''})
         this.handleSocialWorkerRegistrationSubmit = this.handleSocialWorkerRegistrationSubmit.bind(this);
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
@@ -113,7 +124,7 @@ class UpdateSocialWorkerInfo extends React.Component {
 
 
 
-                fetch('http://localhost:8000/register/' + this.props.socialWorkerInfoJSON.user_id + '/' , {
+                fetch(process.env.REACT_APP_IP + 'register/' + this.props.socialWorkerInfoJSON.user_id + '/' , {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -122,8 +133,7 @@ class UpdateSocialWorkerInfo extends React.Component {
                     body: JSON.stringify(registerRequestObject)
                 })
                     .then(res => {
-                        if (res.status == 200) {
-
+                        if (res.status === 200) {
                             this.setState({
                             isLoaded: true,
                         })
@@ -162,7 +172,7 @@ class UpdateSocialWorkerInfo extends React.Component {
     }
 
     render() {
-        
+
         const {autoCompleteResult} = this.state;
 
         const formItemLayout = {
@@ -266,7 +276,7 @@ class UpdateSocialWorkerInfo extends React.Component {
                                     </Col>
                                 </Row>
                                 <Row gutter={36}>
-    
+
                                     <Col span={12}>
                                         <Form.Item hasFeedback>
                                             {getFieldDecorator("password", {
@@ -283,7 +293,7 @@ class UpdateSocialWorkerInfo extends React.Component {
                                                 prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
                                                 placeholder="Password"/>)}
                                         </Form.Item>
-    
+
                                     </Col>
                                     <Col span={12}>
                                         <Form.Item hasFeedback className="register-ant-form-item">
@@ -395,7 +405,7 @@ class UpdateSocialWorkerInfo extends React.Component {
                     <StreetCardFooter/>
                 </Layout>
             );
-        }  
+        }
     }
 }
 

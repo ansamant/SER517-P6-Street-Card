@@ -1,68 +1,70 @@
 .site-layout-content {
-  background: #fff;
-  padding: 24px;
-  min-height: 280px;
-  height: 80vh;
-  width: 50vh;
-  margin-left: 32%;
-  border-radius: 5px;
-  border: lightgrey groove 1px;
- 
+    background: #fff;
+    padding: 24px;
+    min-height: 280px;
+    height: 80vh;
+    width: 50vh;
+    margin-left: 32%;
+    border-radius: 5px;
+    border: lightgrey groove 1px;
+
 }
 
-.content{
-  padding: 50px 50px;
-  background-color: #0f4d92;
+.content {
+    padding: 50px 50px;
+    background-color: #0f4d92;
 }
 
 .site-layout-header {
-  height: 11vh;
-  width: 100%;
+    height: 11vh;
+    width: 100%;
 }
 
 .logo {
-  /* margin-left: -2%; */
-  width: 10vh;
-  height: 10vh;
-  float: left;
-  padding: 1% 1% 0.05% 0%;
+    /* margin-left: -2%; */
+    width: 10vh;
+    height: 10vh;
+    float: left;
+    padding: 1% 1% 0.05% 0%;
 }
+
 .ant-menu.ant-menu-dark .ant-menu-item-selected.menuKey {
-  background-color: #0f4d92; 
-  font-size: medium;
+    background-color: #0f4d92;
+    font-size: medium;
 }
+
 .button {
-  float: right;
-  margin-top: 20px; 
-  width: 20%;
+    float: right;
+    margin-top: 20px;
+    width: 20%;
 }
 
 .form {
-  border: black;
-  padding: 30px 10px 10px 10px;
-  float: right;
+    border: black;
+    padding: 30px 10px 10px 10px;
+    float: right;
 }
 
-.menu{
-  padding-top: 100px;
+.menu {
+    padding-top: 100px;
 }
 
 /* {
   background-color: #0f4d92;
 } */
-.menu .nav-text{
-  float: left;
-  color: #fff;
+.menu .nav-text {
+    float: left;
+    color: #fff;
 }
 
-.register{
-  float: left;
-  margin-right: 10%;
+.register {
+    float: left;
+    margin-right: 10%;
 }
 
-.avatar{
-  float: right;
-  padding: 1% 1% 0.05% 0%;
+.avatar {
+    float: right;
+    padding: 1% 1% 0.05% 0%;
 }
 
 

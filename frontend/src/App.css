@@ -39,19 +39,19 @@ body {
 }
 
 .client-Info {
-  max-width: 1000px;
-  padding: 50px;
-  margin: 100px;
-  position: relative;
-  left: 200px;
+    max-width: 1000px;
+    padding: 50px;
+    margin: 100px;
+    position: relative;
+    left: 200px;
 }
 
 .client-landing {
-  max-width: 1000px;
-  padding: 50px;
-  margin: 80px;
-  position: relative;
-  left: 100px;
+    max-width: 1000px;
+    padding: 50px;
+    margin: 80px;
+    position: relative;
+    left: 100px;
 }
 
 .App-link {
@@ -91,15 +91,16 @@ body {
 }
 
 .site-layout-content .login-form {
-  max-width: 500px;
-  padding: 50px;
-  /* border: 5px solid #fae596; */
-  /* margin: 100px; */
-  background-color: #fff;
-  width: 100%;
+    max-width: 500px;
+    padding: 50px;
+    /* border: 5px solid #fae596; */
+    /* margin: 100px; */
+    background-color: #fff;
+    width: 100%;
 }
+
 .login-form-forgot {
-  float: right;
+    float: right;
 }
 
 .login-form-button {
@@ -231,7 +232,7 @@ body {
 
 .content-transaction {
     background-color: #0f4d92;
-     height: 84vh;
+    height: 84vh;
     padding: 5%;
     text-align: center;
 }
@@ -244,11 +245,11 @@ body {
 
 .site-layout-content {
     background-color: #fff;
-  /* margin-left: 31%; */
-  /* margin-top: 10%; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    /* margin-left: 31%; */
+    /* margin-top: 10%; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
 }
 
@@ -272,7 +273,7 @@ body {
     padding: 2% 5%;
     /*display: inline-block;*/
     margin-bottom: 10%;
-  /* margin-top: 10%; */
+    /* margin-top: 10%; */
     min-width: 30vw;
     border-radius: 8px;
 }
@@ -339,6 +340,6 @@ input::placeholder {
     font-size: 14px;
 }
 
-td{
+td {
     background-color: whitesmoke;
 }
