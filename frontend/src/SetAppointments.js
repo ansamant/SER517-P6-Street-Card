@@ -51,11 +51,8 @@ const tz_Options = [
 ];
 
 class SetAppointments extends React.Component {
-
-
     constructor(props) {
         super(props);
-        //
         this.state = {
             items: {},
             checked: false,
@@ -64,7 +61,6 @@ class SetAppointments extends React.Component {
         }
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
-        
     }
     
     handleSubmit = e => {

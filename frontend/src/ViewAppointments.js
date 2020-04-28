@@ -38,10 +38,8 @@ class ViewAppointments extends React.Component {
         })
         .then(res => {
           if (res.status == 200) {
-              
               this.setState({
                   isLoaded: true,
-                  
                   items: res.json()
               })
           }
@@ -51,7 +49,6 @@ class ViewAppointments extends React.Component {
               }else{
                   this.setState({
                       isLoaded: true,
-                      
                       items: res.json()
                   })
               }
@@ -62,7 +59,6 @@ class ViewAppointments extends React.Component {
               }else{
                   this.setState({
                       isLoaded: true,
-                      
                       items: res.json()
                   })
               }
