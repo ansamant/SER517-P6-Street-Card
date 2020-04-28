@@ -136,14 +136,53 @@ class ViewAppointmentsTable extends React.Component {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
         })
-            .then(res => res.json())
+        .then(res => {
+            if (res.status == 200) {
+             // console.log("STATUS", res.status)
+              res.json().then(json=>{
+                this.setState({
+                  isLoaded: true,
+                  appointmentData: json
+                })
+              })
+                
+            }
+            else if(Math.round(res.status/100) == 4){
+               // console.log("STATUS", res.status)  
+                if(window.confirm("Error, invalid id: "+(res.status).toString())){
+                    this.props.history.push('/socialWorkerRegister');
+                }else{
+                    res.json().then(json=>{
+                      this.setState({
+                        isLoaded: true,
+                        appointmentData: json
+                      })
+                   })
+                    
+                }
+            }
+            else if(Math.round(res.status/100) == 5){
+                if(window.confirm("Server Error: "+(res.status).toString())){
+                    this.props.history.push('/socialWorkerRegister');
+                }else{
+                  res.json().then(json=>{
+                    this.setState({
+                      isLoaded: true,
+                      appointmentData: json
+                    })
+                  })
+                    
+                }
+            }
+        });
+           /* .then(res => res.json())
             .then(json => {
                 this.setState({
                         isLoaded: true,
                         appointmentData: json,
                     }
                 )
-            })
+            })*/
 
     }
 

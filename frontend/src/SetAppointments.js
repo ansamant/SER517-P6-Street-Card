@@ -124,6 +124,8 @@ class SetAppointments extends React.Component {
                     alert: false,
                     items: res.json()
                 })
+
+                console.log(res.json())
             }
             else if(Math.round(res.status/100) == 4){
                 if(window.confirm("Error, invalid id: "+(res.status).toString())){

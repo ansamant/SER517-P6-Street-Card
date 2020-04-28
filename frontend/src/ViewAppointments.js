@@ -31,7 +31,7 @@ class ViewAppointments extends React.Component {
 
 
   componentDidMount() {
-     fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' , {
+    /* fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' , {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -40,38 +40,32 @@ class ViewAppointments extends React.Component {
         })
         .then(res => {
           if (res.status == 200) {
-              
+            console.log("STATUS", res.status)
+            res.json().then(json=>{
               this.setState({
-                  isLoaded: true,
-                  
-                  items: res.json()
+                isLoaded: true,
+                items: json
               })
+            })
+              
           }
-          else if(Math.round(res.status/100) == 4){
-              if(window.confirm("Error, invalid id: "+(res.status).toString())){
-                  this.props.history.push('/socialWorkerRegister');
-              }else{
-                  this.setState({
-                      isLoaded: true,
-                      
-                      items: res.json()
-                  })
-              }
+          else{
+            console.log("STATUS", res.status)
+            if(window.confirm("Error, invalid id: "+(res.status).toString())){
+              this.props.history.push('/socialWorkerRegister');
+            }else{
+              res.json().then(json=>{
+                this.setState({
+                  isLoaded: true,
+                  items: json
+                })
+            })
+              
+          } 
           }
-          else if(Math.round(res.status/100) == 5){
-              if(window.confirm("Server Error: "+(res.status).toString())){
-                  this.props.history.push('/socialWorkerRegister');
-              }else{
-                  this.setState({
-                      isLoaded: true,
-                      
-                      items: res.json()
-                  })
-              }
-          }
+         
           
-      });
-
+      });*/
 
   }
 
