@@ -68,7 +68,7 @@ class ViewAllEnrollment extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/enrollment/', {
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/enrollment/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

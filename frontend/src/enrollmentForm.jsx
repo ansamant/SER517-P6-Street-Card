@@ -40,14 +40,14 @@ class EnrollmentForm extends Component {
         this.props.history.push('/login');
     }
 
-    setPagecomponent(pageComponentValue){
+    setPagecomponent(pageComponentValue) {
         this.props.updatePageComponent(pageComponentValue)
         this.props.history.push('/socialWorkerRegister');
     };
 
     componentDidMount() {
         changingPanel.pop();
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/', {
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,6 @@ class EnrollmentForm extends Component {
         })
             .then(res => res.json())
             .then(json => {
-                console.log(json)
                 this.setState({
                         isLoaded: true,
                         items: json
@@ -75,7 +74,7 @@ class EnrollmentForm extends Component {
             case "VA: SSVF - Rapid Re-Housing":
                 changingPanel.pop();
                 changingPanel.push(<RapidReHousingVA data={e[0]} personalId={this.state.items.PersonalId}
-                                                     history={this.props.history} />)
+                                                     history={this.props.history}/>)
                 break;
         }
     }
@@ -89,7 +88,7 @@ class EnrollmentForm extends Component {
                     loggedInStatus={this.props.loggedInStatus}/>
                 <Layout>
                     <SiderComponent
-                        setPagecomponent = {this.setPagecomponent}
+                        setPagecomponent={this.setPagecomponent}
                     />
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">

@@ -25,14 +25,13 @@ class ClientLanding extends React.Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
-                fetch('http://localhost:8000/homeless/' + values.personId + '/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + values.personId + '/', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
                 })
                     .then(res => res.json())
                     .then(json => {
-                        console.log(json)
                         this.props.handleHomelessPersonJson(json);
                         this.props.history.push('/clientInfo');
                     });

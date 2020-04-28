@@ -45,7 +45,8 @@ const tz_Options = [
     {value: 'Pacific', label: 'Pacific'},
     {value: 'Pacific-New', label: 'Pacific-New'},
     {value: 'Samoa', label: 'Samoa'}
- ];
+];
+
 class EditAppointment extends React.Component {
     constructor(props) {
         super(props);
@@ -55,7 +56,7 @@ class EditAppointment extends React.Component {
             checked: false,
             isLoaded: false,
             email: null,
-            taskId:null,
+            taskId: null,
         }
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
@@ -83,8 +84,7 @@ class EditAppointment extends React.Component {
                 appointmentRequestObject.Email = this.state.email;
                 appointmentRequestObject.TimeZone = values.timeZone[0];
                 appointmentRequestObject.AlertTaskID = this.state.taskId;
-                //console.log(JSON.stringify(appointmentRequestObject));
-                fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -100,26 +100,26 @@ class EditAppointment extends React.Component {
         });
     };
 
-    componentWillMount(){
-        fetch(`http://127.0.0.1:8000/homeless/${this.props.homelessPersonId}/`,{
+    componentWillMount() {
+        fetch(process.env.REACT_APP_IP + 'homeless/${this.props.homelessPersonId}/', {
             method: 'GET',
-            headers:{
+            headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
         })
             .then(res => res.json())
-            .then(json =>{
+            .then(json => {
                 this.setState({
                     email: json["Email"]
                 })
-                //console.log(JSON.stringify(json))
             })
-        
-         
+
+
     }
+
     componentDidMount() {
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -127,7 +127,6 @@ class EditAppointment extends React.Component {
             },
         }).then(res => res.json())
             .then(json => {
-                //console.log(json)
                 this.setState({
                         appointment: json,
                         checked: json["alert"],
@@ -135,7 +134,7 @@ class EditAppointment extends React.Component {
                     }
                 )
             })
-       
+
     }
 
     onChange = e => {
@@ -172,8 +171,7 @@ class EditAppointment extends React.Component {
         const config = {
             rules: [{type: 'object', required: true, message: 'Please select time!'}],
         };
-        //console.log("EMAIL", this.state.email)
-        if(this.state.email != null){
+        if (this.state.email != null) {
             return (
                 <Layout className="layout">
                     <Header
@@ -181,7 +179,7 @@ class EditAppointment extends React.Component {
                         loggedInStatus={this.props.loggedInStatus}
                     />
                     <Layout>
-    
+
                         <SiderComponent
                             setPagecomponent={this.setPagecomponent}
                         />
@@ -318,22 +316,21 @@ class EditAppointment extends React.Component {
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={8} push={1}>
-                                                        <Form.Item>
-                                                            {getFieldDecorator("timeZone", {
-                                                                rules: [
-                                                                    {
-                                                                        type: "array",
-                                                                        required: true,
-                                                                        message: "Please select the Time Zone!"
-                                                                    }
-                                                                ]
-                                                            })(<Cascader options={tz_Options}
-                                                                         placeholder="Time Zone"/>)}
-                                                        </Form.Item>
-                                                    </Col>
+                                                    <Form.Item>
+                                                        {getFieldDecorator("timeZone", {
+                                                            rules: [
+                                                                {
+                                                                    type: "array",
+                                                                    required: true,
+                                                                    message: "Please select the Time Zone!"
+                                                                }
+                                                            ]
+                                                        })(<Cascader options={tz_Options}
+                                                                     placeholder="Time Zone"/>)}
+                                                    </Form.Item>
+                                                </Col>
                                                 <Col span={8} push={1}>
                                                     <Form.Item className="register-ant-form-item">
-                                                        {console.log(appointment.alert)}
                                                         <Checkbox checked={this.state.checked} onChange={this.onChange}>
                                                             Alert
                                                         </Checkbox>
@@ -341,18 +338,20 @@ class EditAppointment extends React.Component {
                                                 </Col>
                                             </Row>
                                         </Panel>
-                                        <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here" key="2">
+                                        <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
+                                               key="2">
                                             <Row>
                                                 <Col span={12}>
                                                     <p style={{padding: "2%"}}>
-    
-    
+
+
                                                         <Checkbox>
-                                                            I acknowledge, the form is completed as per the inputs provided
+                                                            I acknowledge, the form is completed as per the inputs
+                                                            provided
                                                             by the
                                                             client.
                                                         </Checkbox>
-    
+
                                                     </p>
                                                 </Col>
                                                 <Col span={12}>
@@ -364,7 +363,7 @@ class EditAppointment extends React.Component {
                                                     </Form.Item>
                                                 </Col>
                                             </Row>
-    
+
                                         </Panel>
                                     </Collapse>
                                 </Form>
@@ -374,8 +373,7 @@ class EditAppointment extends React.Component {
                     <StreetCardFooter/>
                 </Layout>
             );
-        }
-        else{
+        } else {
             return (
                 <Layout className="layout">
                     <Header
@@ -383,7 +381,7 @@ class EditAppointment extends React.Component {
                         loggedInStatus={this.props.loggedInStatus}
                     />
                     <Layout>
-    
+
                         <SiderComponent
                             setPagecomponent={this.setPagecomponent}
                         />
@@ -520,33 +518,35 @@ class EditAppointment extends React.Component {
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={8} push={1}>
-                                                        <Form.Item>
-                                                            {getFieldDecorator("timeZone", {
-                                                                rules: [
-                                                                    {
-                                                                        type: "array",
-                                                                        required: true,
-                                                                        message: "Please select the Time Zone!"
-                                                                    }
-                                                                ]
-                                                            })(<Cascader options={tz_Options}
-                                                                         placeholder="Time Zone"/>)}
-                                                        </Form.Item>
-                                                    </Col>
+                                                    <Form.Item>
+                                                        {getFieldDecorator("timeZone", {
+                                                            rules: [
+                                                                {
+                                                                    type: "array",
+                                                                    required: true,
+                                                                    message: "Please select the Time Zone!"
+                                                                }
+                                                            ]
+                                                        })(<Cascader options={tz_Options}
+                                                                     placeholder="Time Zone"/>)}
+                                                    </Form.Item>
+                                                </Col>
                                             </Row>
                                         </Panel>
-                                        <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here" key="2">
+                                        <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
+                                               key="2">
                                             <Row>
                                                 <Col span={12}>
                                                     <p style={{padding: "2%"}}>
-    
-    
+
+
                                                         <Checkbox>
-                                                            I acknowledge, the form is completed as per the inputs provided
+                                                            I acknowledge, the form is completed as per the inputs
+                                                            provided
                                                             by the
                                                             client.
                                                         </Checkbox>
-    
+
                                                     </p>
                                                 </Col>
                                                 <Col span={12}>
@@ -558,7 +558,7 @@ class EditAppointment extends React.Component {
                                                     </Form.Item>
                                                 </Col>
                                             </Row>
-    
+
                                         </Panel>
                                     </Collapse>
                                 </Form>
@@ -569,7 +569,7 @@ class EditAppointment extends React.Component {
                 </Layout>
             );
         }
-        
+
     }
 }
 

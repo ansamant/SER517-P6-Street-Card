@@ -16,7 +16,6 @@ const {Content} = Layout;
 class InventoryLog extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.homelessInventoryData)
         this.state = {
             isLoaded: false,
             columns: [
@@ -50,7 +49,7 @@ class InventoryLog extends React.Component {
                     totalAmount: '',
                     unitPurchased: '',
                     productId: '',
-                    dateTIme:''
+                    dateTIme: ''
 
                 }
             ]
@@ -62,7 +61,7 @@ class InventoryLog extends React.Component {
     }
 
     componentDidMount() {
-        
+
     }
 
 

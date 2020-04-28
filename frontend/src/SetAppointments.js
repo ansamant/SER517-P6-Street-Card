@@ -5,7 +5,6 @@ import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layo
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './SiderComponent'
-import { OneToOneOutlined } from '@ant-design/icons';
 
 
 const serviceProvider = [
@@ -36,23 +35,24 @@ const gridStyle = {
 
 //timezones as defined by the pytz library
 const tz_Options = [
-       {value: 'Alaska', label: 'Alaska'},
-       {value: 'Aleutian', label: 'Aleutian'},
-       {value: 'Arizona', label: 'Arizona'},
-       {value: 'Central', label: 'Central'},
-       {value: 'East-Indiana', label: 'East-Indiana'},
-       {value: 'Eastern', label: 'Eastern'},
-       {value: 'Hawaii', label: 'Hawaii'},
-       {value: 'Indiana-Starke', label: 'Indiana-Starke'},
-       {value: 'Michigan', label: 'Michigan'},
-       {value: 'Mountain', label: 'Mountain'},
-       {value: 'Pacific', label: 'Pacific'},
-       {value: 'Pacific-New', label: 'Pacific-New'},
-       {value: 'Samoa', label: 'Samoa'}
-    ];
+    {value: 'Alaska', label: 'Alaska'},
+    {value: 'Aleutian', label: 'Aleutian'},
+    {value: 'Arizona', label: 'Arizona'},
+    {value: 'Central', label: 'Central'},
+    {value: 'East-Indiana', label: 'East-Indiana'},
+    {value: 'Eastern', label: 'Eastern'},
+    {value: 'Hawaii', label: 'Hawaii'},
+    {value: 'Indiana-Starke', label: 'Indiana-Starke'},
+    {value: 'Michigan', label: 'Michigan'},
+    {value: 'Mountain', label: 'Mountain'},
+    {value: 'Pacific', label: 'Pacific'},
+    {value: 'Pacific-New', label: 'Pacific-New'},
+    {value: 'Samoa', label: 'Samoa'}
+];
+
 class SetAppointments extends React.Component {
 
-    
+
     constructor(props) {
         super(props);
         //
@@ -80,17 +80,16 @@ class SetAppointments extends React.Component {
                 appointmentRequestObject.state = values.state;
                 appointmentRequestObject.Date = values['DatePicker'].format('YYYY-MM-DD');
                 appointmentRequestObject.Time = values['TimePicker'].format('hh:mm[:ss[.uuuuuu]]');
-                
+
                 appointmentRequestObject.serviceProvider = values.serviceProvider[0];
                 appointmentRequestObject.personalId = this.props.homelessPersonId;
                 appointmentRequestObject.alert = this.state.checked;
                 appointmentRequestObject.Email = this.state.email;
-                appointmentRequestObject.TimeZone = values.timeZone[0];  
-                //console.log("AppointmentRequestObj", appointmentRequestObject)
+                appointmentRequestObject.TimeZone = values.timeZone[0];
                 if (this.state.email == null) {
                     appointmentRequestObject.Email = ""
                 }
-                fetch('http://localhost:8000/homeless/' + this.props.homelessPersonId + '/appointment/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/appointment/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -108,7 +107,7 @@ class SetAppointments extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/', {
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -117,7 +116,6 @@ class SetAppointments extends React.Component {
         })
             .then(res => res.json())
             .then(json => {
-                //console.log(json)
                 this.setState({
                         isLoaded: true,
                         alert: false,
@@ -125,7 +123,6 @@ class SetAppointments extends React.Component {
                     }
                 )
             })
-            
 
 
     }

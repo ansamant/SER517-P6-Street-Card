@@ -263,7 +263,7 @@ class homelessRegistration extends React.Component {
                 registerRequestObject.Gender = values.Gender[0];
                 registerRequestObject.VeteranStatus = values.VeteranStatus[0];
 
-                fetch('http://localhost:8000/homeless/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -308,7 +308,7 @@ class homelessRegistration extends React.Component {
 
 
 
-                fetch('http://localhost:8000/homeless/' + this.state.homelessData.PersonalId + '/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + this.state.homelessData.PersonalId + '/', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

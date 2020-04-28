@@ -38,7 +38,7 @@ class GreeterView extends React.Component {
                 registerRequestObject.serviceProvider = this.state.serviceProvider;
                 registerRequestObject.clientName = "";
 
-                fetch('http://localhost:8000/homeless/' + values.personalId + '/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + values.personalId + '/', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -50,7 +50,6 @@ class GreeterView extends React.Component {
                     .then(json => {
                         // Need name to be used in the header for easy mapping of client name.
                         registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
-                        //console.log("REG1 " + registerRequestObject.clientName)
                         this.setState({
                             isLoaded: true,
                             name: registerRequestObject.clientName,
@@ -59,8 +58,7 @@ class GreeterView extends React.Component {
 
                     }).then(json => {
                     //should only run after get request has successfully
-                    //console.log("REG2 "+ JSON.stringify(registerRequestObject));
-                    fetch('http://localhost:8000/homeless/' + values.personalId + '/logs/', {
+                    fetch(process.env.REACT_APP_IP + 'homeless/' + values.personalId + '/logs/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -85,7 +83,6 @@ class GreeterView extends React.Component {
     }
 
     processTransaction(personalId) {
-        console.log(personalId)
         this.props.inputPersonalId(personalId)
         this.props.history.push('/transactionPage');
     }
@@ -130,7 +127,7 @@ class GreeterView extends React.Component {
                                 <Col span={24}>
                                     <h3>Hello {this.state.name}</h3>
                                 </Col>
-                                </Row>
+                            </Row>
                             <Form onSubmit={this.handleSubmit} className="login-form">
                                 <Form.Item>
                                     {getFieldDecorator('personalId', {
@@ -156,13 +153,13 @@ class GreeterView extends React.Component {
 
                                 <Row>
 
-                                <Col span={24}>
-                                    <Button type="link" htmlType="submit"
-                                            onClick={() => this.processTransaction(this.state.id)}>
-                                        Go to Inventory ->
-                                    </Button>
-                                </Col>
-                            </Row>
+                                    <Col span={24}>
+                                        <Button type="link" htmlType="submit"
+                                                onClick={() => this.processTransaction(this.state.id)}>
+                                            Go to Inventory ->
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </Form>
                         </div>
                     </Content>

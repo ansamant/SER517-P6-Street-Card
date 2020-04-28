@@ -586,7 +586,7 @@ class RapidReHousingVA extends Component {
                 this.handleEmptyObject(enrollmentRequestObject);
 
 
-                fetch('http://localhost:8000/homeless/' + this.props.personalId + '/enrollment/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.personalId + '/enrollment/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2087,7 +2087,7 @@ class RapidReHousingVA extends Component {
                                 <Form.Item>
                                     <Button type="primary" block htmlType="submit"
                                             className="registration-submit-button" disabled={this.state.isEnabled}>
-                                        Submit {console.log(this.state.isEnabled)}
+                                        Submit
                                     </Button>
                                 </Form.Item>
                             </Col>

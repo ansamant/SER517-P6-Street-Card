@@ -22,7 +22,7 @@ class ViewEnrollmentDetails extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/enrollment/' + this.props.enrollmentId + '/', {
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/enrollment/' + this.props.enrollmentId + '/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,8 +31,6 @@ class ViewEnrollmentDetails extends React.Component {
         })
             .then(res => res.json())
             .then(json => {
-                console.log(json)
-                // json = this.modifyJSON(json)
                 this.setState({
                         enrollment: json,
                     }
