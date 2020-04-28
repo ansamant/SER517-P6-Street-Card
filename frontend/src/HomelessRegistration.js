@@ -402,7 +402,7 @@ class homelessRegistration extends React.Component {
                         <div className="site-layout-content-homeless">
                             <Form {...formItemLayout} name="enrollment"
                                   onSubmit={this.handleHomelessPersonUpdateRegistrationSubmit}>
-                                <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                                <Collapse  style={{backgroundColor: "#f0f9ff"}}>
                                     <Panel header="Name Information" key="1">
                                         <Row gutter={8}>
                                             <Col span={8} push={1}>

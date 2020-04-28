@@ -96,7 +96,7 @@ class ViewEnrollmentDetails extends React.Component {
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
                             <Form {...formItemLayout} name="enrollment">
-                                <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                                <Collapse  style={{backgroundColor: "#f0f9ff"}}>
                                     <Panel key="1" header="Enrollment Details">
                                         {enrollMainDetails}
                                     </Panel>

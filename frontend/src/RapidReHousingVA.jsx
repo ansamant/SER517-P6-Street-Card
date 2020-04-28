@@ -630,7 +630,7 @@ class RapidReHousingVA extends Component {
         return (
             <Form {...formItemLayout} name="enrollment"
                   onSubmit={this.handleOnSubmit}>
-                <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                <Collapse  style={{backgroundColor: "#f0f9ff"}}>
                     <Panel header="Enrollment Details" key="1">
                         <Row gutter={8}>
                             <Col span={8}>

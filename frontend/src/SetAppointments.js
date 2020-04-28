@@ -64,9 +64,9 @@ class SetAppointments extends React.Component {
         }
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
+        
     }
-
-
+    
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -114,17 +114,38 @@ class SetAppointments extends React.Component {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
         })
-            .then(res => res.json())
-            .then(json => {
+        .then(res => {
+            if (res.status == 200) {
                 this.setState({
+                    isLoaded: true,
+                    alert: false,
+                    items: res.json()
+                })
+            }
+            else if(Math.round(res.status/100) == 4){
+                if(window.confirm("Error, invalid id: "+(res.status).toString())){
+                    this.props.history.push('/socialWorkerRegister');
+                }else{
+                    this.setState({
                         isLoaded: true,
                         alert: false,
-                        items: json
-                    }
-                )
-            })
-
-
+                        items: res.json()
+                    })
+                }
+            }
+            else if(Math.round(res.status/100) == 5){
+                if(window.confirm("Server Error: "+(res.status).toString())){
+                    this.props.history.push('/socialWorkerRegister');
+                }else{
+                    this.setState({
+                        isLoaded: true,
+                        alert: false,
+                        items: res.json()
+                    })
+                }
+            }
+            
+        });
     }
 
     handleSuccessfulLogoutAction() {
@@ -178,7 +199,7 @@ class SetAppointments extends React.Component {
                         <Content className="content-enroll">
                             <div className="site-layout-content-homeless">
                                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-                                    <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                                    <Collapse  style={{backgroundColor: "#f0f9ff"}}>
                                         <Panel header="Client Details" key="1">
                                             <Row gutter={8}>
                                                 <Col span={8}>
@@ -394,7 +415,7 @@ class SetAppointments extends React.Component {
                         <Content className="content-enroll">
                             <div className="site-layout-content-homeless">
                                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-                                    <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                                    <Collapse  style={{backgroundColor: "#f0f9ff"}}>
                                         <Panel header="Client Details" key="1">
                                             <Row gutter={8}>
                                                 <Col span={8}>
