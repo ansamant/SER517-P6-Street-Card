@@ -101,7 +101,7 @@ class EditAppointment extends React.Component {
     };
 
     componentWillMount() {
-        fetch(process.env.REACT_APP_IP + 'homeless/${this.props.homelessPersonId}/', {
+        fetch(process.env.REACT_APP_IP + `homeless/${this.props.homelessPersonId}/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -5,6 +5,7 @@ import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layo
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './SiderComponent'
+import { Spin } from 'antd';
 
 
 const serviceProvider = [
@@ -62,7 +63,7 @@ class SetAppointments extends React.Component {
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
     }
-    
+
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -102,7 +103,7 @@ class SetAppointments extends React.Component {
         });
     }
 
-    componentDidMount() {
+    waitComponent() {
         fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/', {
             method: 'GET',
             headers: {
@@ -110,45 +111,47 @@ class SetAppointments extends React.Component {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
         })
-        .then(res => {
-            if (res.status == 200) {
-                this.setState({
-                    isLoaded: true,
-                    alert: false,
-                    items: res.json()
-                })
-            }
-            else if(Math.round(res.status/100) == 4){
-                if(window.confirm("Error, invalid id: "+(res.status).toString())){
-                    this.props.history.push('/socialWorkerRegister');
-                }else{
-                    this.setState({
-                        isLoaded: true,
-                        alert: false,
-                        items: res.json()
+            .then(res => {
+                if (res.status == 200) {
+                    res.json().then(json => {
+                        this.setState({
+                            isLoaded: true,
+                            alert: false,
+                            items: json
+                        })
                     })
+                } else if (Math.round(res.status / 100) == 4) {
+                    if (window.confirm("Error, invalid id: " + (res.status).toString())) {
+                        this.props.history.push('/socialWorkerRegister');
+                    } else {
+                        this.setState({
+                            isLoaded: true,
+                            alert: false,
+                            items: res.json()
+                        })
+                    }
+                } else if (Math.round(res.status / 100) == 5) {
+                    if (window.confirm("Server Error: " + (res.status).toString())) {
+                        this.props.history.push('/socialWorkerRegister');
+                    } else {
+                        this.setState({
+                            isLoaded: true,
+                            alert: false,
+                            items: res.json()
+                        })
+                    }
                 }
-            }
-            else if(Math.round(res.status/100) == 5){
-                if(window.confirm("Server Error: "+(res.status).toString())){
-                    this.props.history.push('/socialWorkerRegister');
-                }else{
-                    this.setState({
-                        isLoaded: true,
-                        alert: false,
-                        items: res.json()
-                    })
-                }
-            }
-            
-        });
+            });
+    }
+
+    componentDidMount() {
+        setTimeout(this.waitComponent(), 3000);
     }
 
     handleSuccessfulLogoutAction() {
         this.props.handleLogout();
         this.props.history.push('/login');
     }
-
 
     setPagecomponent(pageComponentValue) {
         this.props.updatePageComponent(pageComponentValue)
@@ -180,223 +183,434 @@ class SetAppointments extends React.Component {
         const config = {
             rules: [{type: 'object', required: true, message: 'Please select time!'}],
         };
-        if (items.Email != null) {
-            this.state.email = items.Email;
-            return (
-                <Layout className="layout">
-                    <Header
-                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                        loggedInStatus={this.props.loggedInStatus}
-                    />
-                    <Layout>
-                        <SiderComponent
-                            setPagecomponent={this.setPagecomponent}
+        if (this.state.isLoaded) {
+            console.log(this.state.isLoaded)
+            console.log(this.state.items)
+            if (items.Email != null) {
+                this.state.email = items.Email;
+                return (
+                    <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.props.loggedInStatus}
                         />
-                        <Content className="content-enroll">
-                            <div className="site-layout-content-homeless">
-                                <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-                                    <Collapse  style={{backgroundColor: "#f0f9ff"}}>
-                                        <Panel header="Client Details" key="1">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
+                        <Layout>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-enroll">
+                                <div className="site-layout-content-homeless">
+                                    <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+                                        <Collapse style={{backgroundColor: "#f0f9ff"}}>
+                                            <Panel header="Client Details" key="1">
+                                                <Row gutter={8}>
+                                                    <Col span={8}>
 
-                                                    <Form.Item label="Personal Id">
+                                                        <Form.Item label="Personal Id">
 
-                                                        <Input defaultValue={items.PersonalId} disabled={true}/>
+                                                            <Input defaultValue={items.PersonalId} disabled={true}/>
 
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item label="First Name">
-                                                        <Input defaultValue={items.FirstName} disabled={true}/>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item label="Last Name">
-                                                        <Input defaultValue={items.LastName} disabled={true}/>
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Appointment Details" key="2">
-                                            <Row gutter={8}>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item>
-                                                        {getFieldDecorator("serviceProvider", {
-                                                            rules: [
-                                                                {
-                                                                    type: "array",
-                                                                    required: true,
-                                                                    message: "Please select your role!"
-                                                                }
-                                                            ]
-                                                        })(<Cascader options={serviceProvider}
-                                                                     placeholder="Service Provider"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item>
-                                                        {getFieldDecorator("office", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the office!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="Office Name"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("streetAddress1", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the streetAddress1!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="Street Address 1"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("streetAddress2", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the streetAddress2!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="Street Address 2"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("city", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the city!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="City"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("zipCode", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the zipcode!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="Zip Code"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("state", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the state!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="State"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator('DatePicker', {
-                                                            //  initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
-                                                            rules: [
-                                                                {
-                                                                    type: "object",
-                                                                    required: true,
-                                                                    message: "Please input your Date!"
-                                                                }
-                                                            ]
-                                                        })(<DatePicker placeholder="Appointment Date"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator('TimePicker', {
-                                                            //  initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
-                                                            rules: [
-                                                                {
-                                                                    type: "object",
-                                                                    required: true,
-                                                                    message: "Please input your Time!"
-                                                                }
-                                                            ]
-                                                        })(<TimePicker placeholder="Time Date"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item>
-                                                        {getFieldDecorator("timeZone", {
-                                                            rules: [
-                                                                {
-                                                                    type: "array",
-                                                                    required: true,
-                                                                    message: "Please select the Time Zone!"
-                                                                }
-                                                            ]
-                                                        })(<Cascader options={tz_Options}
-                                                                     placeholder="Time Zone"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        <Checkbox checked={this.state.checked} onChange={this.onChange}>Set
-                                                            Alert</Checkbox>
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
-                                               key="3">
-                                            <Row>
-                                                <Col span={12}>
-                                                    <p style={{padding: "2%"}}>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8}>
+                                                        <Form.Item label="First Name">
+                                                            <Input defaultValue={items.FirstName} disabled={true}/>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8}>
+                                                        <Form.Item label="Last Name">
+                                                            <Input defaultValue={items.LastName} disabled={true}/>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel header="Appointment Details" key="2">
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("serviceProvider", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select your role!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={serviceProvider}
+                                                                         placeholder="Service Provider"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("office", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the office!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Office Name"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("streetAddress1", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the streetAddress1!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Street Address 1"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("streetAddress2", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the streetAddress2!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Street Address 2"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("city", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the city!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="City"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("zipCode", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the zipcode!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Zip Code"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("state", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the state!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="State"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator('DatePicker', {
+                                                                //  initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+                                                                rules: [
+                                                                    {
+                                                                        type: "object",
+                                                                        required: true,
+                                                                        message: "Please input your Date!"
+                                                                    }
+                                                                ]
+                                                            })(<DatePicker placeholder="Appointment Date"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator('TimePicker', {
+                                                                //  initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+                                                                rules: [
+                                                                    {
+                                                                        type: "object",
+                                                                        required: true,
+                                                                        message: "Please input your Time!"
+                                                                    }
+                                                                ]
+                                                            })(<TimePicker placeholder="Time Date"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("timeZone", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select the Time Zone!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={tz_Options}
+                                                                         placeholder="Time Zone"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            <Checkbox checked={this.state.checked}
+                                                                      onChange={this.onChange}>Set
+                                                                Alert</Checkbox>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
+                                                   key="3">
+                                                <Row>
+                                                    <Col span={12}>
+                                                        <p style={{padding: "2%"}}>
 
 
-                                                        <Checkbox>
-                                                            I acknowledge, the form is completed as per the inputs
-                                                            provided
-                                                            by the
-                                                            client.
-                                                        </Checkbox>
+                                                            <Checkbox>
+                                                                I acknowledge, the form is completed as per the inputs
+                                                                provided
+                                                                by the
+                                                                client.
+                                                            </Checkbox>
 
-                                                    </p>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <Form.Item>
-                                                        <Button type="primary" block htmlType="submit"
-                                                                className="registration-submit-button">
-                                                            Submit
-                                                        </Button>
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
+                                                        </p>
+                                                    </Col>
+                                                    <Col span={12}>
+                                                        <Form.Item>
+                                                            <Button type="primary" block htmlType="submit"
+                                                                    className="registration-submit-button">
+                                                                Submit
+                                                            </Button>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
 
-                                        </Panel>
-                                    </Collapse>
-                                </Form>
-                            </div>
-                        </Content>
+                                            </Panel>
+                                        </Collapse>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
                     </Layout>
-                    <StreetCardFooter/>
-                </Layout>
-            );
+                );
+            } else {
+                return (
+                    <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.props.loggedInStatus}
+                        />
+                        <Layout>
+                            <SiderComponent
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-enroll">
+                                <div className="site-layout-content-homeless">
+                                    <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+                                        <Collapse style={{backgroundColor: "#f0f9ff"}}>
+                                            <Panel header="Client Details" key="1">
+                                                <Row gutter={8}>
+                                                    <Col span={8}>
+                                                        <Form.Item label="Personal Id">
+                                                            <Input defaultValue={items.PersonalId} disabled={true}/>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8}>
+                                                        <Form.Item label="First Name">
+                                                            <Input defaultValue={items.FirstName} disabled={true}/>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8}>
+                                                        <Form.Item label="Last Name">
+                                                            <Input defaultValue={items.LastName} disabled={true}/>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel header="Appointment Details" key="2">
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("serviceProvider", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select your role!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={serviceProvider}
+                                                                         placeholder="Service Provider"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item>
+                                                            {getFieldDecorator("office", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the office!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Office Name"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("streetAddress1", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the streetAddress1!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Street Address 1"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("streetAddress2", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the streetAddress2!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Street Address 2"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                                <Row gutter={8}>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("city", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the city!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="City"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("zipCode", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the zipcode!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="Zip Code"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("state", {
+                                                                rules: [
+                                                                    {
+                                                                        message: "Please input the state!",
+                                                                        whitespace: true
+                                                                    }
+                                                                ]
+                                                            })(<Input placeholder="State"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator('DatePicker', {
+                                                                //  initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+                                                                rules: [
+                                                                    {
+                                                                        type: "object",
+                                                                        required: true,
+                                                                        message: "Please input your Date!"
+                                                                    }
+                                                                ]
+                                                            })(<DatePicker placeholder="Appointment Date"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator('TimePicker', {
+                                                                //  initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
+                                                                rules: [
+                                                                    {
+                                                                        type: "object",
+                                                                        required: true,
+                                                                        message: "Please input your Time!"
+                                                                    }
+                                                                ]
+                                                            })(<TimePicker placeholder="Time Date"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={8} push={1}>
+                                                        <Form.Item className="register-ant-form-item">
+                                                            {getFieldDecorator("timeZone", {
+                                                                rules: [
+                                                                    {
+                                                                        type: "array",
+                                                                        required: true,
+                                                                        message: "Please select the Time Zone!"
+                                                                    }
+                                                                ]
+                                                            })(<Cascader options={tz_Options}
+                                                                         placeholder="Time Zone"/>)}
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </Panel>
+                                            <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
+                                                   key="3">
+                                                <Row>
+                                                    <Col span={12}>
+                                                        <p style={{padding: "2%"}}>
+
+                                                            <Checkbox>
+                                                                I acknowledge, the form is completed as per the inputs
+                                                                provided
+                                                                by the
+                                                                client.
+                                                            </Checkbox>
+
+                                                        </p>
+                                                    </Col>
+                                                    <Col span={12}>
+                                                        <Form.Item>
+                                                            <Button type="primary" block htmlType="submit"
+                                                                    className="registration-submit-button">
+                                                                Submit
+                                                            </Button>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+
+                                            </Panel>
+                                        </Collapse>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
+                    </Layout>
+                );
+            }
         } else {
             return (
                 <Layout className="layout">
@@ -410,193 +624,7 @@ class SetAppointments extends React.Component {
                         />
                         <Content className="content-enroll">
                             <div className="site-layout-content-homeless">
-                                <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-                                    <Collapse  style={{backgroundColor: "#f0f9ff"}}>
-                                        <Panel header="Client Details" key="1">
-                                            <Row gutter={8}>
-                                                <Col span={8}>
-                                                    <Form.Item label="Personal Id">
-                                                        <Input defaultValue={items.PersonalId} disabled={true}/>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item label="First Name">
-                                                        <Input defaultValue={items.FirstName} disabled={true}/>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8}>
-                                                    <Form.Item label="Last Name">
-                                                        <Input defaultValue={items.LastName} disabled={true}/>
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel header="Appointment Details" key="2">
-                                            <Row gutter={8}>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item>
-                                                        {getFieldDecorator("serviceProvider", {
-                                                            rules: [
-                                                                {
-                                                                    type: "array",
-                                                                    required: true,
-                                                                    message: "Please select your role!"
-                                                                }
-                                                            ]
-                                                        })(<Cascader options={serviceProvider}
-                                                                     placeholder="Service Provider"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item>
-                                                        {getFieldDecorator("office", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the office!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="Office Name"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("streetAddress1", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the streetAddress1!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="Street Address 1"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("streetAddress2", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the streetAddress2!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="Street Address 2"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={8}>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("city", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the city!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="City"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("zipCode", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the zipcode!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="Zip Code"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("state", {
-                                                            rules: [
-                                                                {
-                                                                    message: "Please input the state!",
-                                                                    whitespace: true
-                                                                }
-                                                            ]
-                                                        })(<Input placeholder="State"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator('DatePicker', {
-                                                            //  initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
-                                                            rules: [
-                                                                {
-                                                                    type: "object",
-                                                                    required: true,
-                                                                    message: "Please input your Date!"
-                                                                }
-                                                            ]
-                                                        })(<DatePicker placeholder="Appointment Date"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator('TimePicker', {
-                                                            //  initialValue: this.state.homelessData.DOB ? moment(this.state.homelessData.DOB, 'YYYY/MM/DD') : moment("1993-06-28", 'YYYY/MM/DD'),
-                                                            rules: [
-                                                                {
-                                                                    type: "object",
-                                                                    required: true,
-                                                                    message: "Please input your Time!"
-                                                                }
-                                                            ]
-                                                        })(<TimePicker placeholder="Time Date"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={8} push={1}>
-                                                    <Form.Item className="register-ant-form-item">
-                                                        {getFieldDecorator("timeZone", {
-                                                            rules: [
-                                                                {
-                                                                    type: "array",
-                                                                    required: true,
-                                                                    message: "Please select the Time Zone!"
-                                                                }
-                                                            ]
-                                                        })(<Cascader options={tz_Options}
-                                                                     placeholder="Time Zone"/>)}
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        </Panel>
-                                        <Panel style={{backgroundColor: "lightseagreen"}} header="Submit Form Here"
-                                               key="3">
-                                            <Row>
-                                                <Col span={12}>
-                                                    <p style={{padding: "2%"}}>
-
-                                                        <Checkbox>
-                                                            I acknowledge, the form is completed as per the inputs
-                                                            provided
-                                                            by the
-                                                            client.
-                                                        </Checkbox>
-
-                                                    </p>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <Form.Item>
-                                                        <Button type="primary" block htmlType="submit"
-                                                                className="registration-submit-button">
-                                                            Submit
-                                                        </Button>
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-
-                                        </Panel>
-                                    </Collapse>
-                                </Form>
+                                <h1>Data Loading . . .<Spin /></h1>
                             </div>
                         </Content>
                     </Layout>
@@ -604,6 +632,7 @@ class SetAppointments extends React.Component {
                 </Layout>
             );
         }
+
 
     }
 }
