@@ -67,13 +67,13 @@ class LogView extends React.Component {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
         })
-        .then(res => {
+        /*.then(res => {
             if (res.status == 200) {
                 
                 this.setState({
                     isLoaded: true,
                     alert: false,
-                    items: res.json()
+                    dataSource: res.json()
                 })
             }
             else if(Math.round(res.status/100) == 4){
@@ -83,7 +83,7 @@ class LogView extends React.Component {
                     this.setState({
                         isLoaded: true,
                         alert: false,
-                        items: res.json()
+                        dataSource: res.json()
                     })
                 }
             }
@@ -94,14 +94,14 @@ class LogView extends React.Component {
                     this.setState({
                         isLoaded: true,
                         alert: false,
-                        items: res.json()
+                        dataSource: res.json()
                     })
                 }
             }
             
-        });
+        });*/
     
-           /* .then(res => res.json())
+           .then(res => res.json())
             .then(json => {
                 console.log(json)
                 this.setState({
@@ -109,7 +109,7 @@ class LogView extends React.Component {
                         dataSource: json,
                     }
                 )
-            })*/
+            })
 
     }
 
