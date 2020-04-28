@@ -40,7 +40,7 @@ def get_val_from_env(django_var):
 SECRET_KEY = get_val_from_env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
