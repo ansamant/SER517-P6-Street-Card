@@ -99,16 +99,6 @@ export default class SiderComponentServiceProvider extends React.Component {
                                         <CalendarOutlined/>
                                         Product Data</span>
                         </Menu.Item>
-                        <Menu.Item className="menuKey" key="5">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        Line Chart</span>
-                        </Menu.Item>
-                        <Menu.Item className="menuKey" key="6">
-                                    <span className="nav-text">
-                                        <ClockCircleOutlined/>
-                                        Combined Chart</span>
-                        </Menu.Item>
                         <Menu.Item className="menuKey" key="7">
                                     <span className="nav-text">
                                         <SettingOutlined/>

@@ -444,15 +444,6 @@ export default class App extends React.Component {
                             loggedInStatus={this.state.loggedInStatus}
                             handleLogout={this.handleLogout}
                         />
-                        <PrivateRoute
-                            exact
-                            path={"/inventoryLog"}
-                            component={InventoryLog}
-                            handleLogout={this.handleLogout}
-                            loggedInStatus={this.state.loggedInStatus}
-                            homelessInventoryData={this.state.homelessInventoryData}
-                            updatePageComponent={this.updatePageComponent}
-                        />
                     </Switch>
                 </BrowserRouter>
             </div>
