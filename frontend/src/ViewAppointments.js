@@ -28,6 +28,23 @@ class ViewAppointments extends React.Component {
     };
 
 
+<<<<<<< HEAD
+  componentDidMount() {
+    /* fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/' , {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          },
+        })
+        .then(res => {
+          if (res.status == 200) {
+            console.log("STATUS", res.status)
+            res.json().then(json=>{
+              this.setState({
+                isLoaded: true,
+                items: json
+=======
     componentDidMount() {
         fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/appointment/', {
             method: 'GET',
@@ -41,8 +58,26 @@ class ViewAppointments extends React.Component {
               this.setState({
                   isLoaded: true,
                   items: res.json()
+>>>>>>> 3580010e10e6aa5086e67b30f02e718eccf1c56c
               })
+            })
+              
           }
+<<<<<<< HEAD
+          else{
+            console.log("STATUS", res.status)
+            if(window.confirm("Error, invalid id: "+(res.status).toString())){
+              this.props.history.push('/socialWorkerRegister');
+            }else{
+              res.json().then(json=>{
+                this.setState({
+                  isLoaded: true,
+                  items: json
+                })
+            })
+              
+          } 
+=======
           else if(Math.round(res.status/100) == 4){
               if(window.confirm("Error, invalid id: "+(res.status).toString())){
                   this.props.history.push('/socialWorkerRegister');
@@ -62,9 +97,16 @@ class ViewAppointments extends React.Component {
                       items: res.json()
                   })
               }
+>>>>>>> 3580010e10e6aa5086e67b30f02e718eccf1c56c
           }
+         
           
+<<<<<<< HEAD
+      });*/
+
+=======
       });
+>>>>>>> 3580010e10e6aa5086e67b30f02e718eccf1c56c
   }
 
 

@@ -262,7 +262,11 @@ class AppointmentViewSet(viewsets.ViewSet):
                 queryset = Appointments.objects.filter(personalId_id=homeless_pk).order_by('-Date')
                 serializer = AppointmentSerializer(queryset, many=True)
                 cache.set(cache_key, serializer.data, settings.CACHE_TIME)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                print("SERIALIZER:", serializer.data)
+                if(serializer.data ==[]):
+                    return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
+                else:
+                    return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(data, status=status.HTTP_200_OK)
         else:
