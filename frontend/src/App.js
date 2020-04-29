@@ -21,7 +21,6 @@ import Transaction from "./Transaction"
 import SuccessfulRegistration from "./SuccessfulRegistration";
 import LoginError from "./LoginError";
 import ForgotPasswordForm from "./ForgotPassword";
-import InventoryLog from './InventoryLog'
 import SuccessfulUpdate from "./SuccessfulUpdate";
 import TransactionComplete from "./TransactionComplete";
 import AddProductSuccess from "./AddProductSuccess";
