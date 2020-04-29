@@ -146,29 +146,16 @@ class ViewAppointmentsTable extends React.Component {
                     })
 
                 } else if (Math.round(res.status / 100) == 4) {
-                    // console.log("STATUS", res.status)
                     if (window.confirm("Error, invalid id: " + (res.status).toString())) {
                         this.props.history.push('/socialWorkerRegister');
                     } else {
-                        res.json().then(json => {
-                            this.setState({
-                                isLoaded: true,
-                                appointmentData: json
-                            })
-                        })
-
+                        this.props.history.push('/socialWorkerRegister');
                     }
                 } else if (Math.round(res.status / 100) == 5) {
-                    if (window.confirm("Server Error: " + (res.status).toString())) {
+                    if (window.confirm("Error, invalid id: " + (res.status).toString())) {
                         this.props.history.push('/socialWorkerRegister');
                     } else {
-                        res.json().then(json => {
-                            this.setState({
-                                isLoaded: true,
-                                appointmentData: json
-                            })
-                        })
-
+                        this.props.history.push('/socialWorkerRegister');
                     }
                 }
             });

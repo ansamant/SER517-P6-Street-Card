@@ -916,7 +916,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'newAppointMent') {
+            }
+            else if (this.state.pageComponent === 'newAppointMent') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -959,7 +960,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'loginfo') {
+            }
+            else if (this.state.pageComponent === 'loginfo') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -1001,7 +1003,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'projectenroll') {
+            }
+            else if (this.state.pageComponent === 'projectenroll') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -1043,7 +1046,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'viewenrollment') {
+            }
+            else if (this.state.pageComponent === 'viewenrollment') {
                 return (
                     <Layout className="layout">
                         <Header

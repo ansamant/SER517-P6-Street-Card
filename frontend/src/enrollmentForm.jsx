@@ -67,9 +67,15 @@ class EnrollmentForm extends Component {
                 if (window.confirm("Error, invalid personal id: " + (res.status).toString())) {
                     this.props.history.push('/socialWorkerRegister');
                 }
+                else{
+                     this.props.history.push('/socialWorkerRegister');
+                }
             } else if (Math.round(res.status / 100) == 5) {
                 if (window.confirm("Server Error: " + (res.status).toString())) {
                     this.props.history.push('/socialWorkerRegister');
+                }
+                else{
+                     this.props.history.push('/socialWorkerRegister');
                 }
             }
         })

@@ -29,14 +29,28 @@ class ViewEnrollmentDetails extends React.Component {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
         })
-            .then(res => res.json())
-            .then(json => {
-                this.setState({
-                        enrollment: json,
-                        isLoaded: true
+            .then(res => {
+                if (res.status == 200) {
+                    res.json().then(json => {
+                        this.setState({
+                                enrollment: json,
+                                isLoaded: true
+                            }
+                        )
+                    })
+                } else if (Math.round(res.status / 100) == 4) {
+                    if (window.confirm("Error, invalid personal id: " + (res.status).toString())) {
+                        this.props.history.push('/socialWorkerRegister');
+                    } else {
+                        this.props.history.push('/socialWorkerRegister');
                     }
-                )
-
+                } else if (Math.round(res.status / 100) == 5) {
+                    if (window.confirm("Server Error: " + (res.status).toString())) {
+                        this.props.history.push('/socialWorkerRegister');
+                    } else {
+                        this.props.history.push('/socialWorkerRegister');
+                    }
+                }
             })
     }
 
@@ -124,7 +138,7 @@ class ViewEnrollmentDetails extends React.Component {
 
                         <Content className="content-login">
                             <div className="site-layout-content-login">
-                                <h6>Loading . . .<Spin size="small"/></h6>
+                                <span>Loading . . .<Spin size="small"/></span>
 
                             </div>
                         </Content>

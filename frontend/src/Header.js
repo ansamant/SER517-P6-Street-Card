@@ -34,7 +34,7 @@ export default class HeaderComponent extends React.Component {
             return (
                 <Header className="site-layout-header">
                     <img className="logo" src={logo}/>
-                    <Button onClick={this.logIn} type="link" className="homebutton" key="2">
+                    <Button onClick={this.logIn} type="primary" key="2">
                         <span>Login</span>
                     </Button>
                 </Header>
@@ -43,7 +43,7 @@ export default class HeaderComponent extends React.Component {
             return (
                 <Header className="site-layout-header">
                     <img className="logo" src={logo}/>
-                    <Button onClick={this.logOut} type="link" className="homebutton" key="2">
+                    <Button onClick={this.logOut}  type="primary" key="2">
                         <LogoutOutlined/>
                     </Button>
                 </Header>

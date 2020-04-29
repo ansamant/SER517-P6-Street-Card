@@ -587,7 +587,7 @@ class EditAppointment extends React.Component {
                         />
                         <Content className="content-login">
                             <div className="site-layout-content-login">
-                                <h6>Loading . . .<Spin size="small"/></h6>
+                                <span>Loading . . .<Spin size="small"/></span>
                             </div>
                         </Content>
                     </Layout>

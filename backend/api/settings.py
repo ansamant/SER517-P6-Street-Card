@@ -195,10 +195,11 @@ CORS_ORIGIN_REGEX_WHITELIST = [
 # can use a different one. 
 # Check Celery Documentation: http://docs.celeryproject.org/en/master/getting-started/first-steps-with-celery.html#rabbitmq
 # see: https://docs.celeryproject.org/en/stable/django/first-steps-with-django.html
-# make sure that all worker configs are 
-CELERY_BROKER_URL = 'amqp://guest:guest@rabbit:5672'
-                    # 'amqp://localhost'
+# make sure that all worker configs are
 
+# For Development Environment: 'amqp://localhost'
+# For Production Environment: 'amqp://guest:guest@rabbit:5672'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbit:5672'
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'

@@ -202,7 +202,10 @@ class EnrollmentViewSet(viewsets.ViewSet):
                 queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
                 serializer = EnrollmentSerializer(queryset, many=True)
                 cache.set(cache_key, serializer.data, settings.CACHE_TIME)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                if serializer.data == []:
+                    return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
+                else:
+                    return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(data, status=status.HTTP_200_OK)
         else:

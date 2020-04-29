@@ -151,7 +151,7 @@ class GreeterView extends React.Component {
                         <div className="site-layout-content-login">
                             <Row>
                                 <Col span={24}>
-                                    <h3>Hello {this.state.name}</h3>
+                                    <h6>Hello {this.state.name}</h6>
                                 </Col>
                             </Row>
                             <Form onSubmit={this.handleSubmit} className="login-form">

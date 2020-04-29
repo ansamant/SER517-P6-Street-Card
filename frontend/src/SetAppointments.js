@@ -123,31 +123,13 @@ class SetAppointments extends React.Component {
                     if (window.confirm("Error, invalid id: " + (res.status).toString())) {
                         this.props.history.push('/socialWorkerRegister');
                     } else {
-                        this.setState({
-                            isLoaded: true,
-                            alert: false,
-                            items: res.json()
-                        })
+                        this.props.history.push('/socialWorkerRegister');
                     }
-                } else if (Math.round(res.status / 100) == 4) {
+                } else if (Math.round(res.status / 100) == 5) {
                     if (window.confirm("Error, invalid id: " + (res.status).toString())) {
                         this.props.history.push('/socialWorkerRegister');
                     } else {
-                        this.setState({
-                            isLoaded: true,
-                            alert: false,
-                            items: res.json()
-                        })
-                    }
-                } else if (Math.round(res.status / 100) == 5) {
-                    if (window.confirm("Server Error: " + (res.status).toString())) {
                         this.props.history.push('/socialWorkerRegister');
-                    } else {
-                        this.setState({
-                            isLoaded: true,
-                            alert: false,
-                            items: res.json()
-                        })
                     }
                 }
             });
