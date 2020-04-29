@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Form, Icon, Input, Layout, Table} from "antd";
+import {Form, Layout, Table} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponentServiceProvider from './SiderComponentServiceProvider'
@@ -56,15 +56,15 @@ class ServiceProviderView extends React.Component {
             ],
             columns_2: [
                 {
-                    title: 'product ID',
+                    title: 'Product ID',
                     dataIndex: 'productId',
                 },
                 {
-                    title: 'product',
+                    title: 'Product',
                     dataIndex: 'productName',
                 },
                 {
-                    title: 'product cost',
+                    title: 'Product cost',
                     dataIndex: 'costPerItem',
                 },
 
@@ -430,7 +430,8 @@ class ServiceProviderView extends React.Component {
                         />
                         <Content className="content-enroll">
                             <div>
-                                <Table className="site-layout-content-viewappointment" dataSource={this.state.dataSource_2}
+                                <Table className="site-layout-content-viewappointment"
+                                       dataSource={this.state.dataSource_2}
                                        columns={this.state.columns_2} scroll={{x: 1500, y: 500}}/>
                             </div>
                         </Content>
