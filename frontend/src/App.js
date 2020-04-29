@@ -21,7 +21,6 @@ import Transaction from "./Transaction"
 import SuccessfulRegistration from "./SuccessfulRegistration";
 import LoginError from "./LoginError";
 import ForgotPasswordForm from "./ForgotPassword";
-import InventoryLog from './InventoryLog'
 import SuccessfulUpdate from "./SuccessfulUpdate";
 import TransactionComplete from "./TransactionComplete";
 import AddProductSuccess from "./AddProductSuccess";
@@ -444,15 +443,6 @@ export default class App extends React.Component {
                             component={ForgotPasswordForm}
                             loggedInStatus={this.state.loggedInStatus}
                             handleLogout={this.handleLogout}
-                        />
-                        <PrivateRoute
-                            exact
-                            path={"/inventoryLog"}
-                            component={InventoryLog}
-                            handleLogout={this.handleLogout}
-                            loggedInStatus={this.state.loggedInStatus}
-                            homelessInventoryData={this.state.homelessInventoryData}
-                            updatePageComponent={this.updatePageComponent}
                         />
                     </Switch>
                 </BrowserRouter>
