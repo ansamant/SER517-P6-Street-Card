@@ -20,36 +20,41 @@ class InventoryLog extends React.Component {
             isLoaded: false,
             columns: [
                 {
-                    title: 'Date',
-                    dataIndex: 'dateTime',
-                },
-                {
-                    title: 'Transaction ID',
-                    dataIndex: 'transactionId',
-                },
-                {
-                    title: 'Total Amount',
-                    dataIndex: 'totalAmount',
-                },
-
-                {
-                    title: 'Unit Purchased',
-                    dataIndex: 'unitPurchased',
-                },
-
-                {
-                    title: 'Product ID',
+                    title: 'product ID',
                     dataIndex: 'productId',
                 },
+                {
+                    title: 'product',
+                    dataIndex: 'productName',
+                },
+                {
+                    title: 'product cost',
+                    dataIndex: 'costPerItem',
+                },
+
+                {
+                    title: 'Unit Available',
+                    dataIndex: 'unitsAvailable',
+                },
+
+                {
+                    title: 'Service Provider',
+                    dataIndex: 'serviceProvider',
+                },
+                {
+                    title: 'Category',
+                    dataIndex: 'category',
+                }
 
             ],
             dataSource: [
                 {
-                    transactionId: '',
-                    totalAmount: '',
-                    unitPurchased: '',
                     productId: '',
-                    dateTIme: ''
+                    productName: '',
+                    costPerItem: '',
+                    unitsAvailable: '',
+                    serviceProvider: '',
+                    category: ''
 
                 }
             ]
@@ -61,7 +66,20 @@ class InventoryLog extends React.Component {
     }
 
     componentDidMount() {
-
+        fetch(process.env.REACT_APP_IP + 'product/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+        })
+            .then(res => res.json())
+            .then(json => {
+                this.setState({
+                        dataSource: json,
+                    }
+                )
+            })
     }
 
 

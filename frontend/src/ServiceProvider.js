@@ -13,7 +13,6 @@ const {Content} = Layout;
 class ServiceProviderView extends React.Component {
 
     state = {
-        pageComponent: this.props.pageComponent,
         productUnitData: [],
         productCostData: [],
         productData: []
@@ -21,8 +20,8 @@ class ServiceProviderView extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
+            pageComponent: this.props.pageComponent,
             isLoaded: false,
             columns: [
                 {
