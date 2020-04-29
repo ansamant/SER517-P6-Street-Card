@@ -112,7 +112,6 @@ class UserSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        print(response)
         response['socialWorker'] = SocialWorkerSerializer(
             SocialWorker.objects.get(user_id=response['id'])).data
         return response
@@ -467,7 +466,6 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 
         temp = FinancialAssistanceHOPWA.objects.filter(EnrollmentID_id=instance.EnrollmentID)
         for objects in temp:
-            print(objects.FinancialAssistanceAmount)
             objects.FinancialAssistanceAmount = financial_assistance_hopwa_data['FinancialAssistanceAmount']
             objects.FinancialAssistanceType = financial_assistance_hopwa_data['FinancialAssistanceType']
             objects.DateOfFinancialAssistance = financial_assistance_hopwa_data['DateOfFinancialAssistance']

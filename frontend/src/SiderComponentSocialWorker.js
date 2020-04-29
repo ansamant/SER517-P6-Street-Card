@@ -58,7 +58,7 @@ export default class SiderComponentSocialWorker extends React.Component {
                         <Menu.Item className="menuKey" key="2">
                                     <span className="nav-text">
                                         <UserOutlined/>
-                                        Update Information</span>
+                                        Update Password</span>
                         </Menu.Item>
                     </Menu>
                 </div>

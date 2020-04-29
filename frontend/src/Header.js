@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 import "./index.css";
 import {Button, Layout} from "antd";
 import logo from './streetcard-logo.png';
-import {HomeOutlined, LogoutOutlined} from '@ant-design/icons';
+import {HomeOutlined, LogoutOutlined, LoginOutlined} from '@ant-design/icons';
 
 const {Header} = Layout;
 
@@ -35,7 +35,7 @@ export default class HeaderComponent extends React.Component {
                 <Header className="site-layout-header">
                     <img className="logo" src={logo}/>
                     <Button onClick={this.logIn} type="link" className="homebutton" key="2">
-                        <HomeOutlined/>
+                        <span>Login</span>
                     </Button>
                 </Header>
             );

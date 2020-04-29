@@ -183,10 +183,10 @@ SIMPLE_JWT = {
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-    'http://frontend:3000',
+    'http://localhost:3000',
 ]
 CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://frontend:3000',
+    'http://localhost:3000',
 ]
 
 # Celery Config Options:
@@ -196,7 +196,8 @@ CORS_ORIGIN_REGEX_WHITELIST = [
 # Check Celery Documentation: http://docs.celeryproject.org/en/master/getting-started/first-steps-with-celery.html#rabbitmq
 # see: https://docs.celeryproject.org/en/stable/django/first-steps-with-django.html
 # make sure that all worker configs are 
-CELERY_BROKER_URL = 'amqp://guest:guest@rabbit:5672'
+CELERY_BROKER_URL = 'amqp://localhost'
+    #'amqp://guest:guest@rabbit:5672'
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'

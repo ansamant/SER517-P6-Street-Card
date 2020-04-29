@@ -1,23 +1,7 @@
 import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
-import {
-    Alert,
-    AutoComplete,
-    Button,
-    Cascader,
-    Checkbox,
-    Col,
-    Collapse,
-    DatePicker,
-    Form,
-    Icon,
-    Input,
-    Layout,
-    Row,
-    Select,
-    Result
-} from "antd";
+import {AutoComplete, Button, Col, Form, Icon, Input, Layout, Result, Row} from "antd";
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponentSocialWorker from "./SiderComponentSocialWorker";
@@ -109,22 +93,9 @@ class UpdateSocialWorkerInfo extends React.Component {
 
             if (!err) {
                 var registerRequestObject = {};
-                registerRequestObject.username = values.username;
-                registerRequestObject.email = values.email;
-                registerRequestObject.first_name = values.first_name;
-                registerRequestObject.last_name = values.last_name;
+                registerRequestObject.username = this.props.socialWorkerInfoJSON.user_name;
                 registerRequestObject.password = values.password;
-
-                var socialWorker = {};
-                socialWorker.clearanceLevel = values.clearanceLevel[0];
-                socialWorker.address = values.address;
-                socialWorker.serviceProvider = values.serviceProvider[0];
-
-                registerRequestObject.socialWorker = socialWorker;
-
-
-
-                fetch(process.env.REACT_APP_IP + 'register/' + this.props.socialWorkerInfoJSON.user_id + '/' , {
+                fetch(process.env.REACT_APP_IP + 'register/' + this.props.socialWorkerInfoJSON.user_id + '/', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -135,8 +106,8 @@ class UpdateSocialWorkerInfo extends React.Component {
                     .then(res => {
                         if (res.status === 200) {
                             this.setState({
-                            isLoaded: true,
-                        })
+                                isLoaded: true,
+                            })
                         }
                     });
 
@@ -161,42 +132,18 @@ class UpdateSocialWorkerInfo extends React.Component {
         callback();
     };
 
+
     setPagecomponent(pageComponentValue) {
-        this.setState({
-            pageComponent: pageComponentValue
-        });
+        this.props.updatePageComponent(pageComponentValue)
+        this.props.history.push('/socialWorkerRegister');
     };
 
-    handleButton(){
+
+    handleButton() {
         this.props.history.push('/socialWorkerRegister');
     }
 
     render() {
-
-        const {autoCompleteResult} = this.state;
-
-        const formItemLayout = {
-            labelCol: {
-                xs: {span: 24},
-                sm: {span: 8}
-            },
-            wrapperCol: {
-                xs: {span: 24},
-                sm: {span: 16}
-            }
-        };
-        const tailFormItemLayout = {
-            wrapperCol: {
-                xs: {
-                    span: 24,
-                    offset: 0
-                },
-                sm: {
-                    span: 16,
-                    offset: 8
-                }
-            }
-        };
         if (this.state.isLoaded == true) {
             return (
                 <Layout>
@@ -225,186 +172,130 @@ class UpdateSocialWorkerInfo extends React.Component {
                     </Layout>
                 </Layout>
             )
-        }else {
+        } else {
             const {getFieldDecorator} = this.props.form;
-            return (
-                <Layout className="layout">
-                    <Header
-                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                        loggedInStatus={this.state.loggedInStatus}
-                    />
-                    <Layout>
+            if (this.props.socialWorkerInfoJSON == null) {
+                return (
+                    <Layout className="layout">
+                        <Header loginPageStatus={this.state.loginPageStatus}/>
+                        <Layout>
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Result
+                                        status="warning"
+                                        title="Please Login Again"
+                                        extra={[
+                                            <Button type="primary" key="console" onClick={this.handleButton}>
+                                                Login Again
+                                            </Button>,
+                                        ]}
+                                    />
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
+                    </Layout>
+                );
+            } else {
+                return (
+                    <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.state.loggedInStatus}
+                        />
+                        <Layout>
                             <SiderComponentSocialWorker
                                 setPagecomponent={this.setPagecomponent}
                             />
-                    <Content className="content-login">
-                        <div className="site-layout-content-login">
-                            <Form onSubmit={this.handleSocialWorkerRegistrationSubmit}>
-                                <Row gutter={36}>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("username", {
-                                                initialValue: this.props.socialWorkerInfoJSON.user_name,
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input your username!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="Username"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("email", {
-                                                initialValue: this.props.socialWorkerInfoJSON.user.email,
-                                                rules: [
-                                                    {
-                                                        type: "email",
-                                                        message: "The input is not valid E-mail!"
-                                                    },
-                                                    {
-                                                        required: true,
-                                                        message: "Please input your E-mail!"
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="E-mail"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={36}>
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleSocialWorkerRegistrationSubmit}>
+                                        <Row gutter={36}>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    <Input defaultValue={this.props.socialWorkerInfoJSON.user_name}
+                                                           disabled={true}/>
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    <Input defaultValue={this.props.socialWorkerInfoJSON.user.email}
+                                                           disabled={true}/>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={36}>
+                                            <Col span={12}>
+                                                <Form.Item hasFeedback>
+                                                    {getFieldDecorator("password", {
+                                                        rules: [
+                                                            {
+                                                                required: true,
+                                                                message: "Please input your password!"
+                                                            },
+                                                            {
+                                                                validator: this.validateToNextPassword
+                                                            }
+                                                        ]
+                                                    })(<Input.Password
+                                                        prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="Password"/>)}
+                                                </Form.Item>
 
-                                    <Col span={12}>
-                                        <Form.Item hasFeedback>
-                                            {getFieldDecorator("password", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input your password!"
-                                                    },
-                                                    {
-                                                        validator: this.validateToNextPassword
-                                                    }
-                                                ]
-                                            })(<Input.Password
-                                                prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                placeholder="Password"/>)}
-                                        </Form.Item>
-
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item hasFeedback className="register-ant-form-item">
-                                            {getFieldDecorator("confirm", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please confirm your password!"
-                                                    },
-                                                    {
-                                                        validator: this.compareToFirstPassword
-                                                    }
-                                                ]
-                                            })(<Input.Password
-                                                prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                placeholder="Confirm Password" onBlur={this.handleConfirmBlur}/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={36}>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("first_name", {
-                                                initialValue: this.props.socialWorkerInfoJSON.user.first_name,
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input your first name!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="First Name"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("last_name", {
-                                                initialValue: this.props.socialWorkerInfoJSON.user.last_name,
-                                                rules: [
-                                                    {
-                                                        message: "Please input your last name!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="Last Name"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={36}>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("serviceProvider", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select your role!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={serviceProvider} placeholder="Service Provider"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("clearanceLevel", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select your role!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={clearanceLevel} placeholder="Clearence Level"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={24}>
-                                        <Form.Item>
-                                            {getFieldDecorator("address", {
-                                                initialValue: this.props.socialWorkerInfoJSON.user.socialWorker.address,
-                                                rules: [
-                                                    {
-                                                        message: "Please input your address!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="home" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                        placeholder="Address"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={36}>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            <Button type="primary" htmlType="submit"
-                                                    className="registration-submit-button">
-                                                Submit
-                                            </Button>
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </div>
-                    </Content>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item hasFeedback className="register-ant-form-item">
+                                                    {getFieldDecorator("confirm", {
+                                                        rules: [
+                                                            {
+                                                                required: true,
+                                                                message: "Please confirm your password!"
+                                                            },
+                                                            {
+                                                                validator: this.compareToFirstPassword
+                                                            }
+                                                        ]
+                                                    })(<Input.Password
+                                                        prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="Confirm Password"
+                                                        onBlur={this.handleConfirmBlur}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={36}>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    <Input
+                                                        defaultValue={this.props.socialWorkerInfoJSON.user.first_name}
+                                                        disabled={true}/>
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    <Input defaultValue={this.props.socialWorkerInfoJSON.user.last_name}
+                                                           disabled={true}/>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={36}>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    <Button type="primary" htmlType="submit"
+                                                            className="registration-submit-button">
+                                                        Submit
+                                                    </Button>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
                     </Layout>
-                    <StreetCardFooter/>
-                </Layout>
-            );
+                );
+            }
+
         }
     }
 }

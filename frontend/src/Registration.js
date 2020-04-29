@@ -2,7 +2,6 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
 import {
-    AutoComplete,
     Button,
     Cascader,
     Checkbox,
@@ -209,9 +208,8 @@ const VeteranStatus = [
 
 const {Option} = Select;
 const {Panel} = Collapse;
-const AutoCompleteOption = AutoComplete.Option;
 
-const {Content, Sider} = Layout;
+const {Content} = Layout;
 
 const clearanceLevel = [
     {
@@ -264,15 +262,13 @@ const serviceProvider = [
     }
 ];
 
-const TITLE = 'Register Social worker'
-
 class RegistrationForm extends React.Component {
 
     state = {
         confirmDirty: false,
         autoCompleteResult: [],
         pageComponent: this.props.pageComponent,
-        loginPageStatus: "LOGIN_HEADER"
+        loginPageStatus: "LOGIN_HEADER",
     };
 
     constructor(props) {
@@ -304,9 +300,7 @@ class RegistrationForm extends React.Component {
     handleCreateAppointMentdSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-
             if (!err) {
-
                 this.props.handleHomelessPersonData(values.personId);
                 this.props.history.push('/createAppointment');
             }
@@ -331,17 +325,8 @@ class RegistrationForm extends React.Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
-                fetch(process.env.REACT_APP_IP + 'homeless/' + values.personId + '/', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
-                })
-                    .then(res => res.json())
-                    .then(json => {
-                        this.props.handleHomelessPersonJson(json);
-                        this.props.history.push('/homelessRegistration');
-                    });
-
+                this.props.handleHomelessPersonData(values.personId);
+                this.props.history.push('/homelessRegistration');
             }
         });
 
@@ -429,13 +414,22 @@ class RegistrationForm extends React.Component {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
+                }).then(res => {
+                    if (res.status == 200) {
+                        res.json().then(json => {
+                            this.props.handleUpdateSocialWorkerInfoJSON(json);
+                            this.props.history.push('/updateSocialWorkerInfo');
+                        })
+                    } else if (Math.round(res.status / 100) == 4) {
+                        if (window.confirm("Error, Invalid username: " + (res.status).toString())) {
+                            this.props.history.push('/socialWorkerRegister');
+                        }
+                    } else if (Math.round(res.status / 100) == 5) {
+                        if (window.confirm("Server Error: " + (res.status).toString())) {
+                            this.props.history.push('/socialWorkerRegister');
+                        }
+                    }
                 })
-                    .then(res => res.json())
-                    .then(json => {
-                        // this.props.handleHomelessPersonJson(json);
-                        this.props.handleUpdateSocialWorkerInfoJSON(json);
-                        this.props.history.push('/updateSocialWorkerInfo');
-                    });
             }
         });
 
@@ -477,13 +471,8 @@ class RegistrationForm extends React.Component {
     handleHomelessPersonRegistrationSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-
-
             if (!err) {
                 var registerRequestObject = {};
-
-
-                //registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? this.state.homelessData.PersonalId : Math.floor(100000 + Math.random() * 900000);
                 registerRequestObject.FirstName = values.FirstName ? values.FirstName : null;
                 registerRequestObject.MiddleName = values.MiddleName ? values.MiddleName : null;
                 registerRequestObject.LastName = values.LastName ? values.LastName : null;
@@ -521,8 +510,6 @@ class RegistrationForm extends React.Component {
 
     render() {
         const {getFieldDecorator} = this.props.form;
-        const {autoCompleteResult} = this.state;
-
         const formItemLayout = {
             labelCol: {
                 xs: {span: 24},
@@ -533,19 +520,6 @@ class RegistrationForm extends React.Component {
                 sm: {span: 16}
             }
         };
-        const tailFormItemLayout = {
-            wrapperCol: {
-                xs: {
-                    span: 24,
-                    offset: 0
-                },
-                sm: {
-                    span: 16,
-                    offset: 8
-                }
-            }
-        };
-
         if (this.props.clearanceLevel === "caseworker") {
             if (this.state.pageComponent === 'registerClient') {
                 return (
@@ -855,7 +829,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'updateInformation') {
+            }
+            else if (this.state.pageComponent === 'updateInformation') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -897,7 +872,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'viewAppointment') {
+            }
+            else if (this.state.pageComponent === 'viewAppointment') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -1112,7 +1088,50 @@ class RegistrationForm extends React.Component {
             }
         }
         else if (this.props.clearanceLevel === "admin") {
-            if (this.state.pageComponent === 'registerClient') {
+            if (this.state.pageComponent === 'updateSocialWorkerInfo') {
+                return (
+                    <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.state.loggedInStatus}
+                        />
+                        <Layout>
+                            <SiderComponentSocialWorker
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleUpdateSocialWorkerInfo.bind(this)}>
+                                        <Form.Item>
+                                            {getFieldDecorator('username', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please enter the User Name !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="User Name"
+                                                />,
+                                            )}
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
+                    </Layout>
+                );
+            }
+            else {
                 return (
                     <Layout className="layout">
                         <Header
@@ -1295,48 +1314,7 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else {
-                return (
-                    <Layout className="layout">
-                        <Header
-                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                            loggedInStatus={this.state.loggedInStatus}
-                        />
-                        <Layout>
-                            <SiderComponentSocialWorker
-                                setPagecomponent={this.setPagecomponent}
-                            />
-                            <Content className="content-login">
-                                <div className="site-layout-content-login">
-                                    <Form onSubmit={this.handleUpdateSocialWorkerInfo.bind(this)}>
-                                        <Form.Item>
-                                            {getFieldDecorator('username', {
-                                                rules: [{
-                                                    required: true,
-                                                    message: " Please enter the User Name !"
-                                                }],
-                                            })(
-                                                <Input
-                                                    prefix={<Icon type="user" style={{
-                                                        color: 'rgba(0,0,0,.25)',
-                                                        fontSize: "12px"
-                                                    }}/>}
-                                                    placeholder="User Name"
-                                                />,
-                                            )}
-                                        </Form.Item>
-                                        <Form.Item>
-                                            <Button type="primary" htmlType="submit" className="login-form-button">
-                                                Continue
-                                            </Button>
-                                        </Form.Item>
-                                    </Form>
-                                </div>
-                            </Content>
-                        </Layout>
-                        <StreetCardFooter/>
-                    </Layout>
-                );
+
             }
         }
         else {

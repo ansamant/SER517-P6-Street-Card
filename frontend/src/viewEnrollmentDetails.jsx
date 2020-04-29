@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Collapse, Form, Layout} from "antd";
+import {Collapse, Form, Layout, Spin} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './SiderComponent';
@@ -33,6 +33,7 @@ class ViewEnrollmentDetails extends React.Component {
             .then(json => {
                 this.setState({
                         enrollment: json,
+                        isLoaded: true
                     }
                 )
 
@@ -82,34 +83,59 @@ class ViewEnrollmentDetails extends React.Component {
 
         }
 
+        if (this.state.isLoaded) {
+            return (
+                <Layout className="layout">
+                    <Header
+                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                        loggedInStatus={this.props.loggedInStatus}/>
+                    <Layout>
+                        <SiderComponent
+                            setPagecomponent={this.setPagecomponent}
+                        />
 
-        return (
-            <Layout className="layout">
-                <Header
-                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                    loggedInStatus={this.props.loggedInStatus}/>
-                <Layout>
-                    <SiderComponent
-                        setPagecomponent={this.setPagecomponent}
-                    />
+                        <Content className="content-enroll">
+                            <div className="site-layout-content-homeless">
+                                <Form {...formItemLayout} name="enrollment">
+                                    <Collapse style={{backgroundColor: "#f0f9ff"}}>
+                                        <Panel key="1" header="Enrollment Details">
+                                            {enrollMainDetails}
+                                        </Panel>
+                                        {enrollPanel}
+                                    </Collapse>
+                                </Form>
+                            </div>
+                        </Content>
 
-                    <Content className="content-enroll">
-                        <div className="site-layout-content-homeless">
-                            <Form {...formItemLayout} name="enrollment">
-                                <Collapse  style={{backgroundColor: "#f0f9ff"}}>
-                                    <Panel key="1" header="Enrollment Details">
-                                        {enrollMainDetails}
-                                    </Panel>
-                                    {enrollPanel}
-                                </Collapse>
-                            </Form>
-                        </div>
-                    </Content>
-
+                    </Layout>
+                    <StreetCardFooter/>
                 </Layout>
-                <StreetCardFooter/>
-            </Layout>
-        );
+            );
+        } else {
+            return (
+                <Layout className="layout">
+                    <Header
+                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                        loggedInStatus={this.props.loggedInStatus}/>
+                    <Layout>
+                        <SiderComponent
+                            setPagecomponent={this.setPagecomponent}
+                        />
+
+                        <Content className="content-login">
+                            <div className="site-layout-content-login">
+                                <h6>Loading . . .<Spin size="small"/></h6>
+
+                            </div>
+                        </Content>
+
+                    </Layout>
+                    <StreetCardFooter/>
+                </Layout>
+            );
+        }
+
+
     }
 }
 

@@ -226,6 +226,7 @@ export default class App extends React.Component {
                             handleLogout={this.handleLogout}
                             loggedInStatus={this.state.loggedInStatus}
                             username={this.state.username}
+                            updatePageComponent={this.updatePageComponent}
                             handleHomelessPersonData={this.handleHomelessPersonData}
                             handleLogin={this.handleLogin}
                             clearanceLevel={this.state.clearanceLevel}

@@ -131,7 +131,6 @@ class Transaction extends React.Component {
         var beforeTotal = (prodData[index].quantity && prodData[index].costPerItem) ? prodData[index].quantity * prodData[index].costPerItem : 0;
         prodData[index].quantity = e.target.value;
         prodData[index].amount = prodData[index].quantity * prodData[index].costPerItem;
-        //var afterTotal = (this.state.totalAmount - beforeTotal +  prodData[index].amount) < 0.01 ? 0 : (this.state.totalAmount - beforeTotal +  prodData[index].amount);
         var afterTotal = this.state.totalAmount - beforeTotal + prodData[index].amount;
         afterTotal = afterTotal.toFixed(2);
         this.setState({productData: prodData});
@@ -235,8 +234,8 @@ class Transaction extends React.Component {
                     handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
                     loggedInStatus={this.props.loggedInStatus}/>
                 <Layout>
-                    <Content className="content-transaction">
-                        <div className="transaction-layout-content-login">
+                    <Content className="content-enroll">
+                        <div className="transaction-layout-content">
                             <Cascader style={{width: "100%", border: "2px solid lightgrey"}} options={category}
                                       placeholder="Product Category"
                                       onChange={(e) => {

@@ -1,11 +1,10 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Row, TimePicker} from 'antd';
+import {Button, Cascader, Checkbox, Col, Collapse, DatePicker, Form, Input, Layout, Row, Spin, TimePicker} from 'antd';
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
 import SiderComponent from './SiderComponent'
-import { Spin } from 'antd';
 
 
 const serviceProvider = [
@@ -130,6 +129,16 @@ class SetAppointments extends React.Component {
                             items: res.json()
                         })
                     }
+                } else if (Math.round(res.status / 100) == 4) {
+                    if (window.confirm("Error, invalid id: " + (res.status).toString())) {
+                        this.props.history.push('/socialWorkerRegister');
+                    } else {
+                        this.setState({
+                            isLoaded: true,
+                            alert: false,
+                            items: res.json()
+                        })
+                    }
                 } else if (Math.round(res.status / 100) == 5) {
                     if (window.confirm("Server Error: " + (res.status).toString())) {
                         this.props.history.push('/socialWorkerRegister');
@@ -184,8 +193,7 @@ class SetAppointments extends React.Component {
             rules: [{type: 'object', required: true, message: 'Please select time!'}],
         };
         if (this.state.isLoaded) {
-            console.log(this.state.isLoaded)
-            console.log(this.state.items)
+
             if (items.Email != null) {
                 this.state.email = items.Email;
                 return (
@@ -622,9 +630,9 @@ class SetAppointments extends React.Component {
                         <SiderComponent
                             setPagecomponent={this.setPagecomponent}
                         />
-                        <Content className="content-enroll">
-                            <div className="site-layout-content-homeless">
-                                <h1>Data Loading . . .<Spin /></h1>
+                        <Content className="content-login">
+                            <div className="site-layout-content-login">
+                                <span>Loading . . .<Spin size="small"/></span>
                             </div>
                         </Content>
                     </Layout>
