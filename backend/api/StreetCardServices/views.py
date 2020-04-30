@@ -51,7 +51,7 @@ class LogEntry(viewsets.ModelViewSet):
 
     def list(self, request, homeless_pk=None):
         if is_caseworker(request.user):
-            cache_key = 'log'
+            cache_key = homeless_pk + 'log'
             data = cache.get(cache_key)
             if data is None:
                 queryset = Log.objects.filter(personalId_id=homeless_pk).order_by('-datetime')
@@ -66,7 +66,7 @@ class LogEntry(viewsets.ModelViewSet):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
     def retrieve(self, request, pk=None, homeless_pk=None):
-        cache_key = homeless_pk + 'log'
+        cache_key = homeless_pk + 'log' + pk
         data = cache.get(cache_key)
         if data is None:
             queryset = Log.objects.filter(pk=pk, personalId_id=homeless_pk, read_only=True)
@@ -78,14 +78,12 @@ class LogEntry(viewsets.ModelViewSet):
 
     def create(self, request, homeless_pk=None):
         if is_greeter(request.user):
-            cache_key1 = 'log' + homeless_pk
-            cache_key2 = 'log'
+            cache_key = homeless_pk + 'log'
             enroll = request.data
             enroll['personalId'] = homeless_pk
             serializer = LogSerializer(data=enroll)
             if serializer.is_valid():
-                cache.delete(cache_key1)
-                cache.delete(cache_key2)
+                cache.delete(cache_key)
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
@@ -200,7 +198,7 @@ class EnrollmentViewSet(viewsets.ViewSet):
 
     def list(self, request, homeless_pk=None):
         if is_caseworker(request.user):
-            cache_key = 'enrollment'
+            cache_key = homeless_pk + 'enrollment'
             data = cache.get(cache_key)
             if data is None:
                 queryset = Enrollment.objects.filter(PersonalId_id=homeless_pk)
@@ -217,7 +215,7 @@ class EnrollmentViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None, homeless_pk=None):
         if is_caseworker(request.user):
-            cache_key = homeless_pk + 'enrollment'
+            cache_key = homeless_pk + 'enrollment' + pk
             data = cache.get(cache_key)
             if data is None:
                 queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
@@ -232,15 +230,13 @@ class EnrollmentViewSet(viewsets.ViewSet):
 
     def create(self, request, homeless_pk=None):
         if is_caseworker(request.user):
-            cache_key1 = homeless_pk + 'enrollment'
-            cache_key2 = 'enrollment'
+            cache_key = homeless_pk + 'enrollment'
             enroll = request.data
             enroll['PersonalId'] = homeless_pk
             enroll['EnrollmentID'] = primary_key_generator()
             serializer = EnrollmentSerializer(data=enroll)
             if serializer.is_valid():
-                cache.delete(cache_key1)
-                cache.delete(cache_key2)
+                cache.delete(cache_key)
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
@@ -251,7 +247,7 @@ class EnrollmentViewSet(viewsets.ViewSet):
     def update(self, request, pk=None, homeless_pk=None):
         if is_caseworker(request.user):
             cache_key1 = homeless_pk + 'enrollment'
-            cache_key2 = 'enrollment'
+            cache_key2 = homeless_pk + 'enrollment' + pk
             queryset = Enrollment.objects.filter(pk=pk, PersonalId_id=homeless_pk)
             enroll = get_object_or_404(queryset, pk=pk)
             serializer = EnrollmentSerializer(enroll, data=request.data)
@@ -276,7 +272,7 @@ class AppointmentViewSet(viewsets.ViewSet):
 
     def list(self, request, homeless_pk=None):
         if is_caseworker(request.user) or is_client(request.user):
-            cache_key = 'appointment'
+            cache_key = homeless_pk + 'appointment'
             data = cache.get(cache_key)
             if data is None:
                 queryset = Appointments.objects.filter(personalId_id=homeless_pk).order_by('-Date')
@@ -293,7 +289,7 @@ class AppointmentViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None, homeless_pk=None):
         if is_client(request.user) or is_caseworker(request.user):
-            cache_key = homeless_pk + 'appointment'
+            cache_key = homeless_pk + 'appointment' + pk
             data = cache.get(cache_key)
             if data is None:
                 queryset = Appointments.objects.filter(pk=pk, personalId_id=homeless_pk)
@@ -334,11 +330,9 @@ class AppointmentViewSet(viewsets.ViewSet):
             enroll['personalId'] = homeless_pk
             enroll['appointmentId'] = primary_key_generator()
             serializer = AppointmentSerializer(data=enroll)
-            cache_key1 = homeless_pk + 'appointment'
-            cache_key2 = 'appointment'
+            cache_key = homeless_pk + 'appointment'
             if serializer.is_valid():
-                cache.delete(cache_key1)
-                cache.delete(cache_key2)
+                cache.delete(cache_key)
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
@@ -349,7 +343,7 @@ class AppointmentViewSet(viewsets.ViewSet):
     def update(self, request, pk=None, homeless_pk=None):
         if is_caseworker(request.user):
             cache_key1 = homeless_pk + 'appointment'
-            cache_key2 = 'appointment'
+            cache_key2 = homeless_pk + 'appointment' + pk
             queryset = Appointments.objects.filter(personalId_id=homeless_pk)
             enroll = get_object_or_404(queryset, pk=pk)
             requestData = request.data
