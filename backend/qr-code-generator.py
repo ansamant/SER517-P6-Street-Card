@@ -15,7 +15,7 @@ after scanning
 import pyqrcode
 
 
-url = 'http://localhost:3000/'
+url = 'http://3.23.2.175:3000/'
 qr = pyqrcode.create(url)
 qr.png('qrCode.png', scale=8)
 
