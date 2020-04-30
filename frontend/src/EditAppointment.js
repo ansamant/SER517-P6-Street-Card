@@ -101,7 +101,11 @@ class EditAppointment extends React.Component {
     };
 
     componentWillMount() {
-        fetch(process.env.REACT_APP_IP + `homeless/${this.props.homelessPersonId}/`, {
+       
+    }
+
+    waitComponent() {
+	     fetch(process.env.REACT_APP_IP + `homeless/${this.props.homelessPersonId}/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -114,9 +118,7 @@ class EditAppointment extends React.Component {
                     email: json["Email"]
                 })
             })
-    }
 
-    waitComponent() {
         fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/appointment/' + this.props.appointmentId + '/', {
             method: 'GET',
             headers: {
@@ -136,7 +138,7 @@ class EditAppointment extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(this.waitComponent(), 3000);
+        setTimeout(this.waitComponent(), 6000);
 
     }
 
@@ -174,6 +176,7 @@ class EditAppointment extends React.Component {
         const config = {
             rules: [{type: 'object', required: true, message: 'Please select time!'}],
         };
+	    
         if (this.state.isLoaded) {
             if (this.state.email != null) {
                 return (
