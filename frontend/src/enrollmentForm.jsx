@@ -109,7 +109,7 @@ class EnrollmentForm extends Component {
                     />
                     <Content className="content-enroll">
                         <div className="site-layout-content-homeless">
-                            <Collapse  style={{backgroundColor: "#f0f9ff"}}>
+                            <Collapse  style={{backgroundColor: "#f0f9ff"}} defaultActiveKey={['9']}>
                                 <Panel header="Select Program Category" key="9">
                                     <Row gutter={8}>
                                         <Col span={8}>

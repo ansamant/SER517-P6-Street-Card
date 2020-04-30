@@ -44,7 +44,7 @@ export default class HeaderComponent extends React.Component {
                 <Header className="site-layout-header">
                     <img className="logo" src={logo}/>
                     <Button onClick={this.logOut}  type="primary" key="2">
-                        <LogoutOutlined/>
+                       Logout
                     </Button>
                 </Header>
             )
