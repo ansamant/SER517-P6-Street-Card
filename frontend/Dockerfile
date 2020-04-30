@@ -7,7 +7,6 @@ WORKDIR /src/frontend
 COPY package.json /src/frontend
 RUN npm install -g npm@latest
 RUN npm i --package-lock-only
-RUN npm audit fix
 RUN npm install
 COPY . /src/frontend
 EXPOSE 3000
