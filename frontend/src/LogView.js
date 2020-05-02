@@ -1,10 +1,10 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Form, Layout, Table} from 'antd';
+import {Form, Layout, Spin, Table} from 'antd';
 import Header from './Header.js'
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
+import SiderComponent from './SiderComponent'
 
 /**
  * Creating a table for rendering the timestamp logo.
@@ -16,8 +16,6 @@ const {Content} = Layout;
 class LogView extends React.Component {
     constructor(props) {
         super(props);
-        console.log('Props')
-        console.log(this.props)
         this.state = {
             isLoaded: false,
             columns: [
@@ -59,24 +57,36 @@ class LogView extends React.Component {
     }
 
     componentDidMount() {
-        console.log("HOMELESS ID", this.props.handleHomelessPersonId)
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.handleHomelessPersonId.toString() + '/logs/', {  
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.handleHomelessPersonId.toString() + '/logs/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
+        }).then(res => {
+            if (res.status == 200) {
+                res.json().then(json => {
+                    this.setState({
+                            isLoaded: true,
+                            dataSource: json,
+                        }
+                    )
+                })
+            } else if (Math.round(res.status / 100) == 4) {
+                if (window.confirm("Error, invalid personal id: " + (res.status).toString())) {
+                    this.props.history.push('/socialWorkerRegister');
+                } else {
+                    this.props.history.push('/socialWorkerRegister');
+                }
+            } else if (Math.round(res.status / 100) == 5) {
+                if (window.confirm("Server Error: " + (res.status).toString())) {
+                    this.props.history.push('/socialWorkerRegister');
+                } else {
+                    this.props.history.push('/socialWorkerRegister');
+                }
+            }
+
         })
-            .then(res => res.json())
-            .then(json => {
-                console.log(json)
-                this.setState({
-                        isLoaded: true,
-                        dataSource: json,
-                    }
-                )
-            })
-        console.log(this.state.dataSource);
     }
 
     handleSuccessfulLogoutAction() {
@@ -116,28 +126,52 @@ class LogView extends React.Component {
 
         };
 
-
-        return (
-            <Layout className="layout">
-                <Header
-                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                    loggedInStatus={this.props.loggedInStatus}
-                />
-
-                <Layout>
-                    <SiderComponent
-                        setPagecomponent={this.setPagecomponent}
+        if (this.state.isLoaded) {
+            return (
+                <Layout className="layout">
+                    <Header
+                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                        loggedInStatus={this.props.loggedInStatus}
                     />
-                    <Content className="content-enroll">
-                        <div>
-                            <Table className="site-layout-content-viewappointment" dataSource={this.state.dataSource}
-                                   columns={this.state.columns} scroll={{x: 1500, y: 500}}/>
-                        </div>
-                    </Content>
+
+                    <Layout>
+                        <SiderComponent
+                            setPagecomponent={this.setPagecomponent}
+                        />
+                        <Content className="content-enroll">
+                            <div>
+                                <Table className="site-layout-content-viewappointment"
+                                       dataSource={this.state.dataSource}
+                                       columns={this.state.columns} scroll={{x: 1500, y: 500}}/>
+                            </div>
+                        </Content>
+                    </Layout>
+                    <StreetCardFooter/>
                 </Layout>
-                <StreetCardFooter/>
-            </Layout>
-        );
+            );
+        } else {
+            return (
+                <Layout className="layout">
+                    <Header
+                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                        loggedInStatus={this.props.loggedInStatus}
+                    />
+
+                    <Layout>
+                        <SiderComponent
+                            setPagecomponent={this.setPagecomponent}
+                        />
+                        <Content className="content-login">
+                            <div className="site-layout-content-login">
+                                <span>Loading . . .<Spin size="small"/></span>
+                            </div>
+                        </Content>
+                    </Layout>
+                    <StreetCardFooter/>
+                </Layout>
+            );
+        }
+
 
     }
 }

@@ -2,8 +2,6 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
 import {
-    Alert,
-    AutoComplete,
     Button,
     Cascader,
     Checkbox,
@@ -14,12 +12,14 @@ import {
     Icon,
     Input,
     Layout,
+    Result,
     Row,
     Select
 } from "antd";
 import Header from "./Header";
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
+import SiderComponent from './SiderComponent'
+import SiderComponentSocialWorker from "./SiderComponentSocialWorker";
 
 const nameDataQuality = [
     {
@@ -208,9 +208,8 @@ const VeteranStatus = [
 
 const {Option} = Select;
 const {Panel} = Collapse;
-const AutoCompleteOption = AutoComplete.Option;
 
-const {Content, Sider} = Layout;
+const {Content} = Layout;
 
 const clearanceLevel = [
     {
@@ -222,12 +221,16 @@ const clearanceLevel = [
         label: "Case Worker"
     },
     {
-        value: "service_provider_emp",
+        value: "service_provider",
         label: "Service Provider Employee"
     },
     {
         value: "client",
         label: "Client"
+    },
+    {
+        value: "admin",
+        label: "Admin"
     }
 ];
 
@@ -248,30 +251,38 @@ const serviceProvider = [
     {
         value: "SK",
         label: "Soup Kitchen"
+    },
+    {
+        value: "NA",
+        label: "Not Available"
+    },
+    {
+        value: "OTH",
+        label: "Others"
     }
 ];
 
-const TITLE = 'Register Social worker'
-
 class RegistrationForm extends React.Component {
+
+    state = {
+        confirmDirty: false,
+        autoCompleteResult: [],
+        pageComponent: this.props.pageComponent,
+        loginPageStatus: "LOGIN_HEADER",
+    };
 
     constructor(props) {
         super(props);
-        console.log(this.props.username)
         this.setState({username: this.props.username ? this.props.username : ''})
         this.handleSocialWorkerRegistrationSubmit = this.handleSocialWorkerRegistrationSubmit.bind(this);
         this.handleSuccessfulLogoutAction = this.handleSuccessfulLogoutAction.bind(this);
         this.homelessRegistration = this.homelessRegistration.bind(this);
         this.handleHomelessPersonRegistrationSubmit = this.handleHomelessPersonRegistrationSubmit.bind(this);
         this.setPagecomponent = this.setPagecomponent.bind(this);
+        this.handleUpdateSocialWorkerInfo = this.handleUpdateSocialWorkerInfo.bind(this);
+        this.handleButton = this.handleButton.bind(this);
 
     }
-
-    state = {
-        confirmDirty: false,
-        autoCompleteResult: [],
-        pageComponent: this.props.pageComponent
-    };
 
     componentDidMount() {
 
@@ -282,24 +293,14 @@ class RegistrationForm extends React.Component {
         this.props.history.push('/login');
     }
 
-    handlePersonalIdSubmit = e => {
-        e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-
-            if (!err) {
-                this.props.handleHomelessPersonData(values.personId);
-                this.props.history.push('/homelessRegistration');
-            }
-        });
-    };
-
+    handleButton() {
+        this.props.history.push('/login');
+    }
 
     handleCreateAppointMentdSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-
             if (!err) {
-                console.log(values.personId);
                 this.props.handleHomelessPersonData(values.personId);
                 this.props.history.push('/createAppointment');
             }
@@ -311,7 +312,7 @@ class RegistrationForm extends React.Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
-                console.log(values.personId);
+
                 this.props.handleHomelessPersonData(values.personId);
                 this.props.history.push('/viewAppointment');
             }
@@ -324,17 +325,8 @@ class RegistrationForm extends React.Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
-                fetch('http://localhost:8000/homeless/' + values.personId + '/', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
-                })
-                    .then(res => res.json())
-                    .then(json => {
-                        this.props.handleHomelessPersonJson(json);
-                        this.props.history.push('/homelessRegistration');
-                    });
-
+                this.props.handleHomelessPersonData(values.personId);
+                this.props.history.push('/homelessRegistration');
             }
         });
 
@@ -391,9 +383,8 @@ class RegistrationForm extends React.Component {
 
                 registerRequestObject.socialWorker = socialWorker;
 
-                console.log(registerRequestObject);
 
-                fetch('http://localhost:8000/register/', {
+                fetch(process.env.REACT_APP_IP + 'register/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -402,13 +393,46 @@ class RegistrationForm extends React.Component {
                     body: JSON.stringify(registerRequestObject)
                 })
                     .then(res => {
-                        if (res.status == 201) {
-                            this.props.history.push('/socialWorkerRegister');
+                        if (res.status === 201) {
+                            this.props.history.push('/successful');
                         }
                     });
 
             }
         });
+    }
+
+    handleUpdateSocialWorkerInfo = e => {
+        e.preventDefault();
+
+        this.props.form.validateFieldsAndScroll((err, values) => {
+
+            if (!err) {
+                fetch(process.env.REACT_APP_IP + 'user/' + values.username + '/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(res => {
+                    if (res.status == 200) {
+                        res.json().then(json => {
+                            this.props.handleUpdateSocialWorkerInfoJSON(json);
+                            this.props.history.push('/updateSocialWorkerInfo');
+                        })
+                    } else if (Math.round(res.status / 100) == 4) {
+                        if (window.confirm("Error, Invalid username: " + (res.status).toString())) {
+                            this.props.history.push('/socialWorkerRegister');
+                        }
+                    } else if (Math.round(res.status / 100) == 5) {
+                        if (window.confirm("Server Error: " + (res.status).toString())) {
+                            this.props.history.push('/socialWorkerRegister');
+                        }
+                    }
+                })
+            }
+        });
+
     }
 
     handleConfirmBlur = e => {
@@ -433,7 +457,6 @@ class RegistrationForm extends React.Component {
         callback();
     };
 
-
     homelessRegistration() {
         this.props.handleHomelessPersonData('');
         this.props.history.push('/homelessRegistration');
@@ -448,13 +471,8 @@ class RegistrationForm extends React.Component {
     handleHomelessPersonRegistrationSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-
-
             if (!err) {
                 var registerRequestObject = {};
-                console.log(values.PhoneNumberPrefix);
-                console.log(values.PhoneNumber);
-                //registerRequestObject.PersonalId = this.state.homelessData.PersonalId ? this.state.homelessData.PersonalId : Math.floor(100000 + Math.random() * 900000);
                 registerRequestObject.FirstName = values.FirstName ? values.FirstName : null;
                 registerRequestObject.MiddleName = values.MiddleName ? values.MiddleName : null;
                 registerRequestObject.LastName = values.LastName ? values.LastName : null;
@@ -472,9 +490,8 @@ class RegistrationForm extends React.Component {
                 registerRequestObject.PhoneNumber = values.PhoneNumber;
                 registerRequestObject.Email = values.email;
 
-                console.log(registerRequestObject);
 
-                fetch('http://localhost:8000/homeless/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -493,8 +510,6 @@ class RegistrationForm extends React.Component {
 
     render() {
         const {getFieldDecorator} = this.props.form;
-        const {autoCompleteResult} = this.state;
-        console.log(this.state.pageComponent);
         const formItemLayout = {
             labelCol: {
                 xs: {span: 24},
@@ -505,20 +520,7 @@ class RegistrationForm extends React.Component {
                 sm: {span: 16}
             }
         };
-        const tailFormItemLayout = {
-            wrapperCol: {
-                xs: {
-                    span: 24,
-                    offset: 0
-                },
-                sm: {
-                    span: 16,
-                    offset: 8
-                }
-            }
-        };
-
-        if (this.props.clearanceLevel === "caseworker" && "shivamverma" !== this.props.username) {
+        if (this.props.clearanceLevel === "caseworker") {
             if (this.state.pageComponent === 'registerClient') {
                 return (
                     <Layout className="layout">
@@ -534,7 +536,7 @@ class RegistrationForm extends React.Component {
                                 <div className="site-layout-content-homeless">
                                     <Form {...formItemLayout} name="enrollment"
                                           onSubmit={this.handleHomelessPersonRegistrationSubmit}>
-                                        <Collapse accordion style={{backgroundColor: "#f0f9ff"}}>
+                                        <Collapse style={{backgroundColor: "#f0f9ff"}}>
                                             <Panel header="Name Information" key="1">
                                                 <Row gutter={8}>
                                                     <Col span={8} push={1}>
@@ -827,7 +829,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent == 'updateInformation') {
+            }
+            else if (this.state.pageComponent === 'updateInformation') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -869,7 +872,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'viewAppointment') {
+            }
+            else if (this.state.pageComponent === 'viewAppointment') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -912,7 +916,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'newAppointMent') {
+            }
+            else if (this.state.pageComponent === 'newAppointMent') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -955,7 +960,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'loginfo') {
+            }
+            else if (this.state.pageComponent === 'loginfo') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -997,7 +1003,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'projectenroll') {
+            }
+            else if (this.state.pageComponent === 'projectenroll') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -1039,7 +1046,8 @@ class RegistrationForm extends React.Component {
                         <StreetCardFooter/>
                     </Layout>
                 );
-            } else if (this.state.pageComponent === 'viewenrollment') {
+            }
+            else if (this.state.pageComponent === 'viewenrollment') {
                 return (
                     <Layout className="layout">
                         <Header
@@ -1082,180 +1090,256 @@ class RegistrationForm extends React.Component {
                     </Layout>
                 );
             }
-        } else {
-            return (
-                <Layout className="layout">
-                    <Header
-                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                        loggedInStatus={this.state.loggedInStatus}
-                    />
-                     <Alert
-                            message="Social Worker Registration"
-                            description="- Fill out all the details to register a social worker"
-                            type="info"
-                            closeText="X"
-                            showIcon
+        }
+        else if (this.props.clearanceLevel === "admin") {
+            if (this.state.pageComponent === 'updateSocialWorkerInfo') {
+                return (
+                    <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.state.loggedInStatus}
                         />
-                    <Content className="content-login">
-                        <div className="site-layout-content-login">
-                            <Form onSubmit={this.handleSocialWorkerRegistrationSubmit}>
-                                <Row gutter={36}>
-                                    <Col span={12}>
+                        <Layout>
+                            <SiderComponentSocialWorker
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleUpdateSocialWorkerInfo.bind(this)}>
                                         <Form.Item>
-                                            {getFieldDecorator("username", {
-                                                initialValue: this.state.username,
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input your username!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Username"/>)}
+                                            {getFieldDecorator('username', {
+                                                rules: [{
+                                                    required: true,
+                                                    message: " Please enter the User Name !"
+                                                }],
+                                            })(
+                                                <Input
+                                                    prefix={<Icon type="user" style={{
+                                                        color: 'rgba(0,0,0,.25)',
+                                                        fontSize: "12px"
+                                                    }}/>}
+                                                    placeholder="User Name"
+                                                />,
+                                            )}
                                         </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
                                         <Form.Item>
-                                            {getFieldDecorator("email", {
-                                                rules: [
-                                                    {
-                                                        type: "email",
-                                                        message: "The input is not valid E-mail!"
-                                                    },
-                                                    {
-                                                        required: true,
-                                                        message: "Please input your E-mail!"
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="E-mail"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={36}>
-
-                                    <Col span={12}>
-                                        <Form.Item hasFeedback>
-                                            {getFieldDecorator("password", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input your password!"
-                                                    },
-                                                    {
-                                                        validator: this.validateToNextPassword
-                                                    }
-                                                ]
-                                            })(<Input.Password
-                                                prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                placeholder="Password"/>)}
-                                        </Form.Item>
-
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item hasFeedback className="register-ant-form-item">
-                                            {getFieldDecorator("confirm", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please confirm your password!"
-                                                    },
-                                                    {
-                                                        validator: this.compareToFirstPassword
-                                                    }
-                                                ]
-                                            })(<Input.Password
-                                                prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                placeholder="Confirm Password" onBlur={this.handleConfirmBlur}/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={36}>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("first_name", {
-                                                rules: [
-                                                    {
-                                                        required: true,
-                                                        message: "Please input your first name!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="First Name"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("last_name", {
-                                                rules: [
-                                                    {
-                                                        message: "Please input your last name!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Last Name"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={36}>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("serviceProvider", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select your role!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={serviceProvider} placeholder="Service Provider"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            {getFieldDecorator("clearanceLevel", {
-                                                rules: [
-                                                    {
-                                                        type: "array",
-                                                        required: true,
-                                                        message: "Please select your role!"
-                                                    }
-                                                ]
-                                            })(<Cascader options={clearanceLevel} placeholder="Clearence Level"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={24}>
-                                        <Form.Item>
-                                            {getFieldDecorator("address", {
-                                                rules: [
-                                                    {
-                                                        message: "Please input your address!",
-                                                        whitespace: true
-                                                    }
-                                                ]
-                                            })(<Input prefix={<Icon type="home" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                                      placeholder="Address"/>)}
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={36}>
-                                    <Col span={12}>
-                                        <Form.Item>
-                                            <Button type="primary" htmlType="submit"
-                                                    className="registration-submit-button">
-                                                Submit
+                                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                                Continue
                                             </Button>
                                         </Form.Item>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </div>
-                    </Content>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
+                    </Layout>
+                );
+            }
+            else {
+                return (
+                    <Layout className="layout">
+                        <Header
+                            handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                            loggedInStatus={this.state.loggedInStatus}
+                        />
+                        <Layout>
+                            <SiderComponentSocialWorker
+                                setPagecomponent={this.setPagecomponent}
+                            />
+                            <Content className="content-login">
+                                <div className="site-layout-content-login">
+                                    <Form onSubmit={this.handleSocialWorkerRegistrationSubmit}>
+                                        <Row gutter={36}>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    {getFieldDecorator("username", {
+                                                        initialValue: this.state.username,
+                                                        rules: [
+                                                            {
+                                                                required: true,
+                                                                message: "Please input your username!",
+                                                                whitespace: true
+                                                            }
+                                                        ]
+                                                    })(<Input
+                                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="Username"/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    {getFieldDecorator("email", {
+                                                        rules: [
+                                                            {
+                                                                type: "email",
+                                                                message: "The input is not valid E-mail!"
+                                                            },
+                                                            {
+                                                                required: true,
+                                                                message: "Please input your E-mail!"
+                                                            }
+                                                        ]
+                                                    })(<Input
+                                                        prefix={<Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="E-mail"/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={36}>
+
+                                            <Col span={12}>
+                                                <Form.Item hasFeedback>
+                                                    {getFieldDecorator("password", {
+                                                        rules: [
+                                                            {
+                                                                required: true,
+                                                                message: "Please input your password!"
+                                                            },
+                                                            {
+                                                                validator: this.validateToNextPassword
+                                                            }
+                                                        ]
+                                                    })(<Input.Password
+                                                        prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="Password"/>)}
+                                                </Form.Item>
+
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item hasFeedback className="register-ant-form-item">
+                                                    {getFieldDecorator("confirm", {
+                                                        rules: [
+                                                            {
+                                                                required: true,
+                                                                message: "Please confirm your password!"
+                                                            },
+                                                            {
+                                                                validator: this.compareToFirstPassword
+                                                            }
+                                                        ]
+                                                    })(<Input.Password
+                                                        prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="Confirm Password"
+                                                        onBlur={this.handleConfirmBlur}/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={36}>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    {getFieldDecorator("first_name", {
+                                                        rules: [
+                                                            {
+                                                                required: true,
+                                                                message: "Please input your first name!",
+                                                                whitespace: true
+                                                            }
+                                                        ]
+                                                    })(<Input
+                                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="First Name"/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    {getFieldDecorator("last_name", {
+                                                        rules: [
+                                                            {
+                                                                message: "Please input your last name!",
+                                                                whitespace: true
+                                                            }
+                                                        ]
+                                                    })(<Input
+                                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="Last Name"/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={36}>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    {getFieldDecorator("serviceProvider", {
+                                                        rules: [
+                                                            {
+                                                                type: "array",
+                                                                required: true,
+                                                                message: "Please select your role!"
+                                                            }
+                                                        ]
+                                                    })(<Cascader options={serviceProvider}
+                                                                 placeholder="Service Provider"/>)}
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    {getFieldDecorator("clearanceLevel", {
+                                                        rules: [
+                                                            {
+                                                                type: "array",
+                                                                required: true,
+                                                                message: "Please select your role!"
+                                                            }
+                                                        ]
+                                                    })(<Cascader options={clearanceLevel}
+                                                                 placeholder="Clearence Level"/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col span={24}>
+                                                <Form.Item>
+                                                    {getFieldDecorator("address", {
+                                                        rules: [
+                                                            {
+                                                                message: "Please input your address!",
+                                                                whitespace: true
+                                                            }
+                                                        ]
+                                                    })(<Input
+                                                        prefix={<Icon type="home" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                                        placeholder="Address"/>)}
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={36}>
+                                            <Col span={12}>
+                                                <Form.Item>
+                                                    <Button type="primary" htmlType="submit"
+                                                            className="registration-submit-button">
+                                                        Submit
+                                                    </Button>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                </div>
+                            </Content>
+                        </Layout>
+                        <StreetCardFooter/>
+                    </Layout>
+                );
+
+            }
+        }
+        else {
+            return (
+                <Layout className="layout">
+                    <Header loginPageStatus={this.state.loginPageStatus}/>
+                    <Layout>
+                        <Content className="content-login">
+                            <div className="site-layout-content-login">
+                                <Result
+                                    status="warning"
+                                    title="Please Login Again"
+                                    extra={[
+                                        <Button type="primary" key="console" onClick={this.handleButton}>
+                                            Login Again
+                                        </Button>,
+                                    ]}
+                                />
+                            </div>
+                        </Content>
+                    </Layout>
                     <StreetCardFooter/>
                 </Layout>
             );

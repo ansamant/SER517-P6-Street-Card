@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Col, Form, Icon, Input, Layout, Row} from "antd";
+import {Button, Col, Form, Icon, Input, Layout, Row, Spin} from "antd";
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
 
@@ -11,12 +11,13 @@ class GreeterView extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props.clearanceLevel);
-        console.log(this.props.serviceProvider);
+
+
         this.state = {
             isLoaded: false,
             name: "",
             id: "",
+            clicked: false,
             clearanceLevel: this.props.clearanceLevel,
             serviceProvider: this.props.serviceProvider
         }
@@ -28,17 +29,33 @@ class GreeterView extends React.Component {
 
     }
 
+    waitComponent(values, registerRequestObject) {
+        //should only run after get request has successfully
+        fetch(process.env.REACT_APP_IP + 'homeless/' + values.personalId + '/logs/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(registerRequestObject)
+        })
+            .then(res => res.json())
+            .then(
+                json => {
+
+                });
+    }
+
     handleSubmit = e => {
+        this.state.clicked = true
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
 
             if (!err) {
-
                 var registerRequestObject = {};
                 registerRequestObject.serviceProvider = this.state.serviceProvider;
                 registerRequestObject.clientName = "";
-                console.log(registerRequestObject);
-                fetch('http://localhost:8000/homeless/' + values.personalId + '/', {
+                fetch(process.env.REACT_APP_IP + 'homeless/' + values.personalId + '/', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -46,34 +63,40 @@ class GreeterView extends React.Component {
                     }
 
                 })
-                    .then(res => res.json())
-                    .then(json => {
-                        // Need name to be used in the header for easy mapping of client name.
-                        registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
-                        //console.log("REG1 " + registerRequestObject.clientName)
-                        this.setState({
-                            isLoaded: true,
-                            name: registerRequestObject.clientName,
-                            id: values.personalId
-                        })
+                    .then(res => {
+                        if (res.status == 200) {
+                            res.json().then(json => {
+                                registerRequestObject.clientName = json['FirstName'] + ' ' + json['LastName']
+                                this.setState({
+                                    isLoaded: true,
+                                    name: registerRequestObject.clientName,
+                                    id: values.personalId
+                                })
+                                setTimeout(this.waitComponent(values, registerRequestObject), 1000);
+                            })
+                        } else if (Math.round(res.status / 100) == 4) {
+                            if (window.confirm("Error, invalid personal id: " + (res.status).toString())) {
+                                this.state.clicked = false;
+                                this.state.isLoaded = false;
+                                this.props.history.push('/greeter');
+                            } else {
+                                this.state.clicked = false;
+                                this.state.isLoaded = false;
+                                this.props.history.push('/greeter');
+                            }
+                        } else if (Math.round(res.status / 100) == 5) {
+                            if (window.confirm("Server Error: " + (res.status).toString())) {
+                                this.state.clicked = false;
+                                this.state.isLoaded = false;
+                                this.props.history.push('/greeter');
+                            } else {
+                                this.state.clicked = false;
+                                this.state.isLoaded = false;
+                                this.props.history.push('/greeter');
+                            }
+                        }
 
-                    }).then(json => {
-                    //should only run after get request has successfully
-                    //console.log("REG2 "+ JSON.stringify(registerRequestObject));
-                    fetch('http://localhost:8000/homeless/' + values.personalId + '/logs/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${localStorage.getItem('token')}`
-                        },
-                        body: JSON.stringify(registerRequestObject)
                     })
-                        .then(res => res.json())
-                        .then(
-                            json => {
-                                console.log("register response:", json);
-                            });
-                });
             }
         });
     };
@@ -85,7 +108,6 @@ class GreeterView extends React.Component {
     }
 
     processTransaction(personalId) {
-        console.log(personalId)
         this.props.inputPersonalId(personalId)
         this.props.history.push('/transactionPage');
     }
@@ -118,6 +140,7 @@ class GreeterView extends React.Component {
             }
         };
         if (this.state.isLoaded == true) {
+
             let form;
             form = <Layout className="layout">
                 <Header handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
@@ -128,9 +151,9 @@ class GreeterView extends React.Component {
                         <div className="site-layout-content-login">
                             <Row>
                                 <Col span={24}>
-                                    <h3>Hello {this.state.name}</h3>
+                                    <h6>Hello {this.state.name}</h6>
                                 </Col>
-                                </Row>
+                            </Row>
                             <Form onSubmit={this.handleSubmit} className="login-form">
                                 <Form.Item>
                                     {getFieldDecorator('personalId', {
@@ -156,13 +179,13 @@ class GreeterView extends React.Component {
 
                                 <Row>
 
-                                <Col span={24}>
-                                    <Button type="link" htmlType="submit"
-                                            onClick={() => this.processTransaction(this.state.id)}>
-                                        Go to Inventory ->
-                                    </Button>
-                                </Col>
-                            </Row>
+                                    <Col span={24}>
+                                        <Button type="link" htmlType="submit"
+                                                onClick={() => this.processTransaction(this.state.id)}>
+                                            Go to Inventory ->
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </Form>
                         </div>
                     </Content>
@@ -171,9 +194,47 @@ class GreeterView extends React.Component {
             </Layout>;
             return (
                 <div>
-
                     {form}
                 </div>
+            );
+        } else if (this.state.isLoaded == false && this.state.clicked == true) {
+            let form;
+            form = <Layout className="layout">
+                <Header handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                        loggedInStatus={this.state.loggedInStatus}
+                />
+                <Layout>
+                    <Content className="content-login">
+                        <div className="site-layout-content-login">
+                            <Form onSubmit={this.handleSubmit} className="login-form">
+                                <Row>
+                                    <Col span={24}>
+                                        <span>Loading . . . <Spin/></span>
+                                    </Col>
+                                </Row>
+                                <Form.Item>
+                                    {getFieldDecorator('personalId', {
+                                        rules: [{required: true, message: 'Please input Identification Number!'}],
+                                    })(
+                                        <Input
+                                            prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                            placeholder="Client Identification Number"
+                                        />,
+                                    )}
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit" className="login-form-button">
+                                        Submit
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        </div>
+                    </Content>
+                </Layout>
+                <StreetCardFooter/>
+            </Layout>;
+            return (
+                <div>{form}</div>
             );
         } else {
             let form;

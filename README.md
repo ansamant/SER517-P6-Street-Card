@@ -15,7 +15,7 @@ then reinvested in improving services, building shelters and low-cost housing, a
 benefits for Service Providers.
 
 ### **Technology Stack:**
-- Backend: Django REST Framework, RabbitMQ message broker, Celery Distributed Task Queue
+- Backend: Django REST Framework, RabbitMQ message broker, Celery Distributed Task Queue, Memcached
 - Frontend: React
 - Database: Postgres (Hosted on Amazon RDS)
 
