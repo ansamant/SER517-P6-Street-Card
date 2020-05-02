@@ -1,10 +1,10 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import {Button, Form, Layout, Table} from 'antd';
+import {Button, Form, Layout, Spin, Table} from 'antd';
 import Header from './Header'
 import StreetCardFooter from './StreetCardFooter'
-import SiderComponent from './component/SiderComponent'
+import SiderComponent from './SiderComponent'
 
 const {Content, Sider} = Layout;
 
@@ -128,23 +128,41 @@ class ViewAppointmentsTable extends React.Component {
         this.setPagecomponent = this.setPagecomponent.bind(this);
     }
 
-    componentDidMount() {
-        fetch('http://127.0.0.1:8000/homeless/' + this.props.homelessPersonId + '/appointment/', {
+    waitComponent() {
+        fetch(process.env.REACT_APP_IP + 'homeless/' + this.props.homelessPersonId + '/appointment/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
         })
-            .then(res => res.json())
-            .then(json => {
-                this.setState({
-                        isLoaded: true,
-                        appointmentData: json,
+            .then(res => {
+                if (res.status == 200) {
+                    res.json().then(json => {
+                        this.setState({
+                            isLoaded: true,
+                            appointmentData: json
+                        })
+                    })
+
+                } else if (Math.round(res.status / 100) == 4) {
+                    if (window.confirm("Error, invalid id: " + (res.status).toString())) {
+                        this.props.history.push('/socialWorkerRegister');
+                    } else {
+                        this.props.history.push('/socialWorkerRegister');
                     }
-                )
-            })
-        console.log(this.appointmentData);
+                } else if (Math.round(res.status / 100) == 5) {
+                    if (window.confirm("Error, invalid id: " + (res.status).toString())) {
+                        this.props.history.push('/socialWorkerRegister');
+                    } else {
+                        this.props.history.push('/socialWorkerRegister');
+                    }
+                }
+            });
+    }
+
+    componentDidMount() {
+        setTimeout(this.waitComponent(), 3000);
     }
 
 
@@ -155,7 +173,6 @@ class ViewAppointmentsTable extends React.Component {
 
 
     editAppointment(record) {
-        console.log(record.appointmentId)
         this.props.updateAppointmentId(record.appointmentId);
         this.props.history.push('/editAppointment');
     }
@@ -190,29 +207,51 @@ class ViewAppointmentsTable extends React.Component {
 
 
         };
-        return (
-            <Layout className="layout">
-                <Header
-                    handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
-                    loggedInStatus={this.props.loggedInStatus}
-                />
-
-                <Layout>
-
-                    <SiderComponent
-                        setPagecomponent={this.setPagecomponent}
+        if (this.state.isLoaded) {
+            return (
+                <Layout className="layout">
+                    <Header
+                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                        loggedInStatus={this.props.loggedInStatus}
                     />
-                    <Content className="content-enroll">
-                        <div>
-                            <Table className="site-layout-content-viewappointment"
-                                   dataSource={this.state.appointmentData} columns={this.state.columns}
-                                   scroll={{x: 1500, y: 500}}/>
-                        </div>
-                    </Content>
+
+                    <Layout>
+
+                        <SiderComponent
+                            setPagecomponent={this.setPagecomponent}
+                        />
+                        <Content className="content-enroll">
+                            <div>
+                                <Table className="site-layout-content-viewappointment"
+                                       dataSource={this.state.appointmentData} columns={this.state.columns}
+                                       scroll={{x: 1500, y: 500}}/>
+                            </div>
+                        </Content>
+                    </Layout>
+                    <StreetCardFooter/>
                 </Layout>
-                <StreetCardFooter/>
-            </Layout>
-        );
+            );
+        } else {
+            return (
+                <Layout className="layout">
+                    <Header
+                        handleSuccessfulLogoutAction={this.handleSuccessfulLogoutAction}
+                        loggedInStatus={this.props.loggedInStatus}
+                    />
+                    <Layout>
+                        <SiderComponent
+                            setPagecomponent={this.setPagecomponent}
+                        />
+                        <Content className="content-login">
+                            <div className="site-layout-content-login">
+                                <span>Loading . . .<Spin size="small"/></span>
+                            </div>
+                        </Content>
+                    </Layout>
+                    <StreetCardFooter/>
+                </Layout>
+            );
+        }
 
     }
 }

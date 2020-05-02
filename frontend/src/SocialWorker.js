@@ -9,11 +9,11 @@ class SocialWorker extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.username);
+
         if (this.props.loggedInStatus === "LOGGED_IN" && this.props.username !== "shivamverma") {
             var localClearanceLevel = '';
             var localserviceProvider = '';
-            fetch('http://localhost:8000/user/' + this.props.username + '/', {
+            fetch(process.env.REACT_APP_IP + 'user/' + this.props.username + '/', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -33,6 +33,8 @@ class SocialWorker extends React.Component {
                         this.props.history.push('/clientLanding');
                     } else if (this.state.clearanceLevel == "service_provider_emp") {
                         this.props.history.push('/serviceProvider');
+                    } else if (this.state.clearanceLevel == "admin") {
+                        this.props.history.push('/socialWorkerRegister');
                     } else {
                         this.props.history.push('/greeter');
                     }
