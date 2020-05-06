@@ -20,7 +20,7 @@ const clearanceLevel = [
         label: "Case Worker"
     },
     {
-        value: "service_provider_emp",
+        value: "service_provider",
         label: "Service Provider Employee"
     },
     {

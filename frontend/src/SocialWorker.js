@@ -10,7 +10,7 @@ class SocialWorker extends React.Component {
 
     componentDidMount() {
 
-        if (this.props.loggedInStatus === "LOGGED_IN" && this.props.username !== "shivamverma") {
+        if (this.props.loggedInStatus === "LOGGED_IN") {
             var localClearanceLevel = '';
             var localserviceProvider = '';
             fetch(process.env.REACT_APP_IP + 'user/' + this.props.username + '/', {
@@ -31,7 +31,7 @@ class SocialWorker extends React.Component {
                         this.props.history.push('/socialWorkerRegister');
                     } else if (this.state.clearanceLevel == "client") {
                         this.props.history.push('/clientLanding');
-                    } else if (this.state.clearanceLevel == "service_provider_emp") {
+                    } else if (this.state.clearanceLevel == "service_provider") {
                         this.props.history.push('/serviceProvider');
                     } else if (this.state.clearanceLevel == "admin") {
                         this.props.history.push('/socialWorkerRegister');

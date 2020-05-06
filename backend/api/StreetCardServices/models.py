@@ -246,7 +246,7 @@ class SocialWorker(models.Model):
         """
         GREETER = "greeter", _("Greeter")
         CASEWORKER = "caseworker", _("CaseWorker")
-        SERVICE_PROVIDER_EMPLOYEE = "service_provider_emp", _("Service Provider Employee")
+        SERVICE_PROVIDER_EMPLOYEE = "service_provider", _("Service Provider Employee")
         CLIENT = "client", _("Client")
         ADMIN = "admin", _("Admin")
 
