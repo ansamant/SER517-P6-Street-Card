@@ -1,7 +1,9 @@
 FROM ubuntu:18.04
 RUN apt-get update \
   && apt-get install -y python3-pip python3-dev libpq-dev \
-  && apt-get install -y vim
+  && apt-get install -y vim \ 
+  && python3 manage.py makemigrations && python3 manage.py migrate
+  
 WORKDIR /src/backend
 COPY requirements.txt /src/backend
 RUN pip3 install -r requirements.txt

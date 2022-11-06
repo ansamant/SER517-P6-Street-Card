@@ -199,7 +199,8 @@ CORS_ORIGIN_REGEX_WHITELIST = [
 
 # For Development Environment: 'amqp://localhost'
 # For Production Environment: 'amqp://guest:guest@rabbit:5672'
-CELERY_BROKER_URL = 'amqp://guest:guest@rabbit:5672'
+# CELERY_BROKER_URL = 'amqp://guest:guest@rabbit:5672'
+CELERY_BROKER_URL = 'amqp://localhost'
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
