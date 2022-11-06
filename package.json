@@ -1,0 +1,20 @@
+{
+  "name": "ser517-p6-street-card",
+  "version": "1.0.0",
+  "description": "The StreetCard is a carefully reasoned, comprehensive social program that seeks to connect Homeless\r Persons with Information Technology to optimize the process of providing benefits and housing.",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ansamant/SER517-P6-Street-Card.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ansamant/SER517-P6-Street-Card/issues"
+  },
+  "homepage": "https://github.com/ansamant/SER517-P6-Street-Card#readme"
+}
